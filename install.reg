@@ -3,55 +3,53 @@ Windows Registry Editor Version 5.00
 [HKEY_CLASSES_ROOT\CLSID\{ca586c80-7c84-4b88-8537-726724df6929}]
 
 [HKEY_CLASSES_ROOT\CLSID\{ca586c80-7c84-4b88-8537-726724df6929}]
-@="HareGIT"
+@="Git-Cheetah"
 
 [HKEY_CLASSES_ROOT\CLSID\{ca586c80-7c84-4b88-8537-726724df6929}\InProcServer32]
-@="p:\\dscho\\ext3\\git_shell_ext.dll"
+@="W:\\git-cheetah\\git_shell_ext.dll"
 
 [HKEY_CLASSES_ROOT\CLSID\{ca586c80-7c84-4b88-8537-726724df6929}\InProcServer32]
 "ThreadingModel"="Apartment"
 
 [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Shell Extensions\Approved]
-"{ca586c80-7c84-4b88-8537-726724df6929}"="Hare GIT"
+"{ca586c80-7c84-4b88-8537-726724df6929}"="Git-Cheetah"
 
-[HKEY_CLASSES_ROOT\txtfile\shellex\ContextMenuHandlers\HareGIT]
+[HKEY_CLASSES_ROOT\txtfile\shellex\ContextMenuHandlers\Git-Cheetah]
 
-[HKEY_CLASSES_ROOT\txtfile\shellex\ContextMenuHandlers\HareGIT]
+[HKEY_CLASSES_ROOT\txtfile\shellex\ContextMenuHandlers\Git-Cheetah]
 @="{ca586c80-7c84-4b88-8537-726724df6929}"
 
-[HKEY_CLASSES_ROOT\Directory\shellex\ContextMenuHandlers\HareGIT]
+[HKEY_CLASSES_ROOT\Directory\shellex\ContextMenuHandlers\Git-Cheetah]
 
-[HKEY_CLASSES_ROOT\Directory\shellex\ContextMenuHandlers\HareGIT]
+[HKEY_CLASSES_ROOT\Directory\shellex\ContextMenuHandlers\Git-Cheetah]
 @="{ca586c80-7c84-4b88-8537-726724df6929}"
 
-[HKEY_CLASSES_ROOT\Directory\Background\shellex\ContextMenuHandlers\HareGIT]
+[HKEY_CLASSES_ROOT\Directory\Background\shellex\ContextMenuHandlers\Git-Cheetah]
 
-[HKEY_CLASSES_ROOT\Directory\Background\shellex\ContextMenuHandlers\HareGIT]
+[HKEY_CLASSES_ROOT\Directory\Background\shellex\ContextMenuHandlers\Git-Cheetah]
 @="{ca586c80-7c84-4b88-8537-726724df6929}"
 
-[HKEY_CLASSES_ROOT\Drive\shellex\ContextMenuHandlers\HareGIT]
+[HKEY_CLASSES_ROOT\Drive\shellex\ContextMenuHandlers\Git-Cheetah]
 
-[HKEY_CLASSES_ROOT\Drive\shellex\ContextMenuHandlers\HareGIT]
+[HKEY_CLASSES_ROOT\Drive\shellex\ContextMenuHandlers\Git-Cheetah]
 @="{ca586c80-7c84-4b88-8537-726724df6929}"
 
-[HKEY_CLASSES_ROOT\Folder\shellex\ContextMenuHandlers\HareGIT]
+[HKEY_CLASSES_ROOT\Folder\shellex\ContextMenuHandlers\Git-Cheetah]
 
-[HKEY_CLASSES_ROOT\Folder\shellex\ContextMenuHandlers\HareGIT]
+[HKEY_CLASSES_ROOT\Folder\shellex\ContextMenuHandlers\Git-Cheetah]
 @="{ca586c80-7c84-4b88-8537-726724df6929}"
 
-[HKEY_CLASSES_ROOT\*\shellex\ContextMenuHandlers\HareGIT]
+[HKEY_CLASSES_ROOT\*\shellex\ContextMenuHandlers\Git-Cheetah]
 
-[HKEY_CLASSES_ROOT\*\shellex\ContextMenuHandlers\HareGIT]
+[HKEY_CLASSES_ROOT\*\shellex\ContextMenuHandlers\Git-Cheetah]
 @="{ca586c80-7c84-4b88-8537-726724df6929}"
 
-[HKEY_CLASSES_ROOT\InternetShortcut\shellex\ContextMenuHandlers\HareGIT]
+[HKEY_CLASSES_ROOT\InternetShortcut\shellex\ContextMenuHandlers\Git-Cheetah]
 
-[HKEY_CLASSES_ROOT\InternetShortcut\shellex\ContextMenuHandlers\HareGIT]
+[HKEY_CLASSES_ROOT\InternetShortcut\shellex\ContextMenuHandlers\Git-Cheetah]
 @="{ca586c80-7c84-4b88-8537-726724df6929}"
 
-[HKEY_CLASSES_ROOT\lnkfile\shellex\ContextMenuHandlers\HareGIT]
+[HKEY_CLASSES_ROOT\lnkfile\shellex\ContextMenuHandlers\Git-Cheetah]
 
-[HKEY_CLASSES_ROOT\lnkfile\shellex\ContextMenuHandlers\HareGIT]
+[HKEY_CLASSES_ROOT\lnkfile\shellex\ContextMenuHandlers\Git-Cheetah]
 @="{ca586c80-7c84-4b88-8537-726724df6929}"
-
-
