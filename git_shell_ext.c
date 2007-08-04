@@ -296,9 +296,9 @@ HRESULT PASCAL DllCanUnloadNow(void)
    return (object_count || lock_count) ? S_FALSE : S_OK;
 }
 
-const char *program_name = "Hare GIT";
-const char *program_version = "HareGIT.Application.1";
-const char *program_id = "HareGIT.Application";
+const char *program_name = "Git-Cheetah";
+const char *program_version = "Git-Cheetah.Application.1";
+const char *program_id = "Git-Cheetah.Application";
 
 HRESULT PASCAL DllRegisterServer(void)
 {
