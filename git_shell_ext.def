@@ -1,0 +1,7 @@
+LIBRARY git_shell_ext
+EXPORTS
+DllMain
+DllRegisterServer
+DllUnregisterServer
+DllCanUnloadNow
+DllGetClassObject
