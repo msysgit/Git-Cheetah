@@ -13,5 +13,8 @@ install:
 	regsvr32 git_shell_ext.dll
 	regedit install.reg
 
+uninstall:
+	regsvr32 -u git_shell_ext.dll
+	regedit uninstall.reg
 clean:
 	rm $(OBJECTS) git_shell_ext.dll

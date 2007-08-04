@@ -1,0 +1,27 @@
+Windows Registry Editor Version 5.00
+
+; This registry file creates neccessary entries for uninstallation.
+; **** If you change this file, keep install.reg in sync! ****
+;
+; This file is slated for being generated and not hard-coded.
+
+[-HKEY_CLASSES_ROOT\CLSID\{ca586c80-7c84-4b88-8537-726724df6929}]
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Shell Extensions\Approved]
+"{ca586c80-7c84-4b88-8537-726724df6929}"=-
+
+[-HKEY_CLASSES_ROOT\txtfile\shellex\ContextMenuHandlers\Git-Cheetah]
+
+[-HKEY_CLASSES_ROOT\Directory\shellex\ContextMenuHandlers\Git-Cheetah]
+
+[-HKEY_CLASSES_ROOT\Directory\Background\shellex\ContextMenuHandlers\Git-Cheetah]
+
+[-HKEY_CLASSES_ROOT\Drive\shellex\ContextMenuHandlers\Git-Cheetah]
+
+[-HKEY_CLASSES_ROOT\Folder\shellex\ContextMenuHandlers\Git-Cheetah]
+
+[-HKEY_CLASSES_ROOT\*\shellex\ContextMenuHandlers\Git-Cheetah]
+
+[-HKEY_CLASSES_ROOT\InternetShortcut\shellex\ContextMenuHandlers\Git-Cheetah]
+
+[-HKEY_CLASSES_ROOT\lnkfile\shellex\ContextMenuHandlers\Git-Cheetah]
