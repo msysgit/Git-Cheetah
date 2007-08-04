@@ -12,3 +12,6 @@ git_shell_ext.dll: $(OBJECTS) git_shell_ext.def
 install:
 	regsvr32 git_shell_ext.dll
 	regedit install.reg
+
+clean:
+	rm $(OBJECTS) git_shell_ext.dll
