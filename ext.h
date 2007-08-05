@@ -90,5 +90,4 @@ inline STDMETHODIMP initialize_git_data(struct git_data *this_,
 					LPCITEMIDLIST folder,
 					LPDATAOBJECT data, HKEY id);
 
-
 #endif /* EXT_H */

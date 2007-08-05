@@ -5,6 +5,8 @@ Windows Registry Editor Version 5.00
 ;
 ; This file is slated for being generated and not hard-coded.
 
+[-HKEY_LOCAL_MACHINE\SOFTWARE\Git-Cheetah]
+
 [-HKEY_CLASSES_ROOT\CLSID\{ca586c80-7c84-4b88-8537-726724df6929}]
 
 [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Shell Extensions\Approved]

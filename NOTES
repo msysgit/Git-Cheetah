@@ -5,7 +5,8 @@
    <2007-08-05 Sun>
 ** TODO Move context menu item up a bit.  Sorting is off.
 ** TODO Generate registry installation/uninstallation entries during build.
-   Need to not hard-code the dll path, at least.
+   Need to not hard-code the dll path, at least.  PathToMsys also
+   needs to be determined.
 * Mid-term tasks
 ** TODO Flesh out menu items provided to the user.
 * Long-term tasks

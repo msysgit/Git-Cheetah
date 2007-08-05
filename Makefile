@@ -1,4 +1,4 @@
-OBJECTS=ext.o debug.o dll.o factory.o menu.o
+OBJECTS=ext.o debug.o dll.o factory.o menu.o systeminfo.o
 CFLAGS=-O -g
 
 all: git_shell_ext.dll

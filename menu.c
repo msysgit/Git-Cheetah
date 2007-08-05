@@ -3,13 +3,16 @@
 #include <tchar.h>
 #include "menu.h"
 #include "ext.h"
+#include "debug.h"
+#include "systeminfo.h"
 
 /*
  * These are the functions for handling the context menu.
  */
 
 static STDMETHODIMP query_context_menu(void *p, HMENU menu,
-		UINT index, UINT first_command, UINT last_command, UINT flags)
+				       UINT index, UINT first_command,
+				       UINT last_command, UINT flags)
 {
 	struct git_menu *this_menu = p;
 	struct git_data *this_ = this_menu->git_data;
@@ -18,13 +21,13 @@ static STDMETHODIMP query_context_menu(void *p, HMENU menu,
 		return MAKE_HRESULT(SEVERITY_SUCCESS, FACILITY_NULL, 0);
 
 	InsertMenu(menu, index, MF_STRING | MF_BYPOSITION,
-			first_command, _T("SimpleShlExt Test Item"));
+		   first_command, _T("Git Gui"));
 
 	return MAKE_HRESULT(SEVERITY_SUCCESS, FACILITY_NULL, 1);
 }
 
 static STDMETHODIMP invoke_command(void *p,
-		LPCMINVOKECOMMANDINFO info)
+				   LPCMINVOKECOMMANDINFO info)
 {
 	struct git_menu *this_menu = p;
 	struct git_data *this_ = this_menu->git_data;
@@ -33,13 +36,43 @@ static STDMETHODIMP invoke_command(void *p,
 	if (HIWORD(info->lpVerb) != 0)
 		return E_INVALIDARG;
 
-	if (command == 0) {
-		TCHAR msg[MAX_PATH + 32];
+	if (command == 0)
+	{
+		STARTUPINFO si = { sizeof(si) };
+		PROCESS_INFORMATION pi;
+		
+		TCHAR * msysPath = msys_path();
 
-		wsprintf(msg, _T("The selected file was:\n\n%s"), this_->name);
-		MessageBox(info->hwnd, msg, _T("SimpleShlExt"),
-				MB_ICONINFORMATION);
+		if (msysPath)
+		{
+			TCHAR command[1024];
+			wsprintf(command, TEXT("sh.exe %s\\bin\\git-gui"),
+				 msysPath);
 
+			if (CreateProcess(
+				    NULL,
+				    command,
+				    NULL,
+				    NULL,
+				    FALSE,
+				    0, NULL, NULL, &si, &pi))
+			{
+				CloseHandle(pi.hProcess);
+				CloseHandle(pi.hThread);
+			}
+			else
+			{
+				debug_git("[ERROR] %s/%s:%d Could not create git gui process (%d)",
+					  __FILE__, __FUNCTION__, __LINE__,
+					  GetLastError());
+			}
+		}
+		else
+		{
+			debug_git("[ERROR] %s/%s:%d Could not find msysPath",
+				  __FILE__, __FUNCTION__, __LINE__);
+		}
+		
 		return S_OK;
 	}
 
@@ -47,7 +80,8 @@ static STDMETHODIMP invoke_command(void *p,
 }
 
 static STDMETHODIMP get_command_string(void *p, UINT id,
-		UINT flags, UINT *reserved, LPSTR name, UINT size)
+				       UINT flags, UINT *reserved,
+				       LPSTR name, UINT size)
 {
 	struct git_menu *this_menu = p;
 	struct git_data *this_ = this_menu->git_data;
