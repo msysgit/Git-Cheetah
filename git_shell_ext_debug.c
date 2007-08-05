@@ -1,6 +1,5 @@
 #include <stdarg.h>
 #include <stdlib.h>
-#include <fcntl.h>
 #include <stdio.h>
 #include "git_shell_ext_debug.h"
 
