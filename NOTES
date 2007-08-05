@@ -1,7 +1,8 @@
 * Short-term tasks
-** TODO Split git_shell_ext.[ch] into multiple files
+** DONE Split git_shell_ext.[ch] into multiple files
    One per interface provided by the extension?  Perhaps less verbose
    filenames, as well.
+   <2007-08-05 Sun>
 ** TODO Move context menu item up a bit.  Sorting is off.
 ** TODO Generate registry installation/uninstallation entries during build.
    Need to not hard-code the dll path, at least.
