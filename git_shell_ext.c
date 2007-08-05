@@ -43,10 +43,10 @@ static inline STDMETHODIMP query_interface_git_data(struct git_data *this_,
 	if (IsEqualIID(iid, &IID_git_shell_ext) ||
 			IsEqualIID(iid, &IID_IShellExtInit) ||
 			IsEqualIID(iid, &IID_IUnknown)) {
-		*pointer = this_;
+		*pointer = &this_->shell_ext;
 	} else if (IsEqualIID(iid, &IID_git_menu) ||
 			IsEqualIID(iid, &IID_IContextMenu)) {
-		*pointer = (void *)(((void **)this_) + 1);
+		*pointer = &this_->menu;
 	} else
 		return E_NOINTERFACE;
 
