@@ -1,4 +1,4 @@
-OBJECTS=git_shell_ext.o
+OBJECTS=git_shell_ext.o git_shell_ext_debug.o
 CFLAGS=-O -g
 
 all: git_shell_ext.dll

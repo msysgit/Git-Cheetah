@@ -1,6 +1,7 @@
 #include <stdarg.h>
 #include <tchar.h>
 #include "git_shell_ext.h"
+#include "git_shell_ext_debug.h"
 
 static DWORD object_count = 0, lock_count = 0;
 
