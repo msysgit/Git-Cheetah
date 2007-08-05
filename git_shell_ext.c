@@ -65,6 +65,9 @@ static inline STDMETHODIMP initialize_git_data(struct git_data *this_,
 	UINT count;
 	HRESULT result = S_OK;
 
+	if (!data)
+		return S_OK;
+
 	if (FAILED(data->lpVtbl->GetData(data, &format, &stg)))
 		return E_INVALIDARG;
 
@@ -134,6 +137,7 @@ static STDMETHODIMP query_context_menu(void *p, HMENU menu,
 {
 	struct git_menu *this_menu = p;
 	struct git_data *this_ = this_menu->git_data;
+
 	if (flags & CMF_DEFAULTONLY)
 		return MAKE_HRESULT(SEVERITY_SUCCESS, FACILITY_NULL, 0);
 
@@ -149,6 +153,7 @@ static STDMETHODIMP invoke_command(void *p,
 	struct git_menu *this_menu = p;
 	struct git_data *this_ = this_menu->git_data;
 	int command = LOWORD(info->lpVerb);
+
 	if (HIWORD(info->lpVerb) != 0)
 		return E_INVALIDARG;
 
@@ -170,6 +175,7 @@ static STDMETHODIMP get_command_string(void *p, UINT id,
 {
 	struct git_menu *this_menu = p;
 	struct git_data *this_ = this_menu->git_data;
+
 	if (id == 0)
 		return E_INVALIDARG;
 
