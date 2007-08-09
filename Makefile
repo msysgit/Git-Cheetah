@@ -3,7 +3,7 @@ CFLAGS=-O -g
 
 TARGET=git_shell_ext.dll
 MSYSGIT_PATH=$(shell cd /; pwd -W | sed -e 's|/|\\\\\\\\|g')
-DLL_PATH=$(shell pwd -W | sed -e 's|/|\\\\\\\\|g')\\$(TARGET)
+DLL_PATH=$(shell pwd -W | sed -e 's|/|\\\\\\\\|g')\\\\$(TARGET)
 
 all: $(TARGET)
 
