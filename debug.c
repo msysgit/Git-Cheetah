@@ -39,6 +39,7 @@ void debug_git(char * format, ...)
 		length = vsnprintf(buffer, sizeof(buffer), format, params);
 		va_end(params);
 		fwrite(buffer, sizeof(char), length, debug_git_fd);
+		fputc('\n', debug_git_fd);
 		fflush(debug_git_fd);
 	}
 }
