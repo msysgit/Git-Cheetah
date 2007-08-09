@@ -17,6 +17,12 @@ $(TARGET): $(OBJECTS) git_shell_ext.def
 #	gcc $(LDFLAGS) -o $@ $(OBJECTS)  -lole32 -luuid -loleaut32
 #	dlltool -d git_shell_ext.def -l $@ $(OBJECTS)
 
+dll.o: dll.h ext.h factory.h
+ext.o: ext.h debug.h
+factory.o: factory.h ext.h menu.h
+menu.o: menu.h ext.h debug.h systeminfo.h
+systeminfo.o: systeminfo.h
+
 install: all install.reg
 	regsvr32 -s git_shell_ext.dll
 	regedit -s install.reg
