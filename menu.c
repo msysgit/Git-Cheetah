@@ -46,8 +46,8 @@ static STDMETHODIMP invoke_command(void *p,
 		if (msysPath)
 		{
 			TCHAR command[1024];
-			wsprintf(command, TEXT("sh.exe %s\\bin\\git-gui"),
-				 msysPath);
+			wsprintf(command, TEXT("%s\\bin\\sh.exe --login /bin/git-gui"),
+				 msysPath, msysPath);
 
 			if (CreateProcess(
 				    NULL,
