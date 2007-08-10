@@ -46,8 +46,12 @@ static STDMETHODIMP invoke_command(void *p,
 		if (msysPath)
 		{
 			TCHAR command[1024];
-			wsprintf(command, TEXT("%s\\bin\\sh.exe --login /bin/git-gui"),
-				 msysPath, msysPath);
+			if (info->lpDirectory != NULL)
+				wsprintf(command, TEXT("%s\\bin\\sh.exe --login -c \"cd `echo '%s' | sed -e 's|^\\(.\\):|/\\1/|g' -e 's|\|/|g'` && /bin/git-gui\""),
+					 msysPath, info->lpDirectory);
+			else
+				wsprintf(command, TEXT("%s\\bin\\sh.exe --login /bin/git-gui"),
+					 msysPath);
 
 			if (CreateProcess(
 				    NULL,
