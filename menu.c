@@ -26,6 +26,57 @@ static STDMETHODIMP query_context_menu(void *p, HMENU menu,
 	return MAKE_HRESULT(SEVERITY_SUCCESS, FACILITY_NULL, 1);
 }
 
+/*
+ * Perform a couple of transformations, such that a directory
+ *    C:\Program Files\Bunch of stuff\in\A dir
+ * becomes
+ *    /C/Program\ Files/Bunch\ of\ stuff/in/A\ dir
+ *
+ * Assumes path is initially a correctly formed Windows-style path.
+ * Returns a new string.
+ */
+static char * convert_directory_format(const char * path)
+{
+	int i;
+	int size_incr = 0;
+
+	/* Figure out how much extra space we need to escape spaces */
+	for (i = 0; i < MAX_PATH && path[i] != '\0'; ++i)
+		if (path[i] == ' ')
+			size_incr++;
+
+	char * converted = (char *)calloc(size_incr + i + 1, sizeof(char));
+	char * dst = converted;
+
+	/* Transform:
+	 * " " -> "\ "
+	 * "\" -> "/"
+	 */
+	for (i = 0; i < MAX_PATH && path[i] != '\0'; ++i)
+	{
+		switch (path[i])
+		{
+		case ' ':
+			*(dst++) = '\\';
+			*(dst++) = ' ';
+			break;
+		case '\\':
+			*(dst++) = '/';
+			break;
+		default:
+			*(dst++) = path[i];
+			break;
+		}
+	}
+	*dst = '\0';
+
+	/* X: -> /X */
+	converted[1] = converted[0];
+	converted[0] = '/';
+
+	return converted;
+}
+
 static STDMETHODIMP invoke_command(void *p,
 				   LPCMINVOKECOMMANDINFO info)
 {
@@ -47,11 +98,19 @@ static STDMETHODIMP invoke_command(void *p,
 		{
 			TCHAR command[1024];
 			if (info->lpDirectory != NULL)
-				wsprintf(command, TEXT("%s\\bin\\sh.exe --login -c \"cd `echo '%s' | sed -e 's|^\\(.\\):|/\\1/|g' -e 's|\|/|g'` && /bin/git-gui\""),
-					 msysPath, info->lpDirectory);
+			{
+				char * directory =
+					convert_directory_format(info->lpDirectory);
+
+				wsprintf(command, TEXT("%s\\bin\\sh.exe --login -c \"cd %s && /bin/git-gui\""),
+					 msysPath, directory);
+				free(directory);
+			}
 			else
+			{
 				wsprintf(command, TEXT("%s\\bin\\sh.exe --login /bin/git-gui"),
 					 msysPath);
+			}
 
 			if (CreateProcess(
 				    NULL,
