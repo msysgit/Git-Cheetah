@@ -20,10 +20,12 @@ static STDMETHODIMP query_context_menu(void *p, HMENU menu,
 	if (flags & CMF_DEFAULTONLY)
 		return MAKE_HRESULT(SEVERITY_SUCCESS, FACILITY_NULL, 0);
 
-	InsertMenu(menu, index, MF_STRING | MF_BYPOSITION,
-		   first_command, _T("&Git Gui"));
+	InsertMenu(menu, index, MF_SEPARATOR | MF_BYPOSITION,
+			first_command, "");
+	InsertMenu(menu, index+1, MF_STRING | MF_BYPOSITION,
+		   first_command+1, _T("&Git Gui"));
 	
-	return MAKE_HRESULT(SEVERITY_SUCCESS, FACILITY_NULL, 1);
+	return MAKE_HRESULT(SEVERITY_SUCCESS, FACILITY_NULL, 2);
 }
 
 /*
@@ -159,18 +161,19 @@ static STDMETHODIMP get_command_string(void *p, UINT id,
 	struct git_menu *this_menu = p;
 	struct git_data *this_ = this_menu->git_data;
 
-	if (id > 1)
+	if (id != 1)
 		return E_INVALIDARG;
 
 
 	if (flags & GCS_HELPTEXT) {
 		LPCTSTR text = _T("Launch the GIT Gui in the local or chosen directory.");
-
-		if (flags & GCS_UNICODE)
-			lstrcpynW((LPWSTR)name, mbrtowc(text), size);
+		LPWSTR tw = malloc((strlen(text)+1)*sizeof(wchar_t));
+		mbstowcs(tw, text, strlen(text));
+		if (flags & GCS_UNICODE)			
+			lstrcpynW((LPWSTR)name, tw, size);
 		else
 			lstrcpynA(name, text, size);
-
+		free(tw);
 		return S_OK;
 	}
 
