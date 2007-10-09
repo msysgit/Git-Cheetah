@@ -21,8 +21,8 @@ static STDMETHODIMP query_context_menu(void *p, HMENU menu,
 		return MAKE_HRESULT(SEVERITY_SUCCESS, FACILITY_NULL, 0);
 
 	InsertMenu(menu, index, MF_STRING | MF_BYPOSITION,
-		   first_command, _T("Git Gui"));
-
+		   first_command, _T("&Git Gui"));
+	
 	return MAKE_HRESULT(SEVERITY_SUCCESS, FACILITY_NULL, 1);
 }
 
@@ -102,15 +102,24 @@ static STDMETHODIMP invoke_command(void *p,
 				char * directory =
 					convert_directory_format(info->lpDirectory);
 
-				wsprintf(command, TEXT("%s\\bin\\sh.exe --login -c \"cd %s && /bin/git-gui\""),
-					 msysPath, directory);
+				wsprintf(command, TEXT("%s\\bin\\wish.exe \"%s/bin/git-gui\""),
+					 msysPath, msysPath, directory);
 				free(directory);
 			}
 			else
 			{
-				wsprintf(command, TEXT("%s\\bin\\sh.exe --login /bin/git-gui"),
+				wsprintf(command, TEXT("%s\\bin\\wish.exe /bin/git-gui"),
 					 msysPath);
 			}
+			const char *wd = this_->name;
+			if (wd == NULL || strlen(wd) == 0)
+				wd = info->lpDirectory;
+
+			DWORD dwAttr = FILE_ATTRIBUTE_DIRECTORY;
+			DWORD fa = GetFileAttributes(wd);
+			if (! (fa & dwAttr))
+				wd = info->lpDirectory;
+
 
 			if (CreateProcess(
 				    NULL,
@@ -118,16 +127,16 @@ static STDMETHODIMP invoke_command(void *p,
 				    NULL,
 				    NULL,
 				    FALSE,
-				    0, NULL, NULL, &si, &pi))
+				    0, NULL, wd, &si, &pi))
 			{
 				CloseHandle(pi.hProcess);
 				CloseHandle(pi.hThread);
 			}
 			else
 			{
-				debug_git("[ERROR] %s/%s:%d Could not create git gui process (%d)",
+				debug_git("[ERROR] %s/%s:%d Could not create git gui process (%d) Command: %s",
 					  __FILE__, __FUNCTION__, __LINE__,
-					  GetLastError());
+					  GetLastError(), command);
 			}
 		}
 		else
@@ -146,15 +155,16 @@ static STDMETHODIMP get_command_string(void *p, UINT id,
 				       UINT flags, UINT *reserved,
 				       LPSTR name, UINT size)
 {
+
 	struct git_menu *this_menu = p;
 	struct git_data *this_ = this_menu->git_data;
 
-	if (id == 0)
+	if (id > 1)
 		return E_INVALIDARG;
 
-#if 0
+
 	if (flags & GCS_HELPTEXT) {
-		LPCTSTR text = _T("This is the simple shell extension's help");
+		LPCTSTR text = _T("Launch the GIT Gui in the local or chosen directory.");
 
 		if (flags & GCS_UNICODE)
 			lstrcpynW((LPWSTR)name, mbrtowc(text), size);
@@ -163,7 +173,7 @@ static STDMETHODIMP get_command_string(void *p, UINT id,
 
 		return S_OK;
 	}
-#endif
+
 
 	return E_INVALIDARG;
 }
