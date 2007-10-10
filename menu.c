@@ -89,7 +89,7 @@ static STDMETHODIMP invoke_command(void *p,
 	if (HIWORD(info->lpVerb) != 0)
 		return E_INVALIDARG;
 
-	if (command == 0)
+	if (command == 1)
 	{
 		STARTUPINFO si = { sizeof(si) };
 		PROCESS_INFORMATION pi;
@@ -99,20 +99,11 @@ static STDMETHODIMP invoke_command(void *p,
 		if (msysPath)
 		{
 			TCHAR command[1024];
-			if (info->lpDirectory != NULL)
-			{
-				char * directory =
-					convert_directory_format(info->lpDirectory);
-
-				wsprintf(command, TEXT("%s\\bin\\wish.exe \"%s/bin/git-gui\""),
-					 msysPath, msysPath, directory);
-				free(directory);
-			}
-			else
-			{
-				wsprintf(command, TEXT("%s\\bin\\wish.exe /bin/git-gui"),
-					 msysPath);
-			}
+			
+			wsprintf(command, TEXT("%s\\bin\\wish.exe \"%s/bin/git-gui\""),
+				 msysPath, msysPath);
+			
+			
 			const char *wd = this_->name;
 			if (wd == NULL || strlen(wd) == 0)
 				wd = info->lpDirectory;
@@ -122,7 +113,7 @@ static STDMETHODIMP invoke_command(void *p,
 			if (! (fa & dwAttr))
 				wd = info->lpDirectory;
 
-
+			debug_git("Trying to spawn '%s' in working directory '%s'\n", command, wd);
 			if (CreateProcess(
 				    NULL,
 				    command,
