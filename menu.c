@@ -79,6 +79,24 @@ static char * convert_directory_format(const char * path)
 	return converted;
 }
 
+static void adjust_path_for_git(const char *msys_path)
+{
+	static int initialized = 0;
+
+	if (!initialized) {
+		const char *old_path = getenv("PATH");
+		int old_len = strlen(old_path);
+		int msys_path_len = strlen(msys_path);
+		char *new_path = malloc(old_len + 2 * msys_path_len + 23);
+		if (!new_path)
+			return;
+		sprintf(new_path, "PATH=%s\\bin;%s\\mingw\\bin;%s",
+			old_path, msys_path, msys_path);
+		putenv(new_path);
+		initialized = 1;
+	}
+}
+
 static STDMETHODIMP invoke_command(void *p,
 				   LPCMINVOKECOMMANDINFO info)
 {
@@ -99,9 +117,10 @@ static STDMETHODIMP invoke_command(void *p,
 		if (msysPath)
 		{
 			TCHAR command[1024];
-			
-			wsprintf(command, TEXT("%s\\bin\\wish.exe \"%s/bin/git-gui\""),
-				 msysPath, msysPath);
+
+			adjust_path_for_git(msysPath);
+			wsprintf(command, TEXT("wish.exe \"%s/bin/git-gui\""),
+				 msysPath);
 			
 			
 			const char *wd = this_->name;
