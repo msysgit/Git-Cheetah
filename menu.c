@@ -1,6 +1,7 @@
 #include <shlobj.h>
 #include <stdarg.h>
 #include <tchar.h>
+#include <stdio.h>
 #include "menu.h"
 #include "ext.h"
 #include "debug.h"
@@ -37,18 +38,20 @@ static STDMETHODIMP query_context_menu(void *p, HMENU menu,
  * Assumes path is initially a correctly formed Windows-style path.
  * Returns a new string.
  */
-static char * convert_directory_format(const char * path)
+static char *convert_directory_format(const char *path)
 {
 	int i;
 	int size_incr = 0;
+	char *converted;
+	char *dst;
 
 	/* Figure out how much extra space we need to escape spaces */
 	for (i = 0; i < MAX_PATH && path[i] != '\0'; ++i)
 		if (path[i] == ' ')
 			size_incr++;
 
-	char * converted = (char *)calloc(size_incr + i + 1, sizeof(char));
-	char * dst = converted;
+	converted = (char *)calloc(size_incr + i + 1, sizeof(char));
+	dst = converted;
 
 	/* Transform:
 	 * " " -> "\ "
@@ -85,8 +88,8 @@ static void adjust_path_for_git(const char *msys_path)
 
 	if (!initialized) {
 		const char *old_path = getenv("PATH");
-		int old_len = strlen(old_path);
-		int msys_path_len = strlen(msys_path);
+		size_t old_len = strlen(old_path);
+		size_t msys_path_len = strlen(msys_path);
 		char *new_path = malloc(old_len + 2 * msys_path_len + 23);
 		if (!new_path)
 			return;
@@ -117,18 +120,20 @@ static STDMETHODIMP invoke_command(void *p,
 		if (msysPath)
 		{
 			TCHAR command[1024];
+			const char *wd;
+			DWORD dwAttr, fa;
 
 			adjust_path_for_git(msysPath);
 			wsprintf(command, TEXT("wish.exe \"%s/bin/git-gui\""),
 				 msysPath);
 			
 			
-			const char *wd = this_->name;
+			wd = this_->name;
 			if (wd == NULL || strlen(wd) == 0)
 				wd = info->lpDirectory;
 
-			DWORD dwAttr = FILE_ATTRIBUTE_DIRECTORY;
-			DWORD fa = GetFileAttributes(wd);
+			dwAttr = FILE_ATTRIBUTE_DIRECTORY;
+			fa = GetFileAttributes(wd);
 			if (! (fa & dwAttr))
 				wd = info->lpDirectory;
 
