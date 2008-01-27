@@ -182,8 +182,11 @@ static STDMETHODIMP get_command_string(void *p, UINT id,
 
 	if (flags & GCS_HELPTEXT) {
 		LPCTSTR text = _T("Launch the GIT Gui in the local or chosen directory.");
-		LPWSTR tw = malloc((strlen(text)+1)*sizeof(wchar_t));
-		mbstowcs(tw, text, strlen(text));
+		size_t len = strlen(text) + 1;
+		LPWSTR tw = malloc(len * sizeof(wchar_t));
+		/* need to convert terminating NULL as well */
+		mbstowcs(tw, text, len);
+		/* use Win32 lstrcpyn to [automatically] avoid buffer overflow */
 		if (flags & GCS_UNICODE)			
 			lstrcpynW((LPWSTR)name, tw, size);
 		else
