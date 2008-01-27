@@ -3,37 +3,39 @@
 
 static TCHAR msysPath[MAX_PATH];
 
-TCHAR * msys_path(void)
+static int get_msys_path_from_registry(HKEY root)
+{
+	HKEY key;
+	DWORD path_len = sizeof(msysPath);
+
+	LONG result = RegOpenKeyEx(root, GIT_CHEETAH_REG_PATH,
+		0, KEY_QUERY_VALUE, &key);
+	if (ERROR_SUCCESS != result)
+		return 0;
+
+	result = RegQueryValueEx(key,
+		GIT_CHEETAH_REG_PATHTOMSYS,
+		NULL, NULL, (LPBYTE)msysPath, &path_len);
+
+	RegCloseKey(key);
+
+	return ERROR_SUCCESS == result;
+}
+
+TCHAR *msys_path(void)
 {
 	static int found_path = 0;
-	HKEY hKey;
-	LONG lRet;
 
-	/* Only bother to get it once. */
+	/* try to find user-specific settings first */
+	if (!found_path)
+		found_path = get_msys_path_from_registry(HKEY_CURRENT_USER);
+
+	/* if not found in user settings, try machine-wide */
+	if (!found_path)
+		found_path = get_msys_path_from_registry(HKEY_LOCAL_MACHINE);
+
 	if (found_path)
 		return msysPath;
-	
-	lRet = RegOpenKeyEx(HKEY_LOCAL_MACHINE,
-			    TEXT(GIT_CHEETAH_REG_PATH),
-			    0, KEY_QUERY_VALUE, &hKey);
-	
-	if (lRet == ERROR_SUCCESS)
-	{
-		DWORD msysPathLen = MAX_PATH * sizeof(TCHAR);
-		
-		lRet = RegQueryValueEx(hKey,
-				       TEXT(GIT_CHEETAH_REG_PATHTOMSYS),
-				       NULL, NULL,
-				       (LPBYTE)msysPath,
-				       &msysPathLen);
-		RegCloseKey(hKey);
-
-		if (lRet == ERROR_SUCCESS)
-		{
-			found_path = 1;
-			return msysPath;
-		}
-	}
 
 	return NULL;
 }

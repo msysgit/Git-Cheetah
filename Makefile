@@ -23,18 +23,23 @@ factory.o: factory.h ext.h menu.h
 menu.o: menu.h ext.h debug.h systeminfo.h
 systeminfo.o: systeminfo.h
 
-install: all install.reg
-	regsvr32 -s git_shell_ext.dll
-	regedit -s install.reg
+install%: install%.reg all
+	regsvr32 -s $(DLL_PATH)
+	regedit -s $<
 
-uninstall:
-	regsvr32 -u -s git_shell_ext.dll
-	regedit -s uninstall.reg
+uninstall%: uninstall%.reg
+	regsvr32 -u -s $(DLL_PATH)
+	regedit -s $<
 
 install.reg: install.reg.in Makefile
 	sed < $< > $@ \
 		-e 's|@@MSYSGIT_PATH@@|$(MSYSGIT_PATH)|' \
 		-e 's|@@DLL_PATH@@|$(DLL_PATH)|'
+
+%-user.reg: %.reg
+	sed -e 's|HKEY_CLASSES_ROOT\\|HKEY_CURRENT_USER\\Software\\Classes\\|' \
+		-e 's|HKEY_LOCAL_MACHINE\\|HKEY_CURRENT_USER\\|' \
+		< $< > $@
 
 clean:
 	-rm -f $(OBJECTS) $(TARGET)
