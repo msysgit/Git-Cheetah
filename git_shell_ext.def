@@ -5,3 +5,4 @@ DllRegisterServer PRIVATE
 DllUnregisterServer PRIVATE
 DllCanUnloadNow PRIVATE
 DllGetClassObject PRIVATE
+DllInstall PRIVATE
