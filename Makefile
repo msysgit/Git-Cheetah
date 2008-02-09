@@ -1,4 +1,4 @@
-OBJECTS=ext.o debug.o dll.o factory.o menu.o systeminfo.o registry.o
+OBJECTS=ext.o debug.o dll.o factory.o menu.o systeminfo.o registry.o exec.o
 CFLAGS=-O -g
 
 TARGET=git_shell_ext.dll
@@ -20,9 +20,10 @@ $(TARGET): $(OBJECTS) git_shell_ext.def
 dll.o: dll.h ext.h factory.h systeminfo.h registry.h
 ext.o: ext.h debug.h
 factory.o: factory.h ext.h menu.h
-menu.o: menu.h ext.h debug.h systeminfo.h
+menu.o: menu.h ext.h debug.h systeminfo.h exec.h
 systeminfo.o: systeminfo.h
 registry.o: registry.h
+exec.o: debug.h systeminfo.h exec.h
 
 install: all
 	regsvr32 -s -n -i:machine $(DLL_PATH)

@@ -6,6 +6,7 @@
 #include "ext.h"
 #include "debug.h"
 #include "systeminfo.h"
+#include "exec.h"
 
 /*
  * These are the functions for handling the context menu.
@@ -82,24 +83,6 @@ static char *convert_directory_format(const char *path)
 	return converted;
 }
 
-static void adjust_path_for_git(const char *msys_path)
-{
-	static int initialized = 0;
-
-	if (!initialized) {
-		const char *old_path = getenv("PATH");
-		size_t old_len = strlen(old_path);
-		size_t msys_path_len = strlen(msys_path);
-		char *new_path = malloc(old_len + 2 * msys_path_len + 23);
-		if (!new_path)
-			return;
-		sprintf(new_path, "PATH=%s\\bin;%s\\mingw\\bin;%s",
-			old_path, msys_path, msys_path);
-		putenv(new_path);
-		initialized = 1;
-	}
-}
-
 static STDMETHODIMP invoke_command(void *p,
 				   LPCMINVOKECOMMANDINFO info)
 {
@@ -112,9 +95,6 @@ static STDMETHODIMP invoke_command(void *p,
 
 	if (command == 1)
 	{
-		STARTUPINFO si = { sizeof(si) };
-		PROCESS_INFORMATION pi;
-		
 		TCHAR * msysPath = msys_path();
 
 		if (msysPath)
@@ -123,8 +103,7 @@ static STDMETHODIMP invoke_command(void *p,
 			const char *wd;
 			DWORD dwAttr, fa;
 
-			adjust_path_for_git(msysPath);
-			wsprintf(command, TEXT("wish.exe \"%s/bin/git-gui\""),
+			wsprintf(command, TEXT("\"%s\\bin\\git.exe\" gui"),
 				 msysPath);
 			
 			
@@ -137,30 +116,11 @@ static STDMETHODIMP invoke_command(void *p,
 			if (! (fa & dwAttr))
 				wd = info->lpDirectory;
 
-			debug_git("Trying to spawn '%s' in working directory '%s'\n", command, wd);
-			if (CreateProcess(
-				    NULL,
-				    command,
-				    NULL,
-				    NULL,
-				    FALSE,
-				    0, NULL, wd, &si, &pi))
-			{
-				CloseHandle(pi.hProcess);
-				CloseHandle(pi.hThread);
-			}
-			else
-			{
-				debug_git("[ERROR] %s/%s:%d Could not create git gui process (%d) Command: %s",
-					  __FILE__, __FUNCTION__, __LINE__,
-					  GetLastError(), command);
-			}
+			exec_gui(command, wd);
 		}
 		else
-		{
 			debug_git("[ERROR] %s/%s:%d Could not find msysPath",
 				  __FILE__, __FUNCTION__, __LINE__);
-		}
 		
 		return S_OK;
 	}
