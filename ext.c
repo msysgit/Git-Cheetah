@@ -57,6 +57,10 @@ inline STDMETHODIMP initialize_git_data(struct git_data *this_,
 	UINT count;
 	HRESULT result = S_OK;
 
+	/* store the folder, if provided */
+	if (folder)
+		SHGetPathFromIDList(folder, this_->name);
+
 	if (!data)
 		return S_OK;
 

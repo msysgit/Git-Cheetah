@@ -5,7 +5,10 @@
 char *env_for_git();
 
 /*
- * Executes a console application hidden as in "git gui" to hide git
+ * Native, simplified implementation of spawn with a working directory
+ *
+ * Executes git.exe
+ * Supports only P_WAIT and P_NOWAIT modes.
  */
-void exec_gui(char *cmd, const char *wd);
+int exec_git(char *cmd, const char *wd, int mode);
 

@@ -1,12 +1,14 @@
 #include <shlobj.h>
-#include <stdarg.h>
 #include <tchar.h>
 #include <stdio.h>
+#include <process.h>
 #include "menu.h"
 #include "ext.h"
 #include "debug.h"
 #include "systeminfo.h"
 #include "exec.h"
+
+#define LONGEST_MENU_ITEM 40
 
 /*
  * These are the functions for handling the context menu.
@@ -18,16 +20,57 @@ static STDMETHODIMP query_context_menu(void *p, HMENU menu,
 {
 	struct git_menu *this_menu = p;
 	struct git_data *this_ = this_menu->git_data;
+	char *wd;
+	BOOL bDirSelected = TRUE;
+
+	UINT original_first = first_command;
+	char menu_item[LONGEST_MENU_ITEM];
+
+	int status;
 
 	if (flags & CMF_DEFAULTONLY)
 		return MAKE_HRESULT(SEVERITY_SUCCESS, FACILITY_NULL, 0);
 
+	/* figure out the directory */
+	wd = strdup(this_->name);
+	if (!(FILE_ATTRIBUTE_DIRECTORY & GetFileAttributes(wd))) {
+		char *c = strrchr(wd, '\\');
+		if (c) {
+			*c = 0;
+			bDirSelected = FALSE;
+		}
+	}
+
+	status = exec_git("rev-parse --show-cdup", wd, P_WAIT);
+	free (wd);
+
+	if (-1 == status)
+		return MAKE_HRESULT(SEVERITY_SUCCESS, FACILITY_NULL, 0);
+
+	/*
+	 * TODO: the following big, ugly code needs to be something like
+	 *       build_menu_items()
+	 *       It's left as is to signify the preview nature of the patch
+	 */
+	if (0 != status) { /* this is not a repository */
+		if (bDirSelected)
+			strcpy(menu_item, "&Git Clone Here");
+		else
+			strcpy(menu_item, "&Git Init Here");
+	} else
+		strcpy(menu_item, "&Git");
+
 	InsertMenu(menu, index, MF_SEPARATOR | MF_BYPOSITION,
-			first_command, "");
+			first_command++, "");
 	InsertMenu(menu, index+1, MF_STRING | MF_BYPOSITION,
-		   first_command+1, _T("&Git Gui"));
+		   first_command++, menu_item);
 	
-	return MAKE_HRESULT(SEVERITY_SUCCESS, FACILITY_NULL, 2);
+	/*
+	 * TODO: when the above block is fixed, we'll just have
+	 *       return MAKE_RESULT(..., build_menu_items());
+	 */
+	return MAKE_HRESULT(SEVERITY_SUCCESS, FACILITY_NULL,
+		first_command - original_first);
 }
 
 /*
@@ -95,32 +138,19 @@ static STDMETHODIMP invoke_command(void *p,
 
 	if (command == 1)
 	{
-		TCHAR * msysPath = msys_path();
+		const char *wd;
+		DWORD dwAttr, fa;
 
-		if (msysPath)
-		{
-			TCHAR command[1024];
-			const char *wd;
-			DWORD dwAttr, fa;
+		wd = this_->name;
+		if (wd == NULL || strlen(wd) == 0)
+			wd = info->lpDirectory;
 
-			wsprintf(command, TEXT("\"%s\\bin\\git.exe\" gui"),
-				 msysPath);
-			
-			
-			wd = this_->name;
-			if (wd == NULL || strlen(wd) == 0)
-				wd = info->lpDirectory;
+		dwAttr = FILE_ATTRIBUTE_DIRECTORY;
+		fa = GetFileAttributes(wd);
+		if (!(fa & dwAttr))
+			wd = info->lpDirectory;
 
-			dwAttr = FILE_ATTRIBUTE_DIRECTORY;
-			fa = GetFileAttributes(wd);
-			if (! (fa & dwAttr))
-				wd = info->lpDirectory;
-
-			exec_gui(command, wd);
-		}
-		else
-			debug_git("[ERROR] %s/%s:%d Could not find msysPath",
-				  __FILE__, __FUNCTION__, __LINE__);
+		exec_git("gui", wd, P_NOWAIT);
 		
 		return S_OK;
 	}
