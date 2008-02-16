@@ -3,6 +3,7 @@
 #include <tchar.h>
 #include "ext.h"
 #include "debug.h"
+#include "systeminfo.h"
 
 DWORD object_count = 0;
 DWORD lock_count = 0;
@@ -56,6 +57,10 @@ inline STDMETHODIMP initialize_git_data(struct git_data *this_,
 	HDROP drop;
 	UINT count;
 	HRESULT result = S_OK;
+
+	/* if we can't find msysPath, don't even try to do anything else */
+	if (!msys_path())
+		return E_NOTIMPL;
 
 	/* store the folder, if provided */
 	if (folder)

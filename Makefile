@@ -18,7 +18,7 @@ $(TARGET): $(OBJECTS) git_shell_ext.def
 #	dlltool -d git_shell_ext.def -l $@ $(OBJECTS)
 
 dll.o: dll.h ext.h factory.h systeminfo.h registry.h
-ext.o: ext.h debug.h
+ext.o: ext.h debug.h systeminfo.h
 factory.o: factory.h ext.h menu.h
 menu.o: menu.h ext.h debug.h systeminfo.h exec.h
 systeminfo.o: systeminfo.h
