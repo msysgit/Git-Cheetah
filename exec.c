@@ -128,7 +128,8 @@ int exec_program(const char *working_directory,
 	} while (argc < MAX_ARGS && arg);
 	va_end(params);
 
-	pid = mingw_spawnvpe(argv[0], argv, env_for_git());
+	pid = mingw_spawnvpe_cwd(argv[0], argv, env_for_git(),
+		working_directory);
 
 	if (s1 >= 0)
 		dup2(s1, 1), close(s1);

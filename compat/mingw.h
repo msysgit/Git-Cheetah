@@ -186,6 +186,8 @@ int mingw_utime(const char *file_name, const struct utimbuf *times);
 #define utime mingw_utime
 
 pid_t mingw_spawnvpe(const char *cmd, const char **argv, char **env);
+pid_t mingw_spawnvpe_cwd(const char *cmd, const char **argv, char **env,
+			 const char *working_directory);
 void mingw_execvp(const char *cmd, char *const *argv);
 #define execvp mingw_execvp
 
