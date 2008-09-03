@@ -92,7 +92,7 @@ void strbuf_ltrim(struct strbuf *sb)
 
 void strbuf_tolower(struct strbuf *sb)
 {
-	int i;
+	size_t i;
 	for (i = 0; i < sb->len; i++)
 		sb->buf[i] = tolower(sb->buf[i]);
 }
@@ -204,12 +204,12 @@ void strbuf_addf(struct strbuf *sb, const char *fmt, ...)
 	va_end(ap);
 	if (len < 0)
 		die("your vsnprintf is broken");
-	if (len > strbuf_avail(sb)) {
+	if ((size_t)len > strbuf_avail(sb)) {
 		strbuf_grow(sb, len);
 		va_start(ap, fmt);
 		len = vsnprintf(sb->buf + sb->len, sb->alloc - sb->len, fmt, ap);
 		va_end(ap);
-		if (len > strbuf_avail(sb)) {
+		if ((size_t)len > strbuf_avail(sb)) {
 			die("this should not happen, your snprintf is broken");
 		}
 	}

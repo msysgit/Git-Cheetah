@@ -8,13 +8,15 @@ int mingw_open (const char *filename, int oflags, ...)
 {
 	va_list args;
 	unsigned mode;
+	int fd;
+
 	va_start(args, oflags);
 	mode = va_arg(args, int);
 	va_end(args);
 
 	if (!strcmp(filename, "/dev/null"))
 		filename = "nul";
-	int fd = open(filename, oflags, mode);
+	fd = open(filename, oflags, mode);
 	if (fd < 0 && (oflags & O_CREAT) && errno == EACCES) {
 		DWORD attrs = GetFileAttributes(filename);
 		if (attrs != INVALID_FILE_ATTRIBUTES && (attrs & FILE_ATTRIBUTE_DIRECTORY))
@@ -178,7 +180,7 @@ int mingw_fstat(int fd, struct mingw_stat *buf)
 static inline void time_t_to_filetime(time_t t, FILETIME *ft)
 {
 	long long winTime = t * 10000000LL + 116444736000000000LL;
-	ft->dwLowDateTime = winTime;
+	ft->dwLowDateTime = (DWORD)winTime;
 	ft->dwHighDateTime = winTime >> 32;
 }
 
@@ -281,7 +283,8 @@ int pipe(int filedes[2])
 
 int poll(struct pollfd *ufds, unsigned int nfds, int timeout)
 {
-	int i, pending;
+	unsigned int i;
+	int pending;
 
 	if (timeout != -1)
 		return errno = EINVAL, error("poll timeout not supported");
@@ -514,10 +517,11 @@ static char **get_path_split(void)
 
 static void free_path_split(char **path)
 {
+	char **p;
 	if (!path)
 		return;
 
-	char **p = path;
+	p = path;
 	while (*p)
 		free(*p++);
 	free(path);
@@ -916,7 +920,7 @@ static sig_handler_t timer_fn = SIG_DFL;
  * length to call the signal handler.
  */
 
-static __stdcall unsigned ticktack(void *dummy)
+static unsigned __stdcall ticktack(void *dummy)
 {
 	while (WaitForSingleObject(timer_event, timer_interval) == WAIT_TIMEOUT) {
 		if (timer_fn == SIG_DFL)
@@ -1012,9 +1016,11 @@ int sigaction(int sig, struct sigaction *in, struct sigaction *out)
 #undef signal
 sig_handler_t mingw_signal(int sig, sig_handler_t handler)
 {
+	sig_handler_t old;
+
 	if (sig != SIGALRM)
 		return signal(sig, handler);
-	sig_handler_t old = timer_fn;
+	old = timer_fn;
 	timer_fn = handler;
 	return old;
 }

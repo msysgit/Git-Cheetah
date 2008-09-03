@@ -36,17 +36,17 @@ static void warn_builtin(const char *warn, va_list params)
 
 /* If we are in a dlopen()ed .so write to a global variable would segfault
  * (ugh), so keep things static. */
-static void (*usage_routine)(const char *err) NORETURN = usage_builtin;
-static void (*die_routine)(const char *err, va_list params) NORETURN = die_builtin;
+static void (*usage_routine)(const char *err) __attribute__((__noreturn__)) = usage_builtin;
+static void (*die_routine)(const char *err, va_list params) __attribute__((__noreturn__)) = die_builtin;
 static void (*error_routine)(const char *err, va_list params) = error_builtin;
 static void (*warn_routine)(const char *err, va_list params) = warn_builtin;
 
-void set_usage_routine(void (*routine)(const char *err) NORETURN)
+void set_usage_routine(void (*routine)(const char *err) __attribute__((__noreturn__)))
 {
 	usage_routine = routine;
 }
 
-void set_die_routine(void (*routine)(const char *err, va_list params) NORETURN)
+void set_die_routine(void (*routine)(const char *err, va_list params) __attribute__((__noreturn__)))
 {
 	die_routine = routine;
 }
@@ -67,7 +67,7 @@ void usage(const char *err)
 	usage_routine(err);
 }
 
-void die(const char *err, ...)
+NORETURN void die(const char *err, ...)
 {
 	va_list params;
 

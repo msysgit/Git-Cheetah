@@ -38,6 +38,8 @@ struct passwd {
 	char *pw_dir;
 };
 
+#ifdef __GNUC__
+/* in MSVC, it's defined in winsock2.h */
 struct pollfd {
 	int fd;           /* file descriptor */
 	short events;     /* requested events */
@@ -45,6 +47,7 @@ struct pollfd {
 };
 #define POLLIN 1
 #define POLLHUP 2
+#endif /* __GNUC__ */
 
 typedef void (__cdecl *sig_handler_t)(int);
 struct sigaction {
@@ -196,13 +199,15 @@ sig_handler_t mingw_signal(int sig, sig_handler_t handler);
 /*
  * ANSI emulation wrappers
  */
-
+#ifndef _MSC_VER
+/* Until va_copy available is MSVC */
 int winansi_fputs(const char *str, FILE *stream);
 int winansi_printf(const char *format, ...) __attribute__((format (printf, 1, 2)));
 int winansi_fprintf(FILE *stream, const char *format, ...) __attribute__((format (printf, 2, 3)));
 #define fputs winansi_fputs
 #define printf(...) winansi_printf(__VA_ARGS__)
 #define fprintf(...) winansi_fprintf(__VA_ARGS__)
+#endif
 
 /*
  * git specific compatibility
