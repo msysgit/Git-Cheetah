@@ -1,7 +1,7 @@
+#include "cache.h"
+
 #include <shlobj.h>
 #include <tchar.h>
-#include <stdio.h>
-#include <process.h>
 #include "menu.h"
 #include "ext.h"
 #include "debug.h"
@@ -41,10 +41,12 @@ static STDMETHODIMP query_context_menu(void *p, HMENU menu,
 		}
 	}
 
-	status = exec_git("rev-parse --show-cdup", wd, P_WAIT);
+	status = exec_program(wd, NULL, NULL, WAITMODE,
+		"git", "rev-parse", "--show-cdup", NULL);
 	free (wd);
 
-	if (-1 == status)
+	/* something really bad happened, could run git */
+	if (status < 0)
 		return MAKE_HRESULT(SEVERITY_SUCCESS, FACILITY_NULL, 0);
 
 	/*
@@ -52,7 +54,7 @@ static STDMETHODIMP query_context_menu(void *p, HMENU menu,
 	 *       build_menu_items()
 	 *       It's left as is to signify the preview nature of the patch
 	 */
-	if (0 != status) { /* this is not a repository */
+	if (status) { /* this is not a repository */
 		if (bDirSelected)
 			strcpy(menu_item, "&Git Clone Here");
 		else
@@ -150,7 +152,8 @@ static STDMETHODIMP invoke_command(void *p,
 		if (!(fa & dwAttr))
 			wd = info->lpDirectory;
 
-		exec_git("gui", wd, P_NOWAIT);
+		exec_program(wd, NULL, NULL, NORMALMODE,
+			"git", "gui", NULL);
 		
 		return S_OK;
 	}
