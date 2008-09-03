@@ -477,11 +477,31 @@ static const char *parse_interpreter(const char *cmd)
 }
 
 /*
+ * returns value of PATH environment variable in the given environment or
+ * in the system environment if NULL == env
+ */
+static char *get_path(char **env)
+{
+	char **e;
+	if (!env)
+		return getenv("PATH");
+
+	for (e = env; *e; e++) {
+		/* if it's PATH variable (could be Path= too!) */
+		if (!strnicmp(*e, "PATH=", 5)) {
+			return *e + 5;
+		}
+	}
+
+	return NULL;
+}
+
+/*
  * Splits the PATH into parts.
  */
-static char **get_path_split(void)
+static char **get_path_split(char **env)
 {
-	char *p, **path, *envpath = getenv("PATH");
+	char *p, **path, *envpath = get_path(env);
 	int i, n = 0;
 
 	if (!envpath || !*envpath)
@@ -664,7 +684,7 @@ static pid_t mingw_spawnve(const char *cmd, const char **argv, char **env,
 pid_t mingw_spawnvpe(const char *cmd, const char **argv, char **env)
 {
 	pid_t pid;
-	char **path = get_path_split();
+	char **path = get_path_split(env);
 	char *prog = path_lookup(cmd, path, 0);
 
 	if (!prog) {
@@ -705,7 +725,7 @@ static int try_shell_exec(const char *cmd, char *const *argv, char **env)
 
 	if (!interpr)
 		return 0;
-	path = get_path_split();
+	path = get_path_split(env);
 	prog = path_lookup(interpr, path, 1);
 	if (prog) {
 		int argc = 0;
@@ -746,7 +766,7 @@ static void mingw_execve(const char *cmd, char *const *argv, char *const *env)
 
 void mingw_execvp(const char *cmd, char *const *argv)
 {
-	char **path = get_path_split();
+	char **path = get_path_split(NULL);
 	char *prog = path_lookup(cmd, path, 0);
 
 	if (prog) {
