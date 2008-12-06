@@ -1,10 +1,17 @@
 OBJECTS=ext.o debug.o dll.o factory.o menu.o systeminfo.o registry.o \
 	exec.o menuengine.o cheetahmenu.o
-CFLAGS=-O -g -DNO_MMAP -DNO_PREAD -DNO_STRLCPY
 COMPAT_H = cache.h git-compat-util.h hash.h strbuf.h compat/mingw.h
 COMPAT_OBJ = date.o sha1_file.o strbuf.o usage.o wrapper.o \
 	compat/mingw.o compat/mmap.o compat/pread.o compat/strlcpy.o \
 	compat/winansi.o
+
+ifeq ($(shell uname -o), Cygwin)
+	OSCFLAGS =-mno-cygwin  -mwin32 -mdll
+	OSDLLWRAPFLAG =-mno-cygwin  --target=i386-mingw32
+endif
+
+CFLAGS=-O -g -DNO_MMAP -DNO_PREAD -DNO_STRLCPY $(OSCFLAGS)
+DLLWRAPFLAGS = --enable-stdcall-fixup $(OSDLLWRAPFLAG)
 
 TARGET=git_shell_ext.dll
 MSYSGIT_PATH=$(shell cd /; pwd -W | sed -e 's|/|\\\\\\\\|g')
@@ -16,7 +23,7 @@ all: $(TARGET)
 	$(CC) $(CFLAGS) $< -o $@
 
 $(TARGET): $(OBJECTS) $(COMPAT_OBJ) git_shell_ext.def
-	dllwrap.exe --enable-stdcall-fixup --def git_shell_ext.def \
+	dllwrap.exe $(DLLWRAPFLAGS) --def git_shell_ext.def \
 		$(OBJECTS) $(COMPAT_OBJ) -o $@ -luuid -loleaut32 -lole32 -lws2_32
 
 #	gcc $(LDFLAGS) -o $@ $(OBJECTS)  -lole32 -luuid -loleaut32
