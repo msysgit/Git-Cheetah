@@ -1,7 +1,7 @@
 #ifndef MENU_H
 #define MENU_H
 
-struct git_menu_virtual_table
+extern struct git_menu_virtual_table
 {
         STDMETHOD(query_interface)(void *, REFIID, PVOID*);
         STDMETHOD_(ULONG, add_ref)(void *);

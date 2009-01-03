@@ -43,7 +43,7 @@ struct git_data {
 	char name[MAX_PATH];
 };
 
-struct git_shell_ext_virtual_table
+extern struct git_shell_ext_virtual_table
 {
 	STDMETHOD(query_interface)(void *, REFIID, PVOID*);
 	STDMETHOD_(ULONG, add_ref)(void *);
@@ -77,15 +77,13 @@ struct git_shell_ext_virtual_table
 		return initialize_git_data(this_->git_data, folder, data, id); \
 	}
 
-DWORD object_count;
-DWORD lock_count;
+extern DWORD object_count;
+extern DWORD lock_count;
 
 inline STDMETHODIMP query_interface_git_data(struct git_data *this_,
 					     REFIID iid, LPVOID FAR *pointer);
 inline ULONG STDMETHODCALLTYPE add_ref_git_data(struct git_data *this_);
 inline ULONG STDMETHODCALLTYPE release_git_data(struct git_data *this_);
-inline STDMETHODIMP query_interface_git_data(struct git_data *this_,
-					     REFIID iid, LPVOID FAR *pointer);
 inline STDMETHODIMP initialize_git_data(struct git_data *this_,
 					LPCITEMIDLIST folder,
 					LPDATAOBJECT data, HKEY id);

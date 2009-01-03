@@ -4,7 +4,7 @@
 STDMETHODIMP class_factory_query_interface(IClassFactory *this,
 					   REFIID guid, void **pointer);
 
-IClassFactoryVtbl factory_virtual_table;
-IClassFactory factory;
+extern IClassFactoryVtbl factory_virtual_table;
+extern IClassFactory factory;
 
 #endif /* FACTORY_H */
