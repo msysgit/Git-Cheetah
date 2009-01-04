@@ -33,6 +33,20 @@ static void menu_gui(struct git_data *this_, UINT id)
 	free(wd);
 }
 
+static void menu_history(struct git_data *this_, unsigned int id)
+{
+	BOOL is_directory;
+	char *wd = wd_from_path(this_->name, &is_directory);
+	char *name = "";
+
+	if (!is_directory)
+		name = this_->name + strlen(wd) + 1;
+
+	exec_program(wd, NULL, NULL, HIDDENMODE, "sh", "--login", "-i",
+		"/bin/gitk", "HEAD", "--", name, NULL);
+	free(wd);
+}
+
 UINT cheetah_menu_mask(struct git_data *this_)
 {
 	BOOL is_directory;
@@ -78,6 +92,11 @@ UINT cheetah_menu_mask(struct git_data *this_)
 
 const struct menu_item cheetah_menu[] = {
 	{ MENU_ITEM_ALWAYS, NULL, NULL, build_separator, NULL },
+
+	{ MENU_ITEM_TRACK, "Git &History",
+		"Show GIT history of the chosen file or directory.",
+		build_item,
+		menu_history },
 
 	{ MENU_ITEM_REPO, "&Git",
 		"Launch the GIT Gui in the local or chosen directory.",
