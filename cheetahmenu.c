@@ -47,6 +47,15 @@ static void menu_history(struct git_data *this_, unsigned int id)
 	free(wd);
 }
 
+static void menu_bash(struct git_data *this_, UINT id)
+{
+	char *wd = wd_from_path(this_->name, NULL);
+	/* start is required because exec_program does not create a window */
+	exec_program(wd, NULL, NULL, NORMALMODE,
+		"start", "sh", "--login", "-i", NULL);
+	free(wd);
+}
+
 UINT cheetah_menu_mask(struct git_data *this_)
 {
 	BOOL is_directory;
@@ -108,6 +117,10 @@ const struct menu_item cheetah_menu[] = {
 	{ MENU_ITEM_NOREPO | MENU_ITEM_DIR, "&Git Clone Here",
 		"Clone GIT repo into the local or chosen directory.",
 		build_item, menu_gui },
+
+	{ MENU_ITEM_ALWAYS, "Git Ba&sh",
+		"Start GIT shell in the local or chosen directory",
+		build_item, menu_bash },
 };
 
 void build_cheetah_menu(struct git_data *data, void *platform_data)
