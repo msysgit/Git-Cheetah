@@ -56,6 +56,21 @@ static void menu_bash(struct git_data *this_, UINT id)
 	free(wd);
 }
 
+static void menu_blame(struct git_data *this_, UINT id)
+{
+	BOOL is_directory;
+	char *wd = wd_from_path(this_->name, &is_directory);
+	char *name = "";
+
+	if (!is_directory) {
+		name = this_->name + strlen(wd) + 1;
+		exec_program(wd, NULL, NULL, HIDDENMODE,
+			"git", "gui", "blame", name, NULL);
+	}
+
+	free(wd);
+}
+
 UINT cheetah_menu_mask(struct git_data *this_)
 {
 	BOOL is_directory;
@@ -106,6 +121,9 @@ const struct menu_item cheetah_menu[] = {
 		"Show GIT history of the chosen file or directory.",
 		build_item,
 		menu_history },
+	{ MENU_ITEM_TRACK | MENU_ITEM_FILE, "Git &Blame",
+		"Start a blame viewer on the specified file.",
+		build_item, menu_blame },
 
 	{ MENU_ITEM_REPO, "&Git",
 		"Launch the GIT Gui in the local or chosen directory.",
