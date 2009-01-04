@@ -2,6 +2,7 @@
 
 #include <shlobj.h>
 #include <tchar.h>
+#include "menuengine.h"
 #include "menu.h"
 #include "ext.h"
 #include "debug.h"

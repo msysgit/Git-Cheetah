@@ -1,4 +1,5 @@
 #include <shlobj.h>
+#include "menuengine.h"
 #include "factory.h"
 #include "ext.h"
 #include "menu.h"

@@ -1,6 +1,7 @@
 #include <shlobj.h>
 #include <stdio.h>
 #include "dll.h"
+#include "menuengine.h"
 #include "ext.h"
 #include "factory.h"
 #include "systeminfo.h"

@@ -21,10 +21,10 @@ $(TARGET): $(OBJECTS) $(COMPAT_OBJ) git_shell_ext.def
 #	gcc $(LDFLAGS) -o $@ $(OBJECTS)  -lole32 -luuid -loleaut32
 #	dlltool -d git_shell_ext.def -l $@ $(OBJECTS)
 
-dll.o: dll.h ext.h factory.h systeminfo.h registry.h
-ext.o: ext.h debug.h systeminfo.h
-factory.o: factory.h ext.h menu.h
-menu.o: menu.h ext.h debug.h systeminfo.h exec.h
+dll.o: dll.h ext.h factory.h systeminfo.h registry.h menuengine.h
+ext.o: ext.h debug.h systeminfo.h menuengine.h
+factory.o: factory.h ext.h menu.h menuengine.h
+menu.o: menu.h ext.h debug.h systeminfo.h exec.h menuengine.h cheetahmenu.h
 systeminfo.o: systeminfo.h
 registry.o: registry.h
 exec.o: debug.h systeminfo.h exec.h
