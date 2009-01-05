@@ -1,4 +1,5 @@
-OBJECTS=ext.o debug.o dll.o factory.o menu.o systeminfo.o registry.o exec.o
+OBJECTS=ext.o debug.o dll.o factory.o menu.o systeminfo.o registry.o \
+	exec.o menuengine.o cheetahmenu.o
 CFLAGS=-O -g -DNO_MMAP -DNO_PREAD -DNO_STRLCPY
 COMPAT_H = cache.h git-compat-util.h hash.h strbuf.h compat/mingw.h
 COMPAT_OBJ = date.o sha1_file.o strbuf.o usage.o wrapper.o \
@@ -28,6 +29,9 @@ menu.o: menu.h ext.h debug.h systeminfo.h exec.h menuengine.h cheetahmenu.h
 systeminfo.o: systeminfo.h
 registry.o: registry.h
 exec.o: debug.h systeminfo.h exec.h
+cheetahmenu.o: exec.h menuengine.h cheetahmenu.h
+menuengine.o: menuengine.h
+
 $(COMPAT_OBJ) : $(COMPAT_H)
 
 install: all
