@@ -27,6 +27,11 @@ void reset_platform(void *platform)
 	/* On Windows, we don't do anything to reset the menu */
 }
 
+/*
+ * menu_item_builder to build a Windows-specific menu separator
+ *
+ * Always returns FALSE so the menu engine does not track this item
+ */
 BOOL build_separator(struct git_data *data, const struct menu_item *item,
 		     void *platform)
 {
@@ -38,6 +43,15 @@ BOOL build_separator(struct git_data *data, const struct menu_item *item,
 	return FALSE;
 }
 
+/*
+ * menu_item_builder to build a simple menu item
+ *
+ * Explorer's context menu are limited in the number of comands
+ * that they can use, so build_item would:
+ * - do nothing if that limit is reached and return FALSE to
+ *   instruct the menu engine to not track this item
+ * - create item and return TRUE, so the item can be handled later
+ */
 BOOL build_item(struct git_data *data, const struct menu_item *item,
 		void *platform)
 {
