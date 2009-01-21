@@ -71,6 +71,14 @@ static void menu_blame(struct git_data *this_, UINT id)
 	free(wd);
 }
 
+static void menu_citool(struct git_data *this_, UINT id)
+{
+	char *wd = wd_from_path(this_->name, NULL);
+	exec_program(wd, NULL, NULL, HIDDENMODE, "git", "citool", NULL);
+	free(wd);
+}
+
+
 UINT cheetah_menu_mask(struct git_data *this_)
 {
 	BOOL is_directory;
@@ -117,6 +125,9 @@ UINT cheetah_menu_mask(struct git_data *this_)
 const struct menu_item cheetah_menu[] = {
 	{ MENU_ITEM_ALWAYS, NULL, NULL, build_separator, NULL },
 
+	{ MENU_ITEM_REPO, "Git &Commit Tool",
+		"Launch the GIT commit tool in the local or chosen directory.",
+		build_item, menu_citool },
 	{ MENU_ITEM_TRACK, "Git &History",
 		"Show GIT history of the chosen file or directory.",
 		build_item,
@@ -139,6 +150,7 @@ const struct menu_item cheetah_menu[] = {
 	{ MENU_ITEM_ALWAYS, "Git Ba&sh",
 		"Start GIT shell in the local or chosen directory",
 		build_item, menu_bash },
+	{ MENU_ITEM_ALWAYS, NULL, NULL, build_separator, NULL },
 };
 
 void build_cheetah_menu(struct git_data *data, void *platform_data)
