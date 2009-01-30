@@ -143,15 +143,15 @@ const struct menu_item cheetah_menu[] = {
 		"Start a blame viewer on the specified file.",
 		build_item, menu_blame },
 
-	{ MENU_ITEM_REPO, "&Git",
+	{ MENU_ITEM_REPO, "Git &Gui",
 		"Launch the GIT Gui in the local or chosen directory.",
 		build_item, menu_gui },
 
 	{ MENU_ITEM_NOREPO, "&Git Init Here",
 		"Initialize GIT repo in the local directory.",
 		build_item, menu_init },
-	{ MENU_ITEM_NOREPO | MENU_ITEM_DIR, "&Git Clone Here",
-		"Clone GIT repo into the local or chosen directory.",
+	{ MENU_ITEM_NOREPO | MENU_ITEM_DIR, "Git &Gui",
+		"Launch the GIT Gui in the local or chosen directory.",
 		build_item, menu_gui },
 
 	{ MENU_ITEM_ALWAYS, "Git Ba&sh",
