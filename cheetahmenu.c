@@ -138,12 +138,12 @@ UINT cheetah_menu_mask(struct git_data *this_)
 const struct menu_item cheetah_menu[] = {
 	{ MENU_ITEM_ALWAYS, NULL, NULL, build_separator, NULL },
 
-	{ MENU_ITEM_REPO, "Git &Commit Tool",
-		"Launch the GIT commit tool in the local or chosen directory.",
-		build_item, menu_citool },
 	{ MENU_ITEM_REPO, "Git &Add all files now",
 		"Add all files from this folder now",
 		build_item, menu_addall },
+	{ MENU_ITEM_REPO, "Git &Commit Tool",
+		"Launch the GIT commit tool in the local or chosen directory.",
+		build_item, menu_citool },
 	{ MENU_ITEM_TRACK, "Git &History",
 		"Show GIT history of the chosen file or directory.",
 		build_item,
