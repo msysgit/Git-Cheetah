@@ -85,6 +85,12 @@ static void menu_citool(struct git_data *this_, UINT id)
 	free(wd);
 }
 
+static void menu_addall(struct git_data *this_, UINT id)
+{
+	char *wd = wd_from_path(this_->name, NULL);
+	exec_program(wd, NULL, NULL, HIDDENMODE, "git", "add", "--all", NULL);
+	free(wd);
+}
 
 UINT cheetah_menu_mask(struct git_data *this_)
 {
@@ -135,6 +141,9 @@ const struct menu_item cheetah_menu[] = {
 	{ MENU_ITEM_REPO, "Git &Commit Tool",
 		"Launch the GIT commit tool in the local or chosen directory.",
 		build_item, menu_citool },
+	{ MENU_ITEM_REPO, "Git &Add all files now",
+		"Add all files from this folder now",
+		build_item, menu_addall },
 	{ MENU_ITEM_TRACK, "Git &History",
 		"Show GIT history of the chosen file or directory.",
 		build_item,
@@ -147,7 +156,7 @@ const struct menu_item cheetah_menu[] = {
 		"Launch the GIT Gui in the local or chosen directory.",
 		build_item, menu_gui },
 
-	{ MENU_ITEM_NOREPO, "&Git Init Here",
+	{ MENU_ITEM_NOREPO, "Git I&nit Here",
 		"Initialize GIT repo in the local directory.",
 		build_item, menu_init },
 	{ MENU_ITEM_NOREPO | MENU_ITEM_DIR, "Git &Gui",
