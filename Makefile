@@ -5,7 +5,7 @@ COMPAT_OBJ = date.o sha1_file.o strbuf.o usage.o wrapper.o \
 	compat/mingw.o compat/mmap.o compat/pread.o compat/strlcpy.o \
 	compat/winansi.o
 
-ifeq ($(shell uname -o), Cygwin)
+ifeq ($(shell uname -o 2>/dev/null), Cygwin)
 	OSCFLAGS =-mno-cygwin  -mwin32 -mdll
 	OSDLLWRAPFLAG =-mno-cygwin  --target=i386-mingw32
 endif
