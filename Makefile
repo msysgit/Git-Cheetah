@@ -11,7 +11,7 @@ ifeq ($(shell uname -o 2>/dev/null), Cygwin)
 endif
 
 CFLAGS=-O -g -DNO_MMAP -DNO_PREAD -DNO_STRLCPY $(OSCFLAGS)
-DLLWRAPFLAGS = --enable-stdcall-fixup $(OSDLLWRAPFLAG)
+DLLWRAPFLAGS = --kill-at --enable-stdcall-fixup $(OSDLLWRAPFLAG)
 
 TARGET=git_shell_ext.dll
 MSYSGIT_PATH=$(shell cd /; pwd -W | sed -e 's|/|\\\\\\\\|g')
