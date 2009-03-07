@@ -1,8 +1,8 @@
 LIBRARY git_shell_ext
 EXPORTS
-DllMain@12
-DllRegisterServer@0 PRIVATE
-DllUnregisterServer@0 PRIVATE
-DllCanUnloadNow@0 PRIVATE
-DllGetClassObject@12 PRIVATE
-DllInstall@8 PRIVATE
+DllMain
+DllRegisterServer PRIVATE
+DllUnregisterServer PRIVATE
+DllCanUnloadNow PRIVATE
+DllGetClassObject PRIVATE
+DllInstall PRIVATE
