@@ -1,5 +1,5 @@
 OBJECTS=ext.o debug.o dll.o factory.o menu.o systeminfo.o registry.o \
-	exec.o menuengine.o cheetahmenu.o
+	exec.o menuengine.o cheetahmenu.o columns.o
 COMPAT_H = cache.h git-compat-util.h hash.h strbuf.h compat/mingw.h
 COMPAT_OBJ = date.o sha1_file.o strbuf.o usage.o wrapper.o \
 	compat/mingw.o compat/mmap.o compat/pread.o compat/strlcpy.o \
@@ -10,7 +10,8 @@ ifeq ($(shell uname -o 2>/dev/null), Cygwin)
 	OSDLLWRAPFLAG =-mno-cygwin  --target=i386-mingw32
 endif
 
-CFLAGS=-O -g -DNO_MMAP -DNO_PREAD -DNO_STRLCPY $(OSCFLAGS)
+# define _WIN32_IE, so IColumnProvider's structures are available
+CFLAGS=-O -g -DNO_MMAP -DNO_PREAD -DNO_STRLCPY -D_WIN32_IE=0x0500 $(OSCFLAGS)
 DLLWRAPFLAGS = -Wl,--enable-stdcall-fixup $(OSDLLWRAPFLAG)
 
 TARGET=git_shell_ext.dll
@@ -31,13 +32,14 @@ $(TARGET): $(OBJECTS) $(COMPAT_OBJ) git_shell_ext.def
 
 dll.o: dll.h ext.h factory.h systeminfo.h registry.h menuengine.h
 ext.o: ext.h debug.h systeminfo.h menuengine.h
-factory.o: factory.h ext.h menu.h menuengine.h
+factory.o: factory.h ext.h menu.h menuengine.h columns.h
 menu.o: menu.h ext.h debug.h systeminfo.h exec.h menuengine.h cheetahmenu.h
 systeminfo.o: systeminfo.h
 registry.o: registry.h
 exec.o: debug.h systeminfo.h exec.h
 cheetahmenu.o: exec.h menuengine.h cheetahmenu.h
 menuengine.o: menuengine.h
+columns.o: exec.h ext.h menuengine.h columns.h
 
 $(COMPAT_OBJ) : $(COMPAT_H)
 
