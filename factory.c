@@ -3,6 +3,7 @@
 #include "factory.h"
 #include "ext.h"
 #include "menu.h"
+#include "columns.h"
 
 /*
  * Since COM objects cannot be constructed like your traditional object (i.e.
@@ -49,7 +50,9 @@ static STDMETHODIMP create_instance(IClassFactory *this_,
 
 	data->shell_ext.virtual_table = &git_shell_ext_virtual_table;
 	data->menu.virtual_table = &git_menu_virtual_table;
-	data->shell_ext.git_data = data->menu.git_data = data;
+	data->columns.virtual_table = &git_columns_virtual_table;
+	data->shell_ext.git_data = data->menu.git_data =
+		data->columns.git_data = data;
 
 	result = query_interface_git_data(data, guid, pointer);
 	if (!result)

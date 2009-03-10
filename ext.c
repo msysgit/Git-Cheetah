@@ -41,6 +41,9 @@ inline STDMETHODIMP query_interface_git_data(struct git_data *this_,
 	} else if (IsEqualIID(iid, &IID_git_menu) ||
 			IsEqualIID(iid, &IID_IContextMenu)) {
 		*pointer = &this_->menu;
+	} else if (IsEqualIID(iid, &IID_git_columns) ||
+			IsEqualIID(iid, &IID_IColumnProvider)) {
+		*pointer = &this_->columns;
 	} else
 		return E_NOINTERFACE;
 

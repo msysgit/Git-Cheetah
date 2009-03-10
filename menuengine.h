@@ -10,6 +10,10 @@ struct git_data {
 		void *virtual_table;
 		struct git_data *git_data;
 	} menu;
+	struct git_columns {
+		void *virtual_table;
+		struct git_data *git_data;
+	} columns;
 	unsigned int count;
 	char name[MAX_PATH];
 };
