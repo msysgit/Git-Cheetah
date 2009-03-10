@@ -84,6 +84,7 @@ static char *strreplace(char *string, const size_t size,
  */
 #define CLASS_CHEETAH CLASSES_ROOT "CLSID\\@@CLSID@@"
 #define CONTEXTMENUHANDLER "shellex\\ContextMenuHandlers\\@@PROGRAM_NAME@@"
+#define COLUMNHANDLER "shellex\\ColumnHandlers"
 
 static const char *get_module_filename() {
 	static char module_filename[MAX_PATH] = { '\0' };
@@ -148,6 +149,7 @@ static const reg_value registry_info[] = {
 	{ CLASSES_ROOT "Drive\\" CONTEXTMENUHANDLER, NULL, "@@CLSID@@"},
 	{ CLASSES_ROOT "Folder\\" CONTEXTMENUHANDLER, NULL, NULL },
 	{ CLASSES_ROOT "Folder\\" CONTEXTMENUHANDLER, NULL, "@@CLSID@@" },
+	{ CLASSES_ROOT "Folder\\" COLUMNHANDLER "\\@@CLSID@@", NULL, NULL },
 	{ CLASSES_ROOT "InternetShortcut\\" CONTEXTMENUHANDLER,
 		NULL, NULL },
 	{ CLASSES_ROOT "InternetShortcut\\" CONTEXTMENUHANDLER,
