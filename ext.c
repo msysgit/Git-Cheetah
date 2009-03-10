@@ -1,3 +1,6 @@
+
+#include "cache.h"
+
 #include <shlobj.h>
 #include <stdarg.h>
 #include <tchar.h>
@@ -24,6 +27,8 @@ inline ULONG STDMETHODCALLTYPE add_ref_git_data(struct git_data *this_)
 inline ULONG STDMETHODCALLTYPE release_git_data(struct git_data *this_)
 {
 	if (--(this_->count) == 0) {
+		strbuf_release(&this_->other_files);
+
 		GlobalFree(this_);
 		InterlockedDecrement(&object_count);
 		return 0;

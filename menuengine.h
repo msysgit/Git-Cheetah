@@ -16,6 +16,7 @@ struct git_data {
 	} columns;
 	unsigned int count;
 	char name[MAX_PATH];
+	struct strbuf other_files;
 };
 
 /*

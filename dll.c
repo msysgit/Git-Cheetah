@@ -1,3 +1,6 @@
+
+#include "cache.h"
+
 #include <shlobj.h>
 #include <stdio.h>
 #include "dll.h"

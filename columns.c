@@ -84,18 +84,58 @@ STDMETHODIMP get_column_info(void *p, DWORD dwIndex, SHCOLUMNINFO *psci)
 	return S_OK;
 }
 
+static int cache_others(char *wd, struct strbuf *cache)
+{
+      int status;
+
+      if (cache->alloc)
+	      return 0;
+
+      strbuf_init(cache, 0);
+      status = exec_program(wd, cache, NULL, WAITMODE,
+	      "git", "ls-files", "-z", "--others", "--exclude-standard",
+	      NULL);
+
+      /* something went terribly wrong or not a repo */
+      if (status)
+	      strbuf_release(cache);
+      return status;
+}
+
 /*
  * cache files' status, and return non-zero on the first failure
  * because if something goes wrong, there is no need to try other statuses
  */
 static int cache(struct git_data *this_)
 {
+	int status;
+	if (status = cache_others(this_->name, &this_->other_files))
+		return status;
+
 	/* if everything succeeded, return success */
+	return 0;
+}
+
+static char *parse_others(struct strbuf *cache, char *file)
+{
+	char *start = cache->buf;
+	while (*start) {
+		if (!stricmp(file, start))
+			return "other";
+
+		start += strlen(start) + 1;
+	}
+
 	return 0;
 }
 
 static char *parse_status(struct git_data *this_, char *file)
 {
+	 char *result = NULL;
+
+	 if (result = parse_others(&this_->other_files, file))
+		 return result;
+
 	/* if no status was found, return NULL string */
 	return NULL;
 }
