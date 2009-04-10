@@ -3,6 +3,7 @@
 #include "exec.h"
 #include "menuengine.h"
 #include "cheetahmenu.h"
+#include "debug.h"
 
 char *wd_from_path(const char *path, BOOL *is_path_dir)
 {
@@ -92,6 +93,73 @@ static void menu_addall(struct git_data *this_, UINT id)
 	free(wd);
 }
 
+static void menu_branch(struct git_data *this_, UINT id)
+{
+	int status;
+	char *wd = wd_from_path(this_->name, NULL);
+	struct strbuf err;
+	strbuf_init(&err, 0);
+
+	status = exec_program(wd, NULL, &err, HIDDENMODE,
+		"git", "checkout", get_menu_item_text(id), NULL);
+
+	/* if nothing, terribly wrong happened, show the confirmation */
+	if (-1 != status)
+		/* strangely enough even success message is on stderr */
+		debug_git_mbox(err.buf);
+
+	free(wd);
+}
+
+static BOOL build_branch_menu(struct git_data *data,
+			      const struct menu_item *item,
+			      void *platform)
+{
+	void *submenu;
+
+	int status;
+	char *wd = wd_from_path(data->name, NULL);
+
+	struct strbuf output;
+	struct strbuf **lines, **it;
+	strbuf_init(&output, 0);
+
+	status = exec_program(wd, &output, NULL, WAITMODE,
+		"git", "branch", NULL);
+	free(wd);
+	if (status)
+		return FALSE;
+
+	submenu = start_submenu(data, item, platform);
+
+	lines = strbuf_split(&output, '\n');
+	for (it = lines; *it; it++) {
+		struct menu_item item = {
+			MENU_ITEM_CLEANUP,
+			NULL, NULL,
+			NULL, menu_branch
+		};
+
+		strbuf_rtrim(*it);
+		item.string = strdup((*it)->buf + 2);
+		item.helptext = strdup((*it)->buf + 2);
+		if (build_item(data, &item, submenu)) {
+			check_menu_item(submenu, '*' == (*it)->buf[0]);
+			append_active_menu(item);
+		} else
+			/*
+			 * if the platform failed to create an item
+			 * there is no point to try other items
+			 */
+			break;
+	}
+
+	end_submenu(platform, submenu);
+
+	/* technically, there is nothing to track for the menu engine */
+	return FALSE;
+}
+
 UINT cheetah_menu_mask(struct git_data *this_)
 {
 	BOOL is_directory;
@@ -155,6 +223,10 @@ const struct menu_item cheetah_menu[] = {
 	{ MENU_ITEM_REPO, "Git &Gui",
 		"Launch the GIT Gui in the local or chosen directory.",
 		build_item, menu_gui },
+
+	{ MENU_ITEM_REPO, "Git Bra&nch",
+		"Checkout a branch",
+		build_branch_menu, NULL },
 
 	{ MENU_ITEM_NOREPO, "Git I&nit Here",
 		"Initialize GIT repo in the local directory.",

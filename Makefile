@@ -37,7 +37,7 @@ menu.o: menu.h ext.h debug.h systeminfo.h exec.h menuengine.h cheetahmenu.h
 systeminfo.o: systeminfo.h
 registry.o: registry.h
 exec.o: debug.h systeminfo.h exec.h
-cheetahmenu.o: exec.h menuengine.h cheetahmenu.h
+cheetahmenu.o: exec.h menuengine.h cheetahmenu.h debug.h
 menuengine.o: menuengine.h
 columns.o: exec.h ext.h menuengine.h columns.h
 
