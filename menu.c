@@ -68,6 +68,29 @@ BOOL build_item(struct git_data *data, const struct menu_item *item,
 	return TRUE;
 }
 
+void *start_submenu(struct git_data *this_, const struct menu_item *item,
+		    void *platform)
+{
+	struct windows_menu_data *parent_menu = platform;
+	struct windows_menu_data *submenu =
+		malloc(sizeof(struct windows_menu_data));
+	submenu->menu = CreateMenu();
+	InsertMenu(parent_menu->menu, parent_menu->index,
+		MF_POPUP | MF_BYPOSITION, (UINT_PTR)(submenu->menu),
+		item->string);
+	parent_menu->index++;
+
+	submenu->index = 0;
+	submenu->first = parent_menu->first;
+
+	return submenu;
+}
+
+void end_submenu(void *parent, void *submenu)
+{
+	free(submenu);
+}
+
 /*
  * These are the functions for handling the context menu.
  */

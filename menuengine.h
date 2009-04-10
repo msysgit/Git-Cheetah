@@ -68,4 +68,11 @@ void reset_active_menu();
 char *get_menu_item_text(unsigned int id);
 void handle_menu_item(void *data, unsigned int id);
 
+/*
+ * usually, menu engine will append items, based on the return
+ * from menu_item_builder, but a custom builder might need to
+ * instruct the engine to track a particular item
+ */
+void append_active_menu(const struct menu_item item);
+
 #endif /* MENUENGINE_H */

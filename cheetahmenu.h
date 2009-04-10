@@ -12,6 +12,10 @@ BOOL build_separator(struct git_data *data, const struct menu_item *item,
 BOOL build_item(struct git_data *data, const struct menu_item *item,
 		void *platform);
 
+void *start_submenu(struct git_data *, const struct menu_item *item,
+		    void *platform);
+void end_submenu(void *parent, void *submenu);
+
 /*
  * Cheetah-specific flags and functions
  *
