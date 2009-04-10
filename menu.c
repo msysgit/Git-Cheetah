@@ -91,6 +91,14 @@ void end_submenu(void *parent, void *submenu)
 	free(submenu);
 }
 
+void check_menu_item(void *platform, int checked)
+{
+	struct windows_menu_data *submenu = platform;
+	/* -1, because it's called __after__ index is increased */
+	CheckMenuItem(submenu->menu, submenu->index - 1,
+		MF_BYPOSITION | (checked ? MF_CHECKED : 0));
+}
+
 /*
  * These are the functions for handling the context menu.
  */

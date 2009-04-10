@@ -16,6 +16,8 @@ void *start_submenu(struct git_data *, const struct menu_item *item,
 		    void *platform);
 void end_submenu(void *parent, void *submenu);
 
+void check_menu_item(void *platform, int checked);
+
 /*
  * Cheetah-specific flags and functions
  *
