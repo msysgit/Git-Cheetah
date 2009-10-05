@@ -1,8 +1,8 @@
 
-#include "common/cache.h"
+#include "../common/cache.h"
 
 #include <shlobj.h>
-#include "common/menuengine.h"
+#include "../common/menuengine.h"
 #include "factory.h"
 #include "ext.h"
 #include "menu.h"

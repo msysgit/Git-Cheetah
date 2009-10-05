@@ -1,13 +1,13 @@
 
-#include "common/cache.h"
+#include "../common/cache.h"
 
 #include <shlobj.h>
 #include <stdio.h>
 #include "dll.h"
-#include "common/menuengine.h"
+#include "../common/menuengine.h"
 #include "ext.h"
 #include "factory.h"
-#include "common/systeminfo.h"
+#include "../common/systeminfo.h"
 #include "registry.h"
 
 /*

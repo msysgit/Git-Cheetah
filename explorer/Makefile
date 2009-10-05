@@ -1,12 +1,12 @@
 MODULES=ext.c dll.c factory.c menu.c systeminfo.c registry.c \
 	columns.c
 OBJECTS=${MODULES:%.c=%.o}
-COMMON_OBJ = common/cheetahmenu.o common/date.o common/debug.o \
-	     common/exec.o common/menuengine.o \
-	     common/sha1_file.o common/strbuf.o \
-	     common/usage.o common/wrapper.o
-COMPAT_OBJ = compat/mingw.o compat/mmap.o compat/pread.o \
-	     compat/strlcpy.o compat/winansi.o
+COMMON_OBJ = ../common/cheetahmenu.o ../common/date.o ../common/debug.o \
+	     ../common/exec.o ../common/menuengine.o \
+	     ../common/sha1_file.o ../common/strbuf.o \
+	     ../common/usage.o ../common/wrapper.o
+COMPAT_OBJ = ../compat/mingw.o ../compat/mmap.o ../compat/pread.o \
+	     ../compat/strlcpy.o ../compat/winansi.o
 
 ifeq ($(shell uname -o 2>/dev/null), Cygwin)
 	OSCFLAGS =-mno-cygwin  -mwin32 -mdll
@@ -27,7 +27,7 @@ export CFLAGS
 all: $(TARGET)
 
 common-obj:
-	$(MAKE) -C common all
+	$(MAKE) -C ../common all
 
 %.o : %.c
 	$(CC) $(CFLAGS) $< -c -o $@
@@ -59,4 +59,4 @@ uninstall-user: all
 
 clean:
 	-rm -f $(OBJECTS) $(COMPAT_OBJ) $(TARGET) deps
-	$(MAKE)  -C common clean
+	$(MAKE) -C ../common clean

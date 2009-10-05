@@ -1,9 +1,9 @@
 
-#include "common/cache.h"
-#include "common/exec.h"
+#include "../common/cache.h"
+#include "../common/exec.h"
 
 #include <shlobj.h>
-#include "common/menuengine.h"
+#include "../common/menuengine.h"
 #include "ext.h"
 #include "columns.h"
 

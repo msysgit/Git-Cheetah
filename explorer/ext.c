@@ -1,13 +1,13 @@
 
-#include "common/cache.h"
+#include "../common/cache.h"
 
 #include <shlobj.h>
 #include <stdarg.h>
 #include <tchar.h>
-#include "common/menuengine.h"
+#include "../common/menuengine.h"
 #include "ext.h"
-#include "common/debug.h"
-#include "common/systeminfo.h"
+#include "../common/debug.h"
+#include "../common/systeminfo.h"
 
 DWORD object_count = 0;
 DWORD lock_count = 0;
