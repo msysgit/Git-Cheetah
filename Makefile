@@ -20,8 +20,8 @@ DLL_PATH=$(shell pwd -W | sed -e 's|/|\\\\\\\\|g')\\\\$(TARGET)
 
 all: $(TARGET)
 
-.o:.c
-	$(CC) $(CFLAGS) $< -o $@
+%.o : %.c
+	$(CC) $(CFLAGS) $< -c -o $@
 
 $(TARGET): $(OBJECTS) $(COMPAT_OBJ) git_shell_ext.def
 	dllwrap.exe $(DLLWRAPFLAGS) --def git_shell_ext.def \
