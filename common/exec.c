@@ -19,7 +19,7 @@ static char **env_for_git()
 	 * if we can't find path to msys in the registry, return NULL and
 	 * the CreateProcess will copy the environment for us
 	 */
-	if (!environment && msys_path()) {
+	if (!environment && git_path()) {
 		char *old = GetEnvironmentStrings();
 		size_t space = 0, path_index = -1, name_len = 0;
 		int total = 0, i;
@@ -48,10 +48,9 @@ static char **env_for_git()
 				char *path = old + space + name_len;
 				size_t len;
 				environment[i] = malloc(strlen(path) + 1 +
-					2 * strlen(msys_path()) + 32);
+					2 * strlen(git_path()) + 32);
 				len = sprintf(environment[i],
-					"PATH=%s\\bin;%s\\mingw\\bin%s%s",
-					msys_path(), msys_path(),
+					"PATH=%s%s%s", git_path(),
 					*path ? ";" : "", path);
 			} else
 				environment[i] = strdup(old + space);
@@ -94,8 +93,8 @@ int exec_program(const char *working_directory,
 
 	reporter *debug = QUIETMODE & flags ? debug_git : debug_git_mbox;
 
-	if (!msys_path()) {
-		debug("[ERROR] Could not find msysPath");
+	if (!git_path()) {
+		debug("[ERROR] Could not find git path");
 		return -1;
 	}
 

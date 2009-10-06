@@ -68,7 +68,7 @@ inline STDMETHODIMP initialize_git_data(struct git_data *this_,
 	HRESULT result = S_OK;
 
 	/* if we can't find msysPath, don't even try to do anything else */
-	if (!msys_path())
+	if (!git_path())
 		return E_NOTIMPL;
 
 	/* store the folder, if provided */
