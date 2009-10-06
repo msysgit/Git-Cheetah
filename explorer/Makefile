@@ -11,6 +11,9 @@ COMPAT_OBJ = ../compat/mingw.o ../compat/mmap.o ../compat/pread.o \
 ifeq ($(shell uname -o 2>/dev/null), Cygwin)
 	OSCFLAGS =-mno-cygwin  -mwin32 -mdll
 	OSDLLWRAPFLAG =-mno-cygwin  --target=i386-mingw32
+        DLL_PATH=$(shell cygpath -w "`pwd`" | sed -e 's|\\|\\\\\\\\|g')\\\\$(TARGET)
+else
+        DLL_PATH=$(shell pwd -W | sed -e 's|/|\\\\\\\\|g')\\\\$(TARGET)
 endif
 
 # define _WIN32_IE, so IColumnProvider's structures are available
@@ -19,7 +22,6 @@ DLLWRAPFLAGS = -Wl,--enable-stdcall-fixup $(OSDLLWRAPFLAG)
 
 TARGET=git_shell_ext.dll
 MSYSGIT_PATH=$(shell cd /; pwd -W | sed -e 's|/|\\\\\\\\|g')
-DLL_PATH=$(shell pwd -W | sed -e 's|/|\\\\\\\\|g')\\\\$(TARGET)
 
 # export compile flags to sub-make of the common folder
 export CFLAGS
