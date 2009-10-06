@@ -10,6 +10,10 @@
 #include "../common/systeminfo.h"
 #include "registry.h"
 
+const char *program_name = "Git-Cheetah";
+const char *program_version = "Git-Cheetah.Application.1";
+const char *program_id = "Git-Cheetah.Application";
+
 /*
  * The following is just the necessary infrastructure for having a .dll
  * which can be registered as a COM object.

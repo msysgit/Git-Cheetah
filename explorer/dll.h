@@ -1,9 +1,9 @@
 #ifndef DLL_H
 #define DLL_H
 
-const char *program_name = "Git-Cheetah";
-const char *program_version = "Git-Cheetah.Application.1";
-const char *program_id = "Git-Cheetah.Application";
+extern const char *program_name;
+extern const char *program_version;
+extern const char *program_id;
 
 HRESULT PASCAL DllGetClassObject(REFCLSID obj_guid, REFIID factory_guid,
 				 void **factory_handle);
