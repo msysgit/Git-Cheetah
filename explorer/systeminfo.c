@@ -1,5 +1,6 @@
 #include <windows.h>
 #include "../common/systeminfo.h"
+#include "dll.h"
 
 static TCHAR msysPath[MAX_PATH];
 
