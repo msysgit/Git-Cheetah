@@ -1,5 +1,5 @@
-#include "../git-compat-util.h"
-#include "../strbuf.h"
+#include "../common/git-compat-util.h"
+#include "../common/strbuf.h"
 
 unsigned int _CRT_fmode = _O_BINARY;
 

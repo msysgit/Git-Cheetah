@@ -1,9 +1,12 @@
-MODULES=ext.c debug.c dll.c factory.c menu.c systeminfo.c registry.c \
-	exec.c menuengine.c cheetahmenu.c columns.c
+MODULES=ext.c dll.c factory.c menu.c systeminfo.c registry.c \
+	columns.c
 OBJECTS=${MODULES:%.c=%.o}
-COMPAT_OBJ = date.o sha1_file.o strbuf.o usage.o wrapper.o \
-	compat/mingw.o compat/mmap.o compat/pread.o compat/strlcpy.o \
-	compat/winansi.o
+COMMON_OBJ = common/cheetahmenu.o common/date.o common/debug.o \
+	     common/exec.o common/menuengine.o \
+	     common/sha1_file.o common/strbuf.o \
+	     common/usage.o common/wrapper.o
+COMPAT_OBJ = compat/mingw.o compat/mmap.o compat/pread.o \
+	     compat/strlcpy.o compat/winansi.o
 
 ifeq ($(shell uname -o 2>/dev/null), Cygwin)
 	OSCFLAGS =-mno-cygwin  -mwin32 -mdll
@@ -18,7 +21,13 @@ TARGET=git_shell_ext.dll
 MSYSGIT_PATH=$(shell cd /; pwd -W | sed -e 's|/|\\\\\\\\|g')
 DLL_PATH=$(shell pwd -W | sed -e 's|/|\\\\\\\\|g')\\\\$(TARGET)
 
+# export compile flags to sub-make of the common folder
+export CFLAGS
+
 all: $(TARGET)
+
+common-obj:
+	$(MAKE) -C common all
 
 %.o : %.c
 	$(CC) $(CFLAGS) $< -c -o $@
@@ -26,9 +35,10 @@ all: $(TARGET)
 deps: $(MODULES)
 	$(CC) $(CFLAGS) -MM $(MODULES) > deps
 
-$(TARGET): $(OBJECTS) $(COMPAT_OBJ) deps git_shell_ext.def
+$(TARGET): common-obj $(OBJECTS) $(COMPAT_OBJ) deps git_shell_ext.def
 	dllwrap.exe $(DLLWRAPFLAGS) --def git_shell_ext.def \
-		$(OBJECTS) $(COMPAT_OBJ) -o $@ -luuid -loleaut32 -lole32 -lws2_32
+		$(COMMON_OBJ) $(OBJECTS) $(COMPAT_OBJ) -o $@ \
+		-luuid -loleaut32 -lole32 -lws2_32
 
 #	gcc $(LDFLAGS) -o $@ $(OBJECTS)  -lole32 -luuid -loleaut32
 #	dlltool -d git_shell_ext.def -l $@ $(OBJECTS)
@@ -49,3 +59,4 @@ uninstall-user: all
 
 clean:
 	-rm -f $(OBJECTS) $(COMPAT_OBJ) $(TARGET) deps
+	$(MAKE)  -C common clean

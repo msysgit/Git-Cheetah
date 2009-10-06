@@ -3,7 +3,7 @@
  */
 
 #include <windows.h>
-#include "../git-compat-util.h"
+#include "../common/git-compat-util.h"
 
 /*
  Functions to be wrapped:

@@ -1,14 +1,14 @@
-#include "cache.h"
+#include "common/cache.h"
 
 #include <shlobj.h>
 #include <tchar.h>
-#include "menuengine.h"
-#include "cheetahmenu.h"
+#include "common/menuengine.h"
+#include "common/cheetahmenu.h"
 #include "menu.h"
 #include "ext.h"
-#include "debug.h"
-#include "systeminfo.h"
-#include "exec.h"
+#include "common/debug.h"
+#include "common/systeminfo.h"
+#include "common/exec.h"
 
 #define LONGEST_MENU_ITEM 40
 

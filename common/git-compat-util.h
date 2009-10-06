@@ -178,6 +178,6 @@ extern ssize_t git_pread(int fd, void *buf, size_t count, off_t offset);
  */
 extern ssize_t read_in_full(int fd, void *buf, size_t count);
 
-#include "compat/mingw.h"
+#include "../compat/mingw.h"
 
 #endif

@@ -1,4 +1,4 @@
-#include "../git-compat-util.h"
+#include "../common/git-compat-util.h"
 
 ssize_t git_pread(int fd, void *buf, size_t count, off_t offset)
 {
