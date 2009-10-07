@@ -15,4 +15,6 @@ void message_box(const char *string);
 /* returns true if path is a directory */
 int is_directory(const char *path);
 
+pid_t fork_process(const char *cmd, const char **args, const char *wd);
+
 #endif /* SYSTEMINFO_H */

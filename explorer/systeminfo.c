@@ -99,3 +99,70 @@ int is_directory(const char *path)
 {
 	return (FILE_ATTRIBUTE_DIRECTORY & GetFileAttributes(path));
 }
+
+/*
+ * builds an array of environment variables,
+ * as expected by mingw_spawnvpe
+ */
+static char **env_for_git()
+{
+	static char **environment;
+
+	/*
+	 * if we can't find path to msys in the registry, return NULL and
+	 * the CreateProcess will copy the environment for us
+	 */
+	if (!environment && git_path()) {
+		char *old = GetEnvironmentStrings();
+		size_t space = 0, path_index = -1, name_len = 0;
+		int total = 0, i;
+
+		while (old[space]) {
+			/* if it's PATH variable (could be Path= too!) */
+			if (!strnicmp(old + space, "PATH=", 5)) {
+				path_index = space;
+				name_len = 5;
+			}
+
+			while (old[space])
+				space++;
+			space++; /* skip var-terminating NULL */
+
+			total++;
+		}
+
+		if (path_index == -1)
+			path_index = space;
+
+		environment = malloc(sizeof(*environment) * (total + 1));
+		space = 0;
+		for (i = 0; i < total; i++) {
+			if (path_index == space) {
+				char *path = old + space + name_len;
+				size_t len;
+				environment[i] = malloc(strlen(path) + 1 +
+					2 * strlen(git_path()) + 32);
+				len = sprintf(environment[i],
+					"PATH=%s%s%s", git_path(),
+					*path ? ";" : "", path);
+			} else
+				environment[i] = strdup(old + space);
+
+			while (old[space])
+				space++;
+			space++; /* skip var-terminating NULL */
+		}
+
+		/* mark the end of the array */
+		environment[i] = 0;
+
+		FreeEnvironmentStrings(old);
+	}
+
+	return environment;
+}
+
+pid_t fork_process(const char *cmd, const char **args, const char *wd)
+{
+	return mingw_spawnvpe_cwd(cmd, args, env_for_git(), wd);
+}
