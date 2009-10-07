@@ -52,5 +52,5 @@ void debug_git_mbox(char *format, ...)
 	va_start(params, format);
 	vsnprintf(buffer, sizeof(buffer), format, params);
 	va_end(params);
-	MessageBox(0, buffer, "Hello", MB_OK|MB_ICONEXCLAMATION);
+	message_box(buffer);
 }

@@ -89,3 +89,9 @@ const char *git_path()
 
 	return NULL;
 }
+
+void message_box(const char *string)
+{
+	MessageBox(0, string, "Hello", MB_OK|MB_ICONEXCLAMATION);
+}
+

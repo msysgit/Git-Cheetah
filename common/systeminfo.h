@@ -9,4 +9,7 @@
  */
 const char *git_path();
 
+/* opens a message box with ok button on this platform */
+void message_box(const char *string);
+
 #endif /* SYSTEMINFO_H */
