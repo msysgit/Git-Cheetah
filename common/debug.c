@@ -1,7 +1,4 @@
-#include <stdarg.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <windows.h> /* MB_OK */
+#include "git-compat-util.h"
 #include "debug.h"
 
 static char debug_git_file[MAX_PATH];
