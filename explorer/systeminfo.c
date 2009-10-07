@@ -95,3 +95,7 @@ void message_box(const char *string)
 	MessageBox(0, string, "Hello", MB_OK|MB_ICONEXCLAMATION);
 }
 
+int is_directory(const char *path)
+{
+	return (FILE_ATTRIBUTE_DIRECTORY & GetFileAttributes(path));
+}

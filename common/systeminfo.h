@@ -12,4 +12,7 @@ const char *git_path();
 /* opens a message box with ok button on this platform */
 void message_box(const char *string);
 
+/* returns true if path is a directory */
+int is_directory(const char *path);
+
 #endif /* SYSTEMINFO_H */
