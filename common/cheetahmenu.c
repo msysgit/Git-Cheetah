@@ -4,12 +4,13 @@
 #include "menuengine.h"
 #include "cheetahmenu.h"
 #include "debug.h"
+#include "systeminfo.h"
 
 char *wd_from_path(const char *path, BOOL *is_path_dir)
 {
 	BOOL is_directory = TRUE;
 	char *cheetah_wd = strdup(path);
-	if (!(FILE_ATTRIBUTE_DIRECTORY & GetFileAttributes(cheetah_wd))) {
+	if (!is_path_directory(cheetah_wd)) {
 		char *c = strrchr(cheetah_wd, '\\');
 		if (c) /* sanity check in case it's a weird directory */
 			*c = 0;
