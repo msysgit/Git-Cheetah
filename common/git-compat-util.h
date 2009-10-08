@@ -180,4 +180,13 @@ extern ssize_t read_in_full(int fd, void *buf, size_t count);
 
 #include "../compat/mingw.h"
 
+#ifdef _WIN32
+#define PATH_SEPERATOR '\\'
+#endif
+
+/* default PATH_SEPERATOR is / */
+#ifndef PATH_SEPERATOR
+#define PATH_SEPERATOR '/'
+#endif
+
 #endif
