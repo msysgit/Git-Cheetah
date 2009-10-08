@@ -27,7 +27,8 @@ int exec_program(const char *working_directory,
 	int argc = 0;
 
 	pid_t pid;
-	DWORD status = 0;
+	int status = 0;
+	int ret;
 
 	reporter *debug = QUIETMODE & flags ? debug_git : debug_git_mbox;
 
@@ -86,18 +87,17 @@ int exec_program(const char *working_directory,
 		close(fderr[1]);
 
 	if (WAITMODE & flags) {
-		if (WAIT_OBJECT_0 == WaitForSingleObject((HANDLE)pid,
-			MAX_PROCESSING_TIME)) {
-			if (GetExitCodeProcess((HANDLE)pid, &status))
-				debug_git("Exit code: %d", status);
-			else {
-				/* play safe, and return total failure */
-				status = -1;
-				debug_git("[ERROR] GetExitCode failed (%d); "
+		ret = wait_for_process(pid, MAX_PROCESSING_TIME,
+				&status);
+		if (ret) {
+			if (ret < 0) {
+				debug_git("[ERROR] wait_for_process failed (%d); "
 					"wd: %s; cmd: %s",
-					GetLastError(),
+					status,
 					working_directory,
 					argv[0]);
+
+				status = -1;
 			}
 
 			if (output) {

@@ -166,3 +166,23 @@ pid_t fork_process(const char *cmd, const char **args, const char *wd)
 {
 	return mingw_spawnvpe_cwd(cmd, args, env_for_git(), wd);
 }
+
+int wait_for_process(pid_t pid, int max_time, int *errcode)
+{
+	*errcode = 0;
+	DWORD status;
+
+	if (WAIT_OBJECT_0 == WaitForSingleObject((HANDLE)pid,
+				max_time)) {
+		if (GetExitCodeProcess((HANDLE)pid, &status)) {
+			*errcode = status;
+			debug_git("Exit code: %d", status);
+		}else {
+			/* play safe, and return total failure */
+			*errcode = GetLastError();
+			return -1;
+		}
+		return 1;
+	}
+	return 0;
+}

@@ -17,4 +17,8 @@ int is_directory(const char *path);
 
 pid_t fork_process(const char *cmd, const char **args, const char *wd);
 
+/* returns 1 on success 0 on timeout and -1 on failure to get exit code
+ */
+int wait_for_process(pid_t pid, int max_time, int *errcode);
+
 #endif /* SYSTEMINFO_H */
