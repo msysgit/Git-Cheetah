@@ -15,6 +15,9 @@ do
 	taskkill //f //pid $p
 done
 
+echo "start again?"
+read i
+
 /c/WINDOWS/explorer &
 sleep 2
 /c/WINDOWS/system32/taskmgr &
