@@ -35,11 +35,13 @@
 #include <errno.h>
 #include <limits.h>
 #include <time.h>
-#include <io.h>
-#include <sys/stat.h>
-#include <sys/utime.h>
 #include <signal.h>
+#include <sys/stat.h>
+#ifdef _WIN32
+#include <io.h>
+#include <sys/utime.h>
 #include <process.h>
+#endif /* _WIN32 */
 
 #if defined(_MSC_VER)
 /* MSVC defines mkdir here, not in io.h */
@@ -56,6 +58,7 @@
 #define PATH_MAX            512
 #endif
 
+#ifdef _WIN32
 /* from mingw/include/sys/types.h */
 #ifndef _SSIZE_T_
 #define _SSIZE_T_
@@ -85,6 +88,7 @@ typedef _mode_t	mode_t;
 #define	X_OK	1	/* MS access() doesn't check for execute permission. */
 #define	W_OK	2	/* Check for write permission */
 #define	R_OK	4	/* Check for read permission */
+#endif /* _WIN32 */
 
 /* from mingw/include/string.h */
 #define strcasecmp(__sz1, __sz2) (_stricmp((__sz1), (__sz2)))
@@ -136,7 +140,9 @@ extern ssize_t xread(int fd, void *buf, size_t len);
 extern size_t gitstrlcpy(char *, const char *, size_t);
 #endif
 
+#ifdef _WIN32
 #define snprintf _snprintf
+#endif
 
 #ifdef NO_MMAP
 
@@ -178,7 +184,30 @@ extern ssize_t git_pread(int fd, void *buf, size_t count, off_t offset);
  */
 extern ssize_t read_in_full(int fd, void *buf, size_t count);
 
+#ifdef _WIN32
 #include "../compat/mingw.h"
+#endif
+
+/* some defines not available on osx */
+#ifndef MAX_PATH
+#define MAX_PATH PATH_MAX
+#endif
+
+#ifndef BOOL
+#define BOOL int
+#endif
+
+#ifndef TRUE
+#define TRUE 1
+#endif
+
+#ifndef FALSE
+#define FALSE 0
+#endif
+
+#ifndef UINT
+#define UINT unsigned int
+#endif
 
 #ifdef _WIN32
 #define PATH_SEPERATOR '\\'
