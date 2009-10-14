@@ -1,3 +1,4 @@
+#include "git-compat-util.h"
 #include "cache.h"
 
 #include "debug.h"
@@ -39,7 +40,7 @@ int exec_program_v(const char *working_directory,
 	int flags, const char **argv)
 {
 	int fdout[2], fderr[2];
-	int s0 = -1, s1 = -1, s2 = -1;	/* backups of stdin, stdout, stderr */
+	int s1 = -1, s2 = -1;	/* backups of stdin, stdout, stderr */
 
 	pid_t pid;
 	int status = 0;
