@@ -66,6 +66,27 @@ void build_menu_items(struct git_data *data,
 void reset_active_menu();
 
 char *get_menu_item_text(unsigned int id);
+
+/*
+ * Parses a menu entries text and removes the '&' character
+ * which is used to specify the shortcut key. It returns
+ * the first found key or zero if nothing is found
+ */
+static inline int parse_and_remove_shortcuts(char *name)
+{
+	int i,j;
+	char key = 0;
+	for (i=0,j=0; name[i] && name[j]; i++,j++) {
+		if (!key && name[j] == '&') {
+			key = name[j+1];
+			j++;
+		}
+		name[i] = name[j];
+	}
+	name[i] = '\0';
+	return key;
+}
+
 void handle_menu_item(void *data, unsigned int id);
 
 /*
