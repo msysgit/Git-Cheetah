@@ -174,6 +174,30 @@ static char *convert_directory_format(const char *path)
 	return converted;
 }
 
+const char **menu_get_platform_argv(menu_commands cmd, const void *data)
+{
+	int n;
+	const char *wd = data;
+	static const char *history_argv[] = { "sh", "--login", "-i",
+		"/bin/gitk", "HEAD", "--", NULL, NULL };
+	/* start is required because exec_program does not create a window */
+	static const char *bash_argv[] = { "start", "sh", "--login",
+		"-i", NULL };
+
+	switch(cmd)
+	{
+		case MENU_HISTORY:
+			history_argv[6] = wd;
+			return history_argv;
+
+		case MENU_BASH:
+			return bash_argv;
+
+		default:
+			return NULL;
+	}
+}
+
 inline STDMETHODIMP invoke_command(void *p,
 				   LPCMINVOKECOMMANDINFO info)
 {

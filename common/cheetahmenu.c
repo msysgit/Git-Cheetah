@@ -31,14 +31,28 @@ char *wd_from_path(const char *path, BOOL *is_path_dir)
 static void menu_gui(struct git_data *this_, UINT id)
 {
 	char *wd = wd_from_path(this_->name, NULL);
-	exec_program(wd, NULL, NULL, HIDDENMODE, "git", "gui", NULL);
+	const char **argv;
+	const char *generic_argv[] = { "git", "gui", NULL };
+
+	argv = menu_get_platform_argv(MENU_GUI, NULL);
+	if (!argv)
+		argv = generic_argv;
+
+	exec_program_v(wd, NULL, NULL, HIDDENMODE, argv);
 	free(wd);
 }
 
 static void menu_init(struct git_data *this_, UINT id)
 {
 	char *wd = wd_from_path(this_->name, NULL);
-	exec_program(wd, NULL, NULL, HIDDENMODE, "git", "init", NULL);
+	const char **argv;
+	const char *generic_argv[] = { "git", "init", NULL };
+
+	argv = menu_get_platform_argv(MENU_INIT, NULL);
+	if (!argv)
+		argv = generic_argv;
+
+	exec_program_v(wd, NULL, NULL, HIDDENMODE, argv);
 	free(wd);
 }
 
@@ -47,21 +61,35 @@ static void menu_history(struct git_data *this_, unsigned int id)
 	BOOL is_directory;
 	char *wd = wd_from_path(this_->name, &is_directory);
 	char *name = "";
+	const char **argv;
+	const char *generic_argv[] = { "gitk", "HEAD", "--",
+		NULL, NULL };
 
 	if (!is_directory)
 		name = this_->name + strlen(wd) + 1;
+	generic_argv[3] = name;
 
-	exec_program(wd, NULL, NULL, HIDDENMODE, "sh", "--login", "-i",
-		"/bin/gitk", "HEAD", "--", name, NULL);
+	argv = menu_get_platform_argv(MENU_HISTORY, name);
+	if (!argv)
+		argv = generic_argv;
+
+	exec_program_v(wd, NULL, NULL, HIDDENMODE, argv);
+
 	free(wd);
 }
 
 static void menu_bash(struct git_data *this_, UINT id)
 {
 	char *wd = wd_from_path(this_->name, NULL);
-	/* start is required because exec_program does not create a window */
-	exec_program(wd, NULL, NULL, NORMALMODE,
-		"start", "sh", "--login", "-i", NULL);
+	const char **argv = NULL;
+
+	argv = menu_get_platform_argv(MENU_BASH, wd);
+	/* There is no generic implementation for this item */
+	if (!argv)
+		return;
+
+	exec_program_v(wd, NULL, NULL, NORMALMODE, argv);
+
 	free(wd);
 }
 
@@ -70,11 +98,19 @@ static void menu_blame(struct git_data *this_, UINT id)
 	BOOL is_directory;
 	char *wd = wd_from_path(this_->name, &is_directory);
 	char *name = "";
+	const char **argv;
+	const char *generic_argv[] = { "git", "gui", "blame",
+		NULL, NULL };
 
 	if (!is_directory) {
 		name = this_->name + strlen(wd) + 1;
-		exec_program(wd, NULL, NULL, HIDDENMODE,
-			"git", "gui", "blame", name, NULL);
+		generic_argv[3] = name;
+
+		argv = menu_get_platform_argv(MENU_BLAME, name);
+		if (!argv)
+			argv = generic_argv;
+
+		exec_program_v(wd, NULL, NULL, HIDDENMODE, argv);
 	}
 
 	free(wd);
@@ -83,14 +119,28 @@ static void menu_blame(struct git_data *this_, UINT id)
 static void menu_citool(struct git_data *this_, UINT id)
 {
 	char *wd = wd_from_path(this_->name, NULL);
-	exec_program(wd, NULL, NULL, HIDDENMODE, "git", "citool", NULL);
+	const char **argv;
+	const char *generic_argv[] = { "git", "citool", NULL };
+
+	argv = menu_get_platform_argv(MENU_CITOOL, NULL);
+	if (!argv)
+		argv = generic_argv;
+
+	exec_program_v(wd, NULL, NULL, HIDDENMODE, argv);
 	free(wd);
 }
 
 static void menu_addall(struct git_data *this_, UINT id)
 {
 	char *wd = wd_from_path(this_->name, NULL);
-	exec_program(wd, NULL, NULL, HIDDENMODE, "git", "add", "--all", NULL);
+	const char **argv;
+	const char *generic_argv[] = { "git", "add", "--all", NULL };
+
+	argv = menu_get_platform_argv(MENU_ADDALL, NULL);
+	if (!argv)
+		argv = generic_argv;
+
+	exec_program_v(wd, NULL, NULL, HIDDENMODE, argv);
 	free(wd);
 }
 
@@ -99,10 +149,20 @@ static void menu_branch(struct git_data *this_, UINT id)
 	int status;
 	char *wd = wd_from_path(this_->name, NULL);
 	struct strbuf err;
+	const char *menu_item_text;
+	const char **argv;
+	const char *generic_argv[] = { "git", "checkout", NULL, NULL };
+
+	menu_item_text = get_menu_item_text(id);
+	generic_argv[2] = menu_item_text;
+
+	argv = menu_get_platform_argv(MENU_BRANCH, menu_item_text);
+	if (!argv)
+		argv = generic_argv;
+
 	strbuf_init(&err, 0);
 
-	status = exec_program(wd, NULL, &err, HIDDENMODE,
-		"git", "checkout", get_menu_item_text(id), NULL);
+	status = exec_program_v(wd, NULL, &err, HIDDENMODE, argv);
 
 	/* if nothing, terribly wrong happened, show the confirmation */
 	if (-1 != status)

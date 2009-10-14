@@ -19,6 +19,22 @@ void end_submenu(void *parent, void *submenu);
 void check_menu_item(void *platform, int checked);
 
 /*
+ * This lets a platform override the command called by an item
+ */
+typedef enum {
+	MENU_GUI,
+	MENU_INIT,
+	MENU_HISTORY,
+	MENU_BASH,
+	MENU_BLAME,
+	MENU_CITOOL,
+	MENU_ADDALL,
+	MENU_BRANCH,
+} menu_commands;
+
+const char **menu_get_platform_argv(menu_commands cmd, const void *data);
+
+/*
  * Cheetah-specific flags and functions
  *
  * Generally, nobody is interested in these flags & functions, but
