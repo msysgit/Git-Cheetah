@@ -11,3 +11,4 @@ The currently supported platforms:
 
 explorer - Windows explorer plugin for context menues
 finder   - Mac OS X filemanager plugin for context menues (until 10.5)
+nautilus - Gnome Filemanager plugin for context menues
