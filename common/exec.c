@@ -18,13 +18,28 @@ int exec_program(const char *working_directory,
 	struct strbuf *output, struct strbuf *error_output,
 	int flags, ...)
 {
-	int fdout[2], fderr[2];
-	int s0 = -1, s1 = -1, s2 = -1;	/* backups of stdin, stdout, stderr */
-
 	va_list params;
 	const char *argv[MAX_ARGS];
 	char *arg;
 	int argc = 0;
+
+	va_start(params, flags);
+	do {
+		arg = va_arg(params, char*);
+		argv[argc++] = arg;
+	} while (argc < MAX_ARGS && arg);
+	va_end(params);
+
+	return exec_program_v(working_directory, output, error_output,
+			flags, argv);
+}
+
+int exec_program_v(const char *working_directory,
+	struct strbuf *output, struct strbuf *error_output,
+	int flags, const char **argv)
+{
+	int fdout[2], fderr[2];
+	int s0 = -1, s1 = -1, s2 = -1;	/* backups of stdin, stdout, stderr */
 
 	pid_t pid;
 	int status = 0;
@@ -58,13 +73,6 @@ int exec_program(const char *working_directory,
 
 		flags |= WAITMODE;
 	}
-
-	va_start(params, flags);
-	do {
-		arg = va_arg(params, char*);
-		argv[argc++] = arg;
-	} while (argc < MAX_ARGS && arg);
-	va_end(params);
 
 	pid = fork_process(argv[0], argv, working_directory);
 

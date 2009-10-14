@@ -23,3 +23,7 @@ enum {
 int exec_program(const char *working_directory,
 	struct strbuf *output, struct strbuf *error_output,
 	int flags, ...);
+
+int exec_program_v(const char *working_directory,
+	struct strbuf *output, struct strbuf *error_output,
+	int flags, const char **argv);
