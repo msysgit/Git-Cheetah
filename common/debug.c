@@ -1,4 +1,5 @@
 #include "git-compat-util.h"
+#include "systeminfo.h"
 #include "debug.h"
 
 static char debug_git_file[MAX_PATH];

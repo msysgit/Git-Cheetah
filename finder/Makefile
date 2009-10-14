@@ -9,6 +9,8 @@ COMMON_OBJ = ../common/cheetahmenu.o ../common/date.o ../common/debug.o \
 	     ../common/sha1_file.o ../common/strbuf.o \
 	     ../common/usage.o ../common/wrapper.o
 
+export CFLAGS
+
 all: $(TARGET).plugin
 
 common-obj:

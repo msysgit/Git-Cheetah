@@ -27,6 +27,8 @@
 
 #define ARRAY_SIZE(x) (sizeof(x)/sizeof(x[0]))
 
+#include <ctype.h>
+#include <unistd.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -37,6 +39,7 @@
 #include <time.h>
 #include <signal.h>
 #include <sys/stat.h>
+#include <sys/time.h>
 #ifdef _WIN32
 #include <io.h>
 #include <sys/utime.h>
