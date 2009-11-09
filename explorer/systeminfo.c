@@ -169,8 +169,8 @@ pid_t fork_process(const char *cmd, const char **args, const char *wd)
 
 int wait_for_process(pid_t pid, int max_time, int *errcode)
 {
-	*errcode = 0;
 	DWORD status;
+	*errcode = 0;
 
 	if (WAIT_OBJECT_0 == WaitForSingleObject((HANDLE)pid,
 				max_time)) {
