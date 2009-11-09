@@ -1,6 +1,6 @@
 #!/bin/sh
 
-ps -W | grep -e \\\\explorer.exe$ -e \\\\taskmgr.exe$ > /tmp/killtasks.txt
+ps -W | grep -ie \\\\explorer.exe$ -ie \\\\taskmgr.exe$ > /tmp/killtasks.txt
 
 echo
 cat /tmp/killtasks.txt
