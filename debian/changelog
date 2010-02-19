@@ -1,3 +1,10 @@
+git-cheetah (0.1.0-rc2) jaunty; urgency=low
+
+  * Initial release candidate 2
+    This fixes an compile error on amd64
+
+ -- Heiko Voigt (moon) <hvoigt@hvoigt.net>  Fri, 19 Feb 2010 17:06:45 +0100
+
 git-cheetah (0.1.0-rc1) jaunty; urgency=low
 
   * Initial release candidate 1
