@@ -7,7 +7,7 @@ LIBDIR = $(DESTDIR)/usr/lib
 LDFLAGS = -shared \
 	$(shell pkg-config --libs libnautilus-extension)
 
-WFLAGS=-std=c99 -Wall -pedantic
+WFLAGS=-std=c99 -Wall -pedantic -Werror
 
 # needed to get the proper declarations for glibc
 COMPAT_CFLAGS = -D_POSIX_C_SOURCE=200112L -D_GNU_SOURCE
