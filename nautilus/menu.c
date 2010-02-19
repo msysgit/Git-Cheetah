@@ -198,16 +198,16 @@ GList *git_extension_get_toolbar_items(NautilusMenuProvider *provider,
 void invoke_command(NautilusMenuItem *item,
 		gpointer user_data)
 {
-	int id;
+	long id;
 	struct git_data *me;
 
-	id = (int) g_object_get_data((GObject *) item, "git_extension_id");
+	id = (long) g_object_get_data((GObject *) item, "git_extension_id");
 	me = (struct git_data *) g_object_get_data((GObject *) item,
 			"git_extension_git_data");
 
 	debug_git("invoke_command: %s, id: %i", me->name, id);
 
-	handle_menu_item(me, id);
+	handle_menu_item(me, (unsigned int) id);
 }
 
 const char **menu_get_platform_argv(menu_commands cmd, const void *data,

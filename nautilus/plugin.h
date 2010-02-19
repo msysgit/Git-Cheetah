@@ -22,7 +22,7 @@ struct nautilus_menu_data {
 	GtkWidget *window;
 	GList *menu_items;
 	GCallback item_callback;
-	int item_id;
+	long item_id;
 	struct git_data *git_data;
 };
 
