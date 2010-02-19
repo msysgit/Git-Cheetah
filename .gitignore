@@ -3,3 +3,11 @@
 *.so
 /install.reg
 deps
+
+# debian package generation output
+build-stamp
+configure-stamp
+debian/files
+debian/git-cheetah.debhelper.log
+debian/git-cheetah.substvars
+debian/git-cheetah/

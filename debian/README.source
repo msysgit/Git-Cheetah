@@ -1,0 +1,32 @@
+COMPILE Source
+
+To build for a certain platform please change into the according
+directory and issue a make there.
+
+For example to build the explorer plugin:
+
+  cd explorer
+  make
+  make install
+
+The currently supported platforms:
+
+explorer - Windows explorer plugin for context menues
+finder   - Mac OS X filemanager plugin for context menues (until 10.5)
+nautilus - Gnome Filemanager plugin for context menues
+
+COMPILE Package
+
+    To compile this package use the command
+
+        git-buildpackage
+
+    from the root directory.
+
+
+ISSUES
+
+    The following ISSUES with this packaging have been identified:
+
+    * Restarting nautilus during postinstall or postremove step does not
+      provide a nice user experience.

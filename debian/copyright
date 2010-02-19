@@ -1,0 +1,30 @@
+This package was debianized by Heiko Voigt <hvoigt@hvoigt.net> on
+Sun, 03 Jan 2010 18:39:01 +0100.
+
+It was downloaded from http://repo.or.cz/w/git-cheetah.git
+
+Upstream Author(s):
+
+     29 Kirill
+     21 Heiko Voigt
+     15 Brian Hetro
+     12 Johannes Schindelin
+      5 Christian MICHON
+      3 Yann Ramin
+      1 Bosko Ivanisevic
+      1 Michael Letterle
+      1 Mike Pape
+
+Copyright:
+
+    Copyright (C) 2010 Johannes Schindelin <johannes.schindelin@gmx.de>, et. al
+
+License:
+
+    GPLv2
+
+The Debian packaging is (C) 2010, Heiko Voigt <hvoigt@hvoigt.net> and
+is licensed under the GPL, see `/usr/share/common-licenses/GPL'.
+
+# Please also look if there are files or directories which have a
+# different copyright/license attached and list them here.

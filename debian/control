@@ -1,0 +1,15 @@
+Source: git-cheetah
+Section: devel
+Priority: extra
+Maintainer: Heiko Voigt <hvoigt@hvoigt.net>
+Build-Depends: debhelper (>= 7), libnautilus-extension-dev (>= 2.24)
+Standards-Version: 3.7.3
+Homepage: http://repo.or.cz/w/git-cheetah.git
+
+Package: git-cheetah
+Architecture: any
+Depends: ${shlibs:Depends}, libnautilus-extension1 (>= 2.24), git-core
+Description: A git extension for the nautilus filemanager
+ This extension implements a similar functionality as by the well known
+ Tortoise filemanager extensions. It allows to use Git from the graphical user
+ interface of nautilus.

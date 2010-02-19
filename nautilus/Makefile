@@ -1,8 +1,9 @@
 TARGET = git_cheetah_ext
 MODULES = menu.c util.c plugin.c ../compat/posix.c
 OBJECTS = ${MODULES:%.c=%.o}
+DESTDIR = /
 
-LIBDIR = /usr/lib
+LIBDIR = $(DESTDIR)/usr/lib
 LDFLAGS = -shared \
 	$(shell pkg-config --libs libnautilus-extension)
 
