@@ -1,3 +1,10 @@
+git-cheetah (0.1.0-rc3) jaunty; urgency=low
+
+  * release candidate 3
+    Added dependencies on gui packages of git
+
+ -- Heiko Voigt (moon) <hvoigt@hvoigt.net>  Fri, 19 Feb 2010 17:58:02 +0100
+
 git-cheetah (0.1.0-rc2) jaunty; urgency=low
 
   * Initial release candidate 2
