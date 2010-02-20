@@ -81,7 +81,7 @@ static int menu_history(struct git_data *this_, unsigned int id)
 {
 	BOOL is_directory;
 	char *wd = wd_from_path(this_->name, &is_directory);
-	char *name = "";
+	char *name = NULL;
 	const char **argv;
 
 	free_func_t argv_free;
