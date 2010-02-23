@@ -1,6 +1,7 @@
 #include "../common/git-compat-util.h"
 #include "../common/strbuf.h"
 #include "../common/systeminfo.h"
+#include "../common/debug.h"
 #include <windows.h>
 #include "dll.h"
 
