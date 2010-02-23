@@ -1,0 +1,10 @@
+Debug~
+Release~
+*.exp
+*.ilk
+*.lib
+*.pdb
+*.aps
+*.ncb
+*.suo
+*.user
