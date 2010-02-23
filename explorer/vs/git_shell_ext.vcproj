@@ -222,6 +222,10 @@
 					/>
 				</FileConfiguration>
 			</File>
+			<File
+				RelativePath="..\cheetah.rc"
+				>
+			</File>
 		</Filter>
 		<File
 			RelativePath="..\Makefile"
