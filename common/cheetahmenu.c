@@ -24,6 +24,28 @@ char *wd_from_path(const char *path, BOOL *is_path_dir)
 	return cheetah_wd;
 }
 
+static char *get_git_prefix(const char *wd, int *out_status)
+{
+	char *prefix = NULL, *eol;
+	int status;
+	struct strbuf output = STRBUF_INIT;
+
+	status = exec_program(wd, &output, NULL, WAITMODE,
+		"git", "rev-parse", "--show-prefix", NULL);
+	if (out_status)
+		*out_status = status;
+	
+	eol = strchr(output.buf, '\n');
+	if (eol)
+		*eol = 0;
+
+	if (!status) /* we're in the repo */
+		prefix = strdup(output.buf);
+
+	strbuf_release(&output);
+	return prefix;
+}
+
 /*
  * Cheetah-specific menu
  */
@@ -306,16 +328,7 @@ UINT cheetah_menu_mask(struct git_data *this_)
 	char *wd = wd_from_path(this_->name, &is_directory);
 	UINT selection = is_directory ? MENU_ITEM_DIR : MENU_ITEM_FILE;
 	int status;
-
-	struct strbuf output;
-	char *eol;
-	strbuf_init(&output, 0);
-
-	status = exec_program(wd, &output, NULL, WAITMODE,
-		"git", "rev-parse", "--show-prefix", NULL);
-	eol = strchr(output.buf, '\n');
-	if (eol)
-		*eol = 0;
+	char *prefix = get_git_prefix(wd, &status);
 
 	if (status < 0) /* something went terribly wrong */
 		selection = MENU_ITEM_LAST;
@@ -325,7 +338,7 @@ UINT cheetah_menu_mask(struct git_data *this_)
 		char head_path[MAX_PATH] = "HEAD";
 		if (!is_directory)
 			sprintf(head_path, "HEAD:%s%s",
-				output.buf,
+				prefix,
 				this_->name + strlen(wd) + 1);
 
 		status = exec_program(wd, NULL, NULL, WAITMODE,
@@ -338,7 +351,7 @@ UINT cheetah_menu_mask(struct git_data *this_)
 					MENU_ITEM_NOTRACK : MENU_ITEM_TRACK);
 	}
 
-	strbuf_release(&output);
+	free(prefix);
 	free(wd);
 	return selection;
 }
