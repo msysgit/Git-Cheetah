@@ -22,6 +22,7 @@
 			IntermediateDirectory="$(SolutionDir)$(ConfigurationName)~"
 			ConfigurationType="2"
 			CharacterSet="2"
+			DeleteExtensionsOnClean="*.obj;*.ilk;*.tlb;*.tli;*.tlh;*.tmp;*.rsp;*.pgc;*.pgd;*.meta;$(TargetPath);$(ProjectDir)..\..\common\version.h"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -96,6 +97,7 @@
 			IntermediateDirectory="$(SolutionDir)$(ConfigurationName)~"
 			ConfigurationType="2"
 			CharacterSet="2"
+			DeleteExtensionsOnClean="*.obj;*.ilk;*.tlb;*.tli;*.tlh;*.tmp;*.rsp;*.pgc;*.pgd;*.meta;$(TargetPath);$(ProjectDir)..\..\common\version.h"
 			WholeProgramOptimization="1"
 			>
 			<Tool
@@ -196,6 +198,30 @@
 			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav"
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 			>
+			<File
+				RelativePath="..\..\common\version.in"
+				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="Building version strings..."
+						CommandLine="make -C ../../common version.h"
+						Outputs="..\..\common\version.h"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="Building version strings..."
+						CommandLine="make -C ../../common version.h"
+						Outputs="..\..\common\version.h"
+					/>
+				</FileConfiguration>
+			</File>
 		</Filter>
 		<File
 			RelativePath="..\Makefile"
