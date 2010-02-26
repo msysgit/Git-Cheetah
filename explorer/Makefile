@@ -15,7 +15,7 @@ DLLWRAP = $(cross)dllwrap.exe
 
 MODULES=ext.c dll.c factory.c menu.c systeminfo.c registry.c \
 	columns.c
-OBJECTS=${MODULES:%.c=%.o}
+OBJECTS=${MODULES:%.c=%.o} cheetah.o
 COMMON_OBJ = ../common/cheetahmenu.o ../common/date.o ../common/debug.o \
 	     ../common/exec.o ../common/menuengine.o \
 	     ../common/sha1_file.o ../common/strbuf.o \
@@ -79,3 +79,6 @@ platform-clean:
 
 clean: platform-clean
 	-rm -f  $(TARGET32) $(TARGET64)
+
+cheetah.o: cheetah.rc ../common/version.h
+	windres -o $@ -i $<
