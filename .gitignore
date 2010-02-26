@@ -3,3 +3,4 @@
 *.so
 /install.reg
 deps
+version.h

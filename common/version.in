@@ -1,0 +1,13 @@
+
+/*
+ * defines, originally used by resource files
+ * VERSION should be formatted for FILEVERSION field
+ *         There are windres-specific requirements:
+ *         - WORD's must be separated with commas
+ *         - there must be exactly four (4) WORD's
+ * VERSION_STRING is a string, usually matching FILEVERSION
+ * COMMENTS is just a string
+ */
+#define GIT_CHEETAH_VERSION @@GIT_CHEETAH_VERSION@@
+#define GIT_CHEETAH_VERSION_STRING "@@GIT_CHEETAH_VERSION@@"
+#define GIT_CHEETAH_COMMENTS "@@GIT_CHEETAH_COMMENTS@@"
