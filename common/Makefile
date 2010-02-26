@@ -11,14 +11,18 @@ OBJECTS=${MODULES:%.c=%.o} version.h
 # regex to limit the number of groups to four
 UPTO_FOUR_WORDS=\([0-9]*\),\([0-9]*\),\([0-9]*\),\([0-9]*\).*
 
+# sed args to transform 0.1.2.3.4 to 0,1,2,3
+SED_REPLACE=-e 's/\./,/g' \
+		-e 's/$(UPTO_FOUR_WORDS)/\1,\2,\3,\4/' \
+		-e 's/\(.*\),$$/\1/'
+
 DESCRIBE=$(shell git describe)
 ifeq ($(DESCRIBE),)
 	VERSION="0,0,0,0"
 else
 	VERSION=$(shell echo $(DESCRIBE) | \
-		sed -e 's/v\([0-9.]*\).*/\1/' -e 's/\./,/g' \
-		-e 's/$(UPTO_FOUR_WORDS)/\1,\2,\3,\4/' \
-		-e 's/\(.*\),$$/\1/')
+		sed -e 's/v\([0-9.]*\).*/\1/' \
+		$(SED_REPLACE))
 endif
 
 all: $(OBJECTS)
