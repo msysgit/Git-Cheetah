@@ -112,8 +112,11 @@ static int menu_history(struct git_data *this_, unsigned int id)
 	const char *generic_argv[] = { "gitk", "HEAD", "--",
 		NULL, NULL };
 
-	if (!is_directory)
+	if (is_directory)
+		name = ".";
+	else
 		name = this_->name + strlen(wd) + 1;
+
 	generic_argv[3] = name;
 
 	argv = menu_get_platform_argv(MENU_HISTORY, name,
