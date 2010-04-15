@@ -838,7 +838,7 @@ unsigned long approxidate(const char *date)
 		return strtoul(buffer, NULL, 10);
 
 	gettimeofday(&tv, NULL);
-	localtime_r(&tv.tv_sec, &tm);
+	localtime_r((time_t *)&tv.tv_sec, &tm);
 	now = tm;
 	for (;;) {
 		unsigned char c = *date;
