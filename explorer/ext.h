@@ -38,7 +38,7 @@ static const IID IID_git_columns = {
 
 extern struct git_shell_ext_virtual_table
 {
-	STDMETHOD(query_interface)(void *, REFIID, PVOID*);
+	STDMETHOD(QueryInterface)(void *, REFIID, PVOID*);
 	STDMETHOD_(ULONG, add_ref)(void *);
 	STDMETHOD_(ULONG, release)(void *);
 	STDMETHOD(initialize)(void *,
@@ -47,18 +47,21 @@ extern struct git_shell_ext_virtual_table
 
 #define DEFINE_STANDARD_METHODS(name) \
 	static ULONG STDMETHODCALLTYPE add_ref_##name(void *p) { \
+	debug_git("add_ref_##name"); \
 		struct name *this_ = p; \
 		return add_ref_git_data(this_->git_data); \
 	} \
 	\
 	static ULONG STDMETHODCALLTYPE \
 			release_##name(void *p) { \
+	debug_git("release_##name"); \
 		struct name *this_ = p; \
 		return release_git_data(this_->git_data); \
 	} \
 	\
 	static STDMETHODIMP query_interface_##name(void *p, \
 			REFIID iid, LPVOID FAR *pointer) { \
+	debug_git("query_interface_##name"); \
 		struct name *this_ = p; \
 		return query_interface_git_data(this_->git_data, \
 				iid, pointer); \
@@ -66,6 +69,7 @@ extern struct git_shell_ext_virtual_table
 	\
 	static STDMETHODIMP initialize_##name(void *p, \
 			LPCITEMIDLIST folder, LPDATAOBJECT data, HKEY id) { \
+	debug_git("initialize_##name"); \
 		struct name *this_ = p; \
 		return initialize_git_data(this_->git_data, folder, data, id); \
 	}

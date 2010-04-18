@@ -21,11 +21,13 @@ DWORD lock_count = 0;
 
 inline ULONG STDMETHODCALLTYPE add_ref_git_data(struct git_data *this_)
 {
+debug_git("add_ref_git_data");
 	return ++(this_->count);
 }
 
 inline ULONG STDMETHODCALLTYPE release_git_data(struct git_data *this_)
 {
+debug_git("release_git_data");
 	if (--(this_->count) == 0) {
 		strbuf_release(&this_->other_files);
 
@@ -39,6 +41,7 @@ inline ULONG STDMETHODCALLTYPE release_git_data(struct git_data *this_)
 inline STDMETHODIMP query_interface_git_data(struct git_data *this_,
 					     REFIID iid, LPVOID FAR *pointer)
 {
+debug_git("query_interface_git_data");
 	if (IsEqualIID(iid, &IID_git_shell_ext) ||
 			IsEqualIID(iid, &IID_IShellExtInit) ||
 			IsEqualIID(iid, &IID_IUnknown)) {
@@ -60,6 +63,7 @@ inline STDMETHODIMP initialize_git_data(struct git_data *this_,
 					LPCITEMIDLIST folder,
 					LPDATAOBJECT data, HKEY id)
 {
+debug_git("initialize_git_data");
 	FORMATETC format
 		= {CF_HDROP, NULL, DVASPECT_CONTENT, -1, TYMED_HGLOBAL};
 	STGMEDIUM stg = {TYMED_HGLOBAL};

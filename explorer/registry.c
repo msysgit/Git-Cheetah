@@ -1,5 +1,6 @@
 #include <windows.h>
 #include "registry.h"
+#include "../common/debug.h"
 
 /* uses get_registry_path to replace patterns */
 HRESULT create_reg_entries(const HKEY root, reg_value const info[])
@@ -8,6 +9,7 @@ HRESULT create_reg_entries(const HKEY root, reg_value const info[])
 	int i;
 
 	for (i = 0; NULL != info[i].path; ++i) {
+	debug_git("writing registry entry %s, %s, %s",info[i].path,info[i].name,info[i].value);
 		char path[MAX_REGISTRY_PATH];
 		char name[MAX_REGISTRY_PATH], *regname = NULL;
 		char value [MAX_REGISTRY_PATH], *regvalue = NULL;

@@ -8,6 +8,7 @@
 #include "ext.h"
 #include "factory.h"
 #include "../common/systeminfo.h"
+#include "../common/debug.h"
 #include "registry.h"
 
 const char *program_name = "Git-Cheetah";
@@ -21,8 +22,9 @@ const char *program_id = "Git-Cheetah.Application";
 static HINSTANCE hInst;
 
 HRESULT PASCAL DllGetClassObject(REFCLSID obj_guid, REFIID factory_guid,
-		void **factory_handle)
+		LPVOID *factory_handle)
 {
+debug_git("DllGetClassObject ");
 	if (IsEqualCLSID(obj_guid, &CLSID_git_shell_ext) ||
 			IsEqualCLSID(obj_guid, &CLSID_git_menu))
 		return class_factory_query_interface(&factory,
@@ -34,11 +36,13 @@ HRESULT PASCAL DllGetClassObject(REFCLSID obj_guid, REFIID factory_guid,
 
 HRESULT PASCAL DllCanUnloadNow(void)
 {
+debug_git("DllCanUnloadNow");
    return (object_count || lock_count) ? S_FALSE : S_OK;
 }
 
 BOOL WINAPI DllMain(HINSTANCE instance, DWORD reason, LPVOID reserved)
 {
+debug_git("DllMain %d, %d, %d",instance, reason, reserved);
 	hInst = instance;
 
 	if (reason == DLL_PROCESS_ATTACH) {
@@ -282,12 +286,14 @@ char *get_registry_path(const char *src, char dst[MAX_REGISTRY_PATH])
 
 HRESULT PASCAL DllRegisterServer(void)
 {
+debug_git("DllRegisterServer");
 	setup_root = HKEY_CURRENT_USER;
 	return create_reg_entries (setup_root, registry_info);
 }
 
 HRESULT PASCAL DllUnregisterServer(void)
 {
+debug_git("DllUnregisterServer");
 	setup_root = HKEY_CURRENT_USER;
 	return delete_reg_entries(setup_root, registry_info);
 }
@@ -317,6 +323,7 @@ HRESULT PASCAL DllInstall(BOOL bInstall, LPCWSTR pszCmdLine)
 			HKEY_LOCAL_MACHINE : HKEY_CURRENT_USER;
 
 	if (bInstall) {
+debug_git("DllInstall");
 		if (bDebug)
 			result = create_reg_entries(setup_root, debug_info);
 
@@ -326,6 +333,7 @@ HRESULT PASCAL DllInstall(BOOL bInstall, LPCWSTR pszCmdLine)
 			result = create_reg_entries(setup_root,
 					registry_info);
 	} else { /* uninstall */
+debug_git("DllInstall Uninstall");
 		if (bDebug)
 			result = delete_reg_entries(setup_root, debug_info);
 

@@ -25,6 +25,7 @@ struct windows_menu_data {
 void reset_platform(void *platform)
 {
 	/* On Windows, we don't do anything to reset the menu */
+	debug_git("reset_platform");
 }
 
 /*
