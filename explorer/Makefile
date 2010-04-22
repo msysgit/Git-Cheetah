@@ -1,9 +1,13 @@
+TARGET64=git_shell_ext64.dll
+TARGET32=git_shell_ext.dll
 ifneq (,$(W64))
 cross = /src/mingw-w64/sysroot/bin/x86_64-w64-mingw32-
 WIN32_IE=0x0501
+TARGET=$(TARGET64)
 else
 cross = ""
 WIN32_IE=0x0500
+TARGET=$(TARGET32)
 endif
 
 CC = $(cross)gcc.exe
@@ -31,7 +35,6 @@ endif
 CFLAGS=-O -g -DNO_MMAP -DNO_PREAD -DNO_STRLCPY -D_WIN32_IE=$(WIN32_IE) $(OSCFLAGS)
 DLLWRAPFLAGS = -Wl,--enable-stdcall-fixup $(OSDLLWRAPFLAG)
 
-TARGET=git_shell_ext.dll
 MSYSGIT_PATH=$(shell cd /; pwd -W | sed -e 's|/|\\\\\\\\|g')
 
 # export compile flags to sub-make of the common folder
@@ -70,6 +73,9 @@ install-user: all
 uninstall-user: all
 	regsvr32 -u -s $(DLL_PATH)
 
-clean:
+platform-clean:
 	-rm -f $(OBJECTS) $(COMPAT_OBJ) $(TARGET) deps
 	$(MAKE) -C ../common clean
+
+clean: platform-clean
+	-rm -f  $(TARGET32) $(TARGET64)
