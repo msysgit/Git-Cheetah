@@ -3,7 +3,6 @@
 
 #include <shlobj.h>
 #include "../common/menuengine.h"
-#include "../common/debug.h"
 #include "factory.h"
 #include "ext.h"
 #include "menu.h"
@@ -22,7 +21,6 @@
 STDMETHODIMP class_factory_query_interface(IClassFactory *this, 
 					   REFIID guid, void **pointer)
 {
-debug_git("class_factory_query_interface");
 	if (!IsEqualIID(guid, &IID_IUnknown) &&
 			!IsEqualIID(guid, &IID_IClassFactory)) {
 		*pointer = 0;
@@ -41,7 +39,6 @@ static ULONG STDMETHODCALLTYPE return_one(IClassFactory *this)
 static STDMETHODIMP create_instance(IClassFactory *this_,
 		IUnknown *outer, REFIID guid, void **pointer)
 {
-debug_git("create_instance");
 	HRESULT result;
 	struct git_data *data;
 
