@@ -283,13 +283,17 @@ char *get_registry_path(const char *src, char dst[MAX_REGISTRY_PATH])
 HRESULT PASCAL DllRegisterServer(void)
 {
 	setup_root = HKEY_CURRENT_USER;
-	return create_reg_entries (setup_root, registry_info);
+	HRESULT retval = create_reg_entries (setup_root, registry_info);
+	SHChangeNotify(SHCNE_ASSOCCHANGED, SHCNF_IDLIST,NULL,NULL);
+	return retval;
 }
 
 HRESULT PASCAL DllUnregisterServer(void)
 {
 	setup_root = HKEY_CURRENT_USER;
-	return delete_reg_entries(setup_root, registry_info);
+	HRESULT retval = delete_reg_entries(setup_root, registry_info);
+	SHChangeNotify(SHCNE_ASSOCCHANGED, SHCNF_IDLIST,NULL,NULL);
+	return retval;
 }
 
 /* provide means to create/delete keys:
@@ -335,6 +339,6 @@ HRESULT PASCAL DllInstall(BOOL bInstall, LPCWSTR pszCmdLine)
 			result = delete_reg_entries(setup_root,
 					registry_info);
 	}
-
+	SHChangeNotify(SHCNE_ASSOCCHANGED, SHCNF_IDLIST,NULL,NULL);
 	return result;
 }
