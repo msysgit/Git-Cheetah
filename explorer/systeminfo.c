@@ -3,7 +3,7 @@
 #include "../common/systeminfo.h"
 #include "dll.h"
 
-static char gitPath[MAX_PATH] = "";
+static char gitPath[2*MAX_PATH+1] = "";
 static TCHAR msysPath[MAX_PATH];
 
 static int get_msys_path_from_registry(HKEY root)
@@ -70,6 +70,7 @@ test_git_path_failed:
 const char *git_path()
 {
 	char path[MAX_PATH];
+	size_t path_len;
 
 	if (!msys_path())
 		return NULL;
@@ -78,12 +79,13 @@ const char *git_path()
 		return gitPath;
 
 	if (test_msys_path("bin", path)) {
+		path_len = strlen(path);
 		memcpy(gitPath, path, MAX_PATH);
-		return gitPath;
 	}
 
 	if (test_msys_path("mingw\\bin", path)) {
-		memcpy(gitPath, path, MAX_PATH);
+		gitPath[path_len] = ';';
+		memcpy(gitPath+path_len+1, path, MAX_PATH);
 		return gitPath;
 	}
 
