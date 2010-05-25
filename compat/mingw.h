@@ -4,7 +4,10 @@
  * things that are not available in header files
  */
 
+#ifndef _PID_T_
 typedef int pid_t;
+#endif
+
 #define hstrerror strerror
 
 #define S_IFLNK    0120000 /* Symbolic link */

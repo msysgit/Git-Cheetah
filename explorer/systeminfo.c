@@ -1,9 +1,10 @@
 #include "../common/git-compat-util.h"
-#include <windows.h>
+#include "../common/strbuf.h"
 #include "../common/systeminfo.h"
+#include <windows.h>
 #include "dll.h"
 
-static char gitPath[MAX_PATH] = "";
+static struct strbuf gitPath = STRBUF_INIT;
 static TCHAR msysPath[MAX_PATH];
 
 static int get_msys_path_from_registry(HKEY root)
@@ -74,20 +75,19 @@ const char *git_path()
 	if (!msys_path())
 		return NULL;
 
-	if (*gitPath)
-		return gitPath;
+	if (gitPath.len)
+		return gitPath.buf;
 
-	if (test_msys_path("bin", path)) {
-		memcpy(gitPath, path, MAX_PATH);
-		return gitPath;
-	}
+	if (test_msys_path("bin", path))
+		strbuf_addstr(&gitPath, path);
 
 	if (test_msys_path("mingw\\bin", path)) {
-		memcpy(gitPath, path, MAX_PATH);
-		return gitPath;
+		if (gitPath.len)
+			strbuf_addch(&gitPath, ';');
+		strbuf_addstr(&gitPath, path);
 	}
 
-	return NULL;
+	return gitPath.len ? gitPath.buf : NULL;
 }
 
 void message_box(const char *string)

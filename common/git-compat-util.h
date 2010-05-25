@@ -62,6 +62,10 @@
 #endif
 
 #ifdef _WIN32
+#ifdef _SSIZE_T_DEFINED
+#define _SSIZE_T_
+#endif
+
 /* from mingw/include/sys/types.h */
 #ifndef _SSIZE_T_
 #define _SSIZE_T_
@@ -71,7 +75,6 @@ typedef long _ssize_t;
 typedef _ssize_t ssize_t;
 #endif
 #endif /* Not _SSIZE_T_ */
-
 #ifndef _MODE_T_
 #define	_MODE_T_
 typedef unsigned short _mode_t;

@@ -14,8 +14,10 @@
  */
 #define SHCDF_UPDATEITEM        0x00000001
 
+#ifndef _WIN64
 /* convenience macro, not defined in mingw's OleAuto.h */
 #define V_I1REF(X)       V_UNION(X, pcVal)
+#endif /* _WIN64 */
 #endif
 
 #define CHEETAH_COLUMN_FLAGS (SHCOLSTATE_TYPE_STR)
