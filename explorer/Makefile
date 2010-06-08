@@ -64,13 +64,13 @@ $(TARGET): common-obj $(OBJECTS) $(COMPAT_OBJ) deps git_shell_ext.def
 install: all
 	regsvr32 -s -n -i:machine $(DLL_PATH)
 
-uninstall: all
+uninstall:
 	regsvr32 -u -s -n -i:machine $(DLL_PATH)
 
 install-user: all
 	regsvr32 -s $(DLL_PATH)
 
-uninstall-user: all
+uninstall-user:
 	regsvr32 -u -s $(DLL_PATH)
 
 platform-clean:
