@@ -94,6 +94,6 @@ void handle_menu_item(void *data, unsigned int id);
  * from menu_item_builder, but a custom builder might need to
  * instruct the engine to track a particular item
  */
-void append_active_menu(const struct menu_item item);
+void append_active_menu(const struct menu_item *item);
 
 #endif /* MENUENGINE_H */

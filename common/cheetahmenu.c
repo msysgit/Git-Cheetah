@@ -268,7 +268,7 @@ static BOOL build_branch_menu(struct git_data *data,
 		item.helptext = strdup((*it)->buf + 2);
 		if (build_item(data, &item, submenu)) {
 			check_menu_item(submenu, '*' == (*it)->buf[0]);
-			append_active_menu(item);
+			append_active_menu(&item);
 		} else
 			/*
 			 * if the platform failed to create an item

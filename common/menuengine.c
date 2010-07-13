@@ -29,11 +29,11 @@ void reset_active_menu()
 	next_active_item = 0;
 }
 
-void append_active_menu(const struct menu_item item)
+void append_active_menu(const struct menu_item *item)
 {
 	active_menu = realloc(active_menu,
 		(next_active_item + 1) * sizeof(struct menu_item));
-	active_menu[next_active_item] = item;
+	active_menu[next_active_item] = *item;
 	next_active_item++;
 }
 
@@ -57,7 +57,7 @@ void build_menu_items(struct git_data *data,
 		if ((menu_def[i].selection & selection) ==
 				menu_def[i].selection) {
 			if (menu_def[i].builder(data, &menu_def[i], platform))
-				append_active_menu(menu_def[i]);
+				append_active_menu(&menu_def[i]);
 		}
 }
 
