@@ -25,17 +25,9 @@ BOOL build_item(struct git_data *me, const struct menu_item *item,
 	char item_reference_string[1024];
 	NautilusMenuItem *one_menu_item;
 	struct nautilus_menu_data *nautilus_data = platform;
-	static int not_shown_offset = 0;
 
-	if (!platform) {
-		not_shown_offset++;
+	if (!platform)
 		return TRUE;
-	}
-
-	if (not_shown_offset) {
-		nautilus_data->item_id += not_shown_offset;
-		not_shown_offset = 0;
-	}
 
 	item_name = strdup(item->string);
 
@@ -53,15 +45,12 @@ BOOL build_item(struct git_data *me, const struct menu_item *item,
 			G_CALLBACK(invoke_command), nautilus_data->provider);
 
 	g_object_set_data((GObject *) one_menu_item, "git_extension_id",
-			(void *) nautilus_data->item_id);
+			(void *)next_active_item);
 	g_object_set_data((GObject *) one_menu_item,
 			"git_extension_git_data", me);
 
 	nautilus_data->menu_items = g_list_append(nautilus_data->menu_items,
 			one_menu_item);
-
-	/* this needs to be uniqe for each item */
-	nautilus_data->item_id++;
 
 	free(item_name);
 	return TRUE;
@@ -71,9 +60,7 @@ BOOL build_separator(struct git_data *me, const struct menu_item *item,
 		void *platform)
 {
 	/* not implemented, yet */
-	struct nautilus_menu_data *nautilus_data = platform;
-	nautilus_data->item_id++;
-	return TRUE;
+	return FALSE;
 }
 
 void reset_platform(void *platform)
@@ -126,8 +113,7 @@ GList *git_extension_get_file_items(NautilusMenuProvider *provider,
 
 	struct nautilus_menu_data nautilus_data = {
 		provider,
-		NULL,
-		0
+		NULL
 	};
 
 
@@ -157,8 +143,7 @@ GList *git_extension_get_background_items(NautilusMenuProvider *provider,
 
 	struct nautilus_menu_data nautilus_data = {
 		provider,
-		NULL,
-		0
+		NULL
 	};
 
 	git_data.name[0] = '\0';
