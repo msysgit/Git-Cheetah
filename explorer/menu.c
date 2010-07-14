@@ -86,6 +86,7 @@ void *start_submenu(struct git_data *this_, const struct menu_item *item,
 
 	submenu->index = 0;
 	submenu->first = parent_menu->first;
+	submenu->last = parent_menu->last;
 
 	return submenu;
 }
