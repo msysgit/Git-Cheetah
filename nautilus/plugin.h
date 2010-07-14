@@ -16,6 +16,7 @@
 struct nautilus_menu_data {
 	NautilusMenuProvider *provider;
 	GList *menu_items;
+	NautilusMenu *submenu;
 };
 
 #endif /* NAUTILUS_PLUGIN_H */

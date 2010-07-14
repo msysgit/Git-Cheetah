@@ -49,8 +49,11 @@ BOOL build_item(struct git_data *me, const struct menu_item *item,
 	g_object_set_data((GObject *) one_menu_item,
 			"git_extension_git_data", me);
 
-	nautilus_data->menu_items = g_list_append(nautilus_data->menu_items,
-			one_menu_item);
+	if (nautilus_data->submenu)
+		nautilus_menu_append_item(nautilus_data->submenu, one_menu_item);
+	else
+		nautilus_data->menu_items = g_list_append(nautilus_data->menu_items,
+				one_menu_item);
 
 	free(item_name);
 	return TRUE;
@@ -71,13 +74,50 @@ void reset_platform(void *platform)
 void *start_submenu(struct git_data *me, const struct menu_item *item,
 		void *platform)
 {
-	/* not implemented, yet */
-	return NULL;
+	struct nautilus_menu_data *nautilus_data = platform;
+
+	NautilusMenuItem *submenu_item;
+	NautilusMenu *submenu;
+	char name[512], *item_name = strdup(item->string), shortcut_key;
+
+	shortcut_key = parse_and_remove_shortcuts(item_name);
+
+	snprintf(name, sizeof(name), "GitExtension::%s", item_name);
+	name[sizeof(name) - 1] = '\0';
+
+	debug_git("creating submenu item '%s' '%s' '%s'", item_name, name, item->helptext);
+	submenu_item =  nautilus_menu_item_new(
+		name,
+		item_name,
+		item->helptext,
+		NULL);
+
+	free(item_name);
+
+	submenu = nautilus_menu_new();
+
+	g_object_set_data((GObject *)submenu, "git_menu_parent",
+			(void *)nautilus_data->submenu);
+
+	nautilus_menu_item_set_submenu(submenu_item, submenu);
+
+	if (nautilus_data->submenu)
+		nautilus_menu_append_item(nautilus_data->submenu, submenu_item);
+	else
+		nautilus_data->menu_items = g_list_append(nautilus_data->menu_items,
+				submenu_item);
+
+	nautilus_data->submenu = submenu;
+
+	return platform;
 }
 
 void end_submenu(void *parent, void *submenu)
 {
-	/* not implemented, yet */
+	struct nautilus_menu_data *nautilus_data = parent;
+	nautilus_data->submenu = (NautilusMenu *)g_object_get_data(
+			(GObject *)nautilus_data->submenu,
+			"git_menu_parent");
 }
 
 static inline char *get_local_filename_from_fileinfo(char *filename, int n,
@@ -113,6 +153,7 @@ GList *git_extension_get_file_items(NautilusMenuProvider *provider,
 
 	struct nautilus_menu_data nautilus_data = {
 		provider,
+		NULL,
 		NULL
 	};
 
@@ -143,6 +184,7 @@ GList *git_extension_get_background_items(NautilusMenuProvider *provider,
 
 	struct nautilus_menu_data nautilus_data = {
 		provider,
+		NULL,
 		NULL
 	};
 
