@@ -50,7 +50,7 @@ BOOL build_item(struct git_data *me, const struct menu_item *item,
 			item->helptext,
 			NULL /* icon name */);
 	g_signal_connect(one_menu_item, "activate",
-			nautilus_data->item_callback, nautilus_data->provider);
+			G_CALLBACK(invoke_command), nautilus_data->provider);
 
 	g_object_set_data((GObject *) one_menu_item, "git_extension_id",
 			(void *) nautilus_data->item_id);
@@ -126,11 +126,8 @@ GList *git_extension_get_file_items(NautilusMenuProvider *provider,
 
 	struct nautilus_menu_data nautilus_data = {
 		provider,
-		window,
 		NULL,
-		G_CALLBACK(invoke_command),
-		0,
-		&git_data
+		0
 	};
 
 
@@ -160,11 +157,8 @@ GList *git_extension_get_background_items(NautilusMenuProvider *provider,
 
 	struct nautilus_menu_data nautilus_data = {
 		provider,
-		window,
 		NULL,
-		G_CALLBACK(invoke_command),
-		0,
-		&git_data
+		0
 	};
 
 	git_data.name[0] = '\0';

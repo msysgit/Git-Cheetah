@@ -19,11 +19,8 @@
 
 struct nautilus_menu_data {
 	NautilusMenuProvider *provider;
-	GtkWidget *window;
 	GList *menu_items;
-	GCallback item_callback;
 	int item_id;
-	struct git_data *git_data;
 };
 
 #endif /* NAUTILUS_PLUGIN_H */
