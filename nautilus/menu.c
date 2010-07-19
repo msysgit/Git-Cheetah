@@ -123,22 +123,20 @@ void end_submenu(void *parent, void *submenu)
 static inline char *get_local_filename_from_fileinfo(char *filename, int n,
 		NautilusFileInfo *file)
 {
-	char *name;
-	char locator[MAX_PATH];
-
-	name = nautilus_file_info_get_uri(file);
+	char *name, *uri = nautilus_file_info_get_uri(file);
 
 	/* find out if this is a local file */
-	strncpy(locator, name, MAX_PATH);
-	locator[7] = '\0';
-	if (!strcmp(locator, "file://")) {
-		strncpy(filename, name+7, n);
+	name = g_filename_from_uri(uri, NULL, NULL);
+	if (name) {
+		strncpy(filename, name, n);
+		g_free(name);
 		filename[n-1] = '\0';
 	}
 	else
 		filename=NULL;
 
-	g_free(name);
+	g_free(uri);
+
 	return filename;
 }
 
