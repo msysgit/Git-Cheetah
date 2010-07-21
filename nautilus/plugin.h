@@ -10,10 +10,6 @@
 #include <libnautilus-extension/nautilus-property-page-provider.h>
 
 
-#include <gtk/gtktable.h>
-#include <gtk/gtkvbox.h>
-#include <gtk/gtkhbox.h>
-#include <gtk/gtklabel.h>
 #include <string.h>
 #include <time.h>
 
