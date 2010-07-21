@@ -30,7 +30,7 @@ struct git_data {
 struct menu_item;
 
 typedef unsigned int selection_to_mask(struct git_data *);
-typedef void menu_item_handler(struct git_data *, unsigned int);
+typedef int menu_item_handler(struct git_data *, unsigned int);
 /*
  * if platform-specific builder returns TRUE, the menu item
  * is added to the active menu and can be passed to menu_item_handler
@@ -90,7 +90,7 @@ static inline int parse_and_remove_shortcuts(char *name)
 	return key;
 }
 
-void handle_menu_item(void *data, unsigned int id);
+int handle_menu_item(void *data, unsigned int id);
 
 /*
  * usually, menu engine will append items, based on the return

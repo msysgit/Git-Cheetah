@@ -69,10 +69,10 @@ char *get_menu_item_text(unsigned int id)
 	return active_menu[id].helptext;
 }
 
-void handle_menu_item(void *data, unsigned int id)
+int handle_menu_item(void *data, unsigned int id)
 {
 	if (id > next_active_item)
-		return;
+		return 0;
 
-	(active_menu[id].handler)(data, id);
+	return (active_menu[id].handler)(data, id);
 }

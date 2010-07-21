@@ -28,7 +28,7 @@ char *wd_from_path(const char *path, BOOL *is_path_dir)
  * Cheetah-specific menu
  */
 
-static void menu_gui(struct git_data *this_, UINT id)
+static int menu_gui(struct git_data *this_, UINT id)
 {
 	char *wd = wd_from_path(this_->name, NULL);
 	const char **argv;
@@ -49,9 +49,11 @@ static void menu_gui(struct git_data *this_, UINT id)
 	if (argv_free)
 		argv_free(argv_data);
 	free(wd);
+
+	return 0;
 }
 
-static void menu_init(struct git_data *this_, UINT id)
+static int menu_init(struct git_data *this_, UINT id)
 {
 	char *wd = wd_from_path(this_->name, NULL);
 	const char **argv;
@@ -66,14 +68,16 @@ static void menu_init(struct git_data *this_, UINT id)
 	if (!argv)
 		argv = generic_argv;
 
-	exec_program_v(wd, NULL, NULL, HIDDENMODE, argv);
+	exec_program_v(wd, NULL, NULL, HIDDENMODE | WAITMODE, argv);
 
 	if (argv_free)
 		argv_free(argv_data);
 	free(wd);
+
+	return 1;
 }
 
-static void menu_history(struct git_data *this_, unsigned int id)
+static int menu_history(struct git_data *this_, unsigned int id)
 {
 	BOOL is_directory;
 	char *wd = wd_from_path(this_->name, &is_directory);
@@ -100,9 +104,11 @@ static void menu_history(struct git_data *this_, unsigned int id)
 	if (argv_free)
 		argv_free(argv_data);
 	free(wd);
+
+	return 0;
 }
 
-static void menu_bash(struct git_data *this_, UINT id)
+static int menu_bash(struct git_data *this_, UINT id)
 {
 	char *wd = wd_from_path(this_->name, NULL);
 	const char **argv;
@@ -115,7 +121,7 @@ static void menu_bash(struct git_data *this_, UINT id)
 	/* There is no generic implementation for this item */
 	if (!argv) {
 		debug_git("Error: Got no platform terminal for bash");
-		return;
+		return 0;
 	}
 
 	exec_program_v(wd, NULL, NULL, NORMALMODE, argv);
@@ -123,9 +129,11 @@ static void menu_bash(struct git_data *this_, UINT id)
 	if (argv_free)
 		argv_free(argv_data);
 	free(wd);
+
+	return 0;
 }
 
-static void menu_blame(struct git_data *this_, UINT id)
+static int menu_blame(struct git_data *this_, UINT id)
 {
 	BOOL is_directory;
 	char *wd = wd_from_path(this_->name, &is_directory);
@@ -153,9 +161,11 @@ static void menu_blame(struct git_data *this_, UINT id)
 	if (argv_free)
 		argv_free(argv_data);
 	free(wd);
+
+	return 0;
 }
 
-static void menu_citool(struct git_data *this_, UINT id)
+static int menu_citool(struct git_data *this_, UINT id)
 {
 	char *wd = wd_from_path(this_->name, NULL);
 	const char **argv;
@@ -175,9 +185,11 @@ static void menu_citool(struct git_data *this_, UINT id)
 	if (argv_free)
 		argv_free(argv_data);
 	free(wd);
+
+	return 0;
 }
 
-static void menu_addall(struct git_data *this_, UINT id)
+static int menu_addall(struct git_data *this_, UINT id)
 {
 	char *wd = wd_from_path(this_->name, NULL);
 	const char **argv;
@@ -197,9 +209,11 @@ static void menu_addall(struct git_data *this_, UINT id)
 	if (argv_free)
 		argv_free(argv_data);
 	free(wd);
+
+	return 0;
 }
 
-static void menu_branch(struct git_data *this_, UINT id)
+static int menu_branch(struct git_data *this_, UINT id)
 {
 	int status;
 	char *wd = wd_from_path(this_->name, NULL);
@@ -222,7 +236,7 @@ static void menu_branch(struct git_data *this_, UINT id)
 
 	strbuf_init(&err, 0);
 
-	status = exec_program_v(wd, NULL, &err, HIDDENMODE, argv);
+	status = exec_program_v(wd, NULL, &err, HIDDENMODE | WAITMODE, argv);
 
 	/* if nothing, terribly wrong happened, show the confirmation */
 	if (-1 != status)
@@ -232,6 +246,8 @@ static void menu_branch(struct git_data *this_, UINT id)
 	if (argv_free)
 		argv_free(argv_data);
 	free(wd);
+
+	return 1;
 }
 
 static BOOL build_branch_menu(struct git_data *data,

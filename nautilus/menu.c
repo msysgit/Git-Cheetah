@@ -214,6 +214,7 @@ void invoke_command(NautilusMenuItem *item,
 {
 	int id;
 	struct git_data *me;
+	NautilusMenuProvider *provider = (NautilusMenuProvider*)user_data;
 
 	id = (int) g_object_get_data((GObject *) item, "git_extension_id");
 	me = (struct git_data *) g_object_get_data((GObject *) item,
@@ -221,7 +222,8 @@ void invoke_command(NautilusMenuItem *item,
 
 	debug_git("invoke_command: %s, id: %i", me->name, id);
 
-	handle_menu_item(me, id);
+	if (handle_menu_item(me, id))
+		nautilus_menu_provider_emit_items_updated_signal(provider);
 }
 
 const char **menu_get_platform_argv(menu_commands cmd, const void *data,
