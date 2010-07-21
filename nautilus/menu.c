@@ -40,7 +40,7 @@ BOOL build_item(struct git_data *me, const struct menu_item *item,
 	one_menu_item = nautilus_menu_item_new(item_reference_string,
 			item_name,
 			item->helptext,
-			NULL /* icon name */);
+			item->flags & MI_CHECKED ? GTK_STOCK_YES : NULL);
 	g_signal_connect(one_menu_item, "activate",
 			G_CALLBACK(invoke_command), nautilus_data->provider);
 
