@@ -24,6 +24,7 @@ BOOL build_item(struct git_data *me, const struct menu_item *item,
 	char shortcut_key;
 	char item_reference_string[1024];
 	NautilusMenuItem *one_menu_item;
+	GValue sensitive = {0};
 	struct nautilus_menu_data *nautilus_data = platform;
 
 	if (!platform)
@@ -48,6 +49,11 @@ BOOL build_item(struct git_data *me, const struct menu_item *item,
 			(void *)next_active_item);
 	g_object_set_data((GObject *) one_menu_item,
 			"git_extension_git_data", me);
+
+	g_value_init(&sensitive, G_TYPE_BOOLEAN);
+	g_value_set_boolean(&sensitive, !(item->flags & MI_DISABLED));
+	g_object_set_property((GObject *)one_menu_item, "sensitive",
+			&sensitive);
 
 	if (nautilus_data->submenu)
 		nautilus_menu_append_item(nautilus_data->submenu, one_menu_item);

@@ -39,6 +39,7 @@ typedef int menu_item_handler(struct git_data *, unsigned int);
 typedef BOOL menu_item_builder(struct git_data *, const struct menu_item *, void *);
 
 #define MI_CHECKED 1
+#define MI_DISABLED 2
 
 struct menu_item {
 	unsigned int selection;

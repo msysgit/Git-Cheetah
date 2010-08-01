@@ -282,7 +282,8 @@ static BOOL build_branch_menu(struct git_data *data,
 		strbuf_rtrim(*it);
 		item.string = strdup((*it)->buf + 2);
 		item.helptext = strdup((*it)->buf + 2);
-		item.flags = '*' == (*it)->buf[0] ? MI_CHECKED : 0;
+		item.flags = '*' == (*it)->buf[0] ?
+			MI_CHECKED | MI_DISABLED : 0;
 		if (build_item(data, &item, submenu))
 			append_active_menu(&item);
 		else
