@@ -68,7 +68,6 @@ pid_t fork_process(const char *cmd, const char **args, const char *wd)
 int wait_for_process(pid_t pid, int max_time, int *errcode)
 {
 	int stat_loc;
-	int status = 0;
 	if (waitpid(pid, &stat_loc, 0) < 0) {
 		debug_git("waitpid failed (%i): %s",errno, strerror(errno));
 		*errcode = -ERR_RUN_COMMAND_WAITPID_NOEXIT;
@@ -77,11 +76,11 @@ int wait_for_process(pid_t pid, int max_time, int *errcode)
 
 	if (WIFEXITED(stat_loc)) {
 		*errcode = WEXITSTATUS(stat_loc);
-		debug_git("Exit status: 0x%x", status);
+		debug_git("Exit status: 0x%x", *errcode);
 		return 1;
 	} else {
 		char errmsg[1024];
-		status = -1;
+		*errcode = -1;
 		if (WIFSIGNALED(stat_loc) && WCOREDUMP(stat_loc))
 			sprintf(errmsg,"coredump");
 		else if (WIFSIGNALED(stat_loc))
