@@ -132,7 +132,7 @@ static void menu_blame(struct git_data *this_, UINT id)
 	char *name = "";
 	const char **argv;
 
-	free_func_t argv_free;
+	free_func_t argv_free = NULL;
 	void *argv_data;
 
 	const char *generic_argv[] = { "git", "gui", "blame",
