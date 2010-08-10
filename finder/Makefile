@@ -45,6 +45,7 @@ $(TARGET).plugin/Contents: PkgInfo Info.plist
 
 install: all
 	rm -rf ~/Library/Contextual\ Menu\ Items/$(TARGET).plugin
+	mkdir -p ~/Library/Contextual\ Menu\ Items
 	cp -r $(TARGET).plugin ~/Library/Contextual\ Menu\ Items/$(TARGET).plugin
 
 clean:
