@@ -57,7 +57,8 @@ BOOL build_item(struct git_data *me, const struct menu_item *item,
 		goto add_menu_entry_cleanup;
 	}
 
-	if (AEPutKeyPtr(&menu_entry, 'cmcd', typeSInt32, &osx_data->item_id,
+	if (AEPutKeyPtr(&menu_entry, keyContextualMenuCommandID, typeSInt32,
+				&osx_data->item_id,
 				sizeof(osx_data->item_id)) != noErr)
 	{
 		status = FALSE;
