@@ -39,32 +39,14 @@ BOOL build_item(struct git_data *me, const struct menu_item *item,
 
 	debug_git("Adding entry: %s", item_name);
 
-	if (AECreateList(NULL, 0, true, &menu_entry) != noErr)
-		return FALSE;
-
-	if (AEPutKeyPtr(&menu_entry, keyAEName, typeCString, item_name,
-				strlen(item_name) + 1) != noErr)
-	{
+	if ((AECreateList(NULL, 0, true, &menu_entry) != noErr) ||
+	    (AEPutKeyPtr(&menu_entry, keyAEName, typeCString, item_name,
+	        strlen(item_name) + 1) != noErr) ||
+	    (AEPutKeyPtr(&menu_entry, keyContextualMenuCommandID, typeSInt32,
+	        &next_active_item, sizeof(next_active_item)) != noErr) ||
+	    (AEPutDesc(osx_data->menu, 0, &menu_entry) != noErr))
 		status = FALSE;
-		goto add_menu_entry_cleanup;
-	}
 
-	if (AEPutKeyPtr(&menu_entry, keyContextualMenuCommandID, typeSInt32,
-				&next_active_item,
-				sizeof(next_active_item)) != noErr)
-	{
-		status = FALSE;
-		goto add_menu_entry_cleanup;
-	}
-
-	/* insert menu item at the end of the menu */
-	if (AEPutDesc(osx_data->menu, 0, &menu_entry) != noErr)
-	{
-		status = FALSE;
-		goto add_menu_entry_cleanup;
-	}
-
-add_menu_entry_cleanup:
 	AEDisposeDesc(&menu_entry);
 	free(item_name);
 	return status;
