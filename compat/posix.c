@@ -61,7 +61,7 @@ pid_t fork_process(const char *cmd, const char **args, const char *wd)
 	execvp(cmd,(char **)args);
 
 	/* here this code is done, if not something went wrong */
-	fprintf(stderr, "execv failed: %s, Error: %s\n", cmd, strerror(errno));
+	debug_git("execv failed: %s, Error: %s\n", cmd, strerror(errno));
 	exit(-ERR_RUN_COMMAND_FORK);
 }
 
