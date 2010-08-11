@@ -31,17 +31,9 @@ BOOL build_item(struct git_data *me, const struct menu_item *item,
 	BOOL status = TRUE;
 	char *item_name = strdup(item->string);
 	char shortcut_key;
-	static int not_shown_offset = 0;
 
-	if (!platform) {
-		not_shown_offset++;
+	if (!platform)
 		return TRUE;
-	}
-
-	if (not_shown_offset) {
-		osx_data->item_id += not_shown_offset;
-		not_shown_offset = 0;
-	}
 
 	shortcut_key = parse_and_remove_shortcuts(item_name);
 
@@ -58,8 +50,8 @@ BOOL build_item(struct git_data *me, const struct menu_item *item,
 	}
 
 	if (AEPutKeyPtr(&menu_entry, keyContextualMenuCommandID, typeSInt32,
-				&osx_data->item_id,
-				sizeof(osx_data->item_id)) != noErr)
+				&next_active_item,
+				sizeof(next_active_item)) != noErr)
 	{
 		status = FALSE;
 		goto add_menu_entry_cleanup;
@@ -72,9 +64,6 @@ BOOL build_item(struct git_data *me, const struct menu_item *item,
 		goto add_menu_entry_cleanup;
 	}
 
-	/* this needs to be uniqe for each item */
-	osx_data->item_id++;
-
 add_menu_entry_cleanup:
 	AEDisposeDesc(&menu_entry);
 	free(item_name);
@@ -84,8 +73,6 @@ add_menu_entry_cleanup:
 BOOL build_separator(struct git_data *me, const struct menu_item *item,
 		void *platform)
 {
-	struct osx_menu_data *osx_data = platform;
-	osx_data->item_id++;
 	return TRUE;
 }
 
@@ -109,7 +96,7 @@ OSStatus query_context_menu(void *_me, const AEDescList *selection,
 		AEDescList *menu)
 {
 	struct plugin_data *me = _me;
-	struct osx_menu_data osx_data = { menu, selection, noErr , 0 };
+	struct osx_menu_data osx_data = { menu, selection, noErr };
 
 	/* currently this fails when multiple files/directories are
 	 * selected

@@ -37,7 +37,6 @@ struct osx_menu_data {
 	AEDescList *menu;
 	const AEDescList *selection;
 	OSStatus status;
-	int item_id;
 };
 
 extern void *create_instance(CFAllocatorRef a, CFUUIDRef id);
