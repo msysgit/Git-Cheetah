@@ -77,7 +77,7 @@ void *start_submenu(struct git_data *this_, const struct menu_item *item,
 {
 	struct windows_menu_data *parent_menu = platform;
 	struct windows_menu_data *submenu =
-		malloc(sizeof(struct windows_menu_data));
+		xmalloc(sizeof(struct windows_menu_data));
 	submenu->menu = CreateMenu();
 	InsertMenu(parent_menu->menu, parent_menu->index,
 		MF_POPUP | MF_BYPOSITION, (UINT_PTR)(submenu->menu),
@@ -265,7 +265,7 @@ inline STDMETHODIMP get_command_string(void *p, UINT id,
 
 	if (flags & GCS_UNICODE) {
 		size_t len = strlen(text) + 1;
-		LPWSTR tw = malloc(len * sizeof(wchar_t));
+		LPWSTR tw = xmalloc(len * sizeof(wchar_t));
 		/* need to convert terminating NULL as well */
 		mbstowcs(tw, text, len);
 		lstrcpynW((LPWSTR)name, tw, size);
