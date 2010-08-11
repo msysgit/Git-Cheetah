@@ -35,6 +35,7 @@ struct plugin_data {
 
 struct osx_menu_data {
 	AEDescList *menu;
+	char *menu_name;
 	const AEDescList *selection;
 	OSStatus status;
 };

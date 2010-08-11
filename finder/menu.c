@@ -66,19 +66,50 @@ void reset_platform(void *platform)
 void *start_submenu(struct git_data *me, const struct menu_item *item,
 		void *platform)
 {
-	/* not implemented, yet */
-	return NULL;
+	struct osx_menu_data *parent_menu = platform;
+	struct osx_menu_data *submenu =
+	    xmalloc(sizeof(struct osx_menu_data));
+
+	submenu->selection = parent_menu->selection;
+	submenu->status = parent_menu->status;
+
+	submenu->menu = xmalloc(sizeof(*submenu->menu));
+	submenu->menu->descriptorType = typeNull;
+	submenu->menu->dataHandle = NULL;
+	AECreateList(NULL, 0, false, submenu->menu);
+
+	submenu->menu_name = strdup(item->string);
+	parse_and_remove_shortcuts(submenu->menu_name);
+	return submenu;
 }
 
-void end_submenu(void *parent, void *submenu)
+void end_submenu(void *parent, void *platform)
 {
+	struct osx_menu_data *parent_menu = parent;
+	struct osx_menu_data *submenu = platform;
+	AERecord menu_entry = { typeNull, NULL };
+
+	debug_git("Adding submenu: %s", submenu->menu_name);
+
+	AECreateList(NULL, 0, true, &menu_entry);
+	AEPutKeyPtr(&menu_entry, keyAEName, typeCString, submenu->menu_name,
+	    strlen(submenu->menu_name) + 1);
+	AEPutKeyDesc(&menu_entry, keyContextualMenuSubmenu,
+	    submenu->menu);
+	AEPutDesc(parent_menu->menu, 0, &menu_entry);
+
+	AEDisposeDesc(submenu->menu);
+	AEDisposeDesc(&menu_entry);
+	free(submenu->menu_name);
+	free(submenu->menu);
+	free(submenu);
 }
 
 OSStatus query_context_menu(void *_me, const AEDescList *selection,
 		AEDescList *menu)
 {
 	struct plugin_data *me = _me;
-	struct osx_menu_data osx_data = { menu, selection, noErr };
+	struct osx_menu_data osx_data = { menu, NULL, selection, noErr };
 
 	/* currently this fails when multiple files/directories are
 	 * selected
