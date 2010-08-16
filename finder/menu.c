@@ -28,6 +28,8 @@ BOOL build_item(struct git_data *me, const struct menu_item *item,
 {
 	struct osx_menu_data *osx_data = platform;
 	AERecord menu_entry = { typeNull, NULL };
+	MenuItemAttributes attr = item->flags & MI_DISABLED ?
+	    kMenuItemAttrSectionHeader : 0;
 	BOOL status = TRUE;
 	char *item_name = strdup(item->string);
 	char shortcut_key;
@@ -44,6 +46,8 @@ BOOL build_item(struct git_data *me, const struct menu_item *item,
 	        strlen(item_name) + 1) != noErr) ||
 	    (AEPutKeyPtr(&menu_entry, keyContextualMenuCommandID, typeSInt32,
 	        &next_active_item, sizeof(next_active_item)) != noErr) ||
+	    (AEPutKeyPtr(&menu_entry, keyContextualMenuAttributes, typeSInt32,
+	        &attr, sizeof(attr)) != noErr) ||
 	    (AEPutDesc(osx_data->menu, 0, &menu_entry) != noErr))
 		status = FALSE;
 
