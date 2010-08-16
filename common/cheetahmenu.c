@@ -258,7 +258,7 @@ static BOOL build_branch_menu(struct git_data *data,
 	lines = strbuf_split(&output, '\n');
 	for (it = lines; *it; it++) {
 		struct menu_item item = {
-			MENU_ITEM_CLEANUP,
+			MENU_ITEM_CLEANUP, 0,
 			NULL, NULL,
 			NULL, menu_branch
 		};
@@ -266,10 +266,10 @@ static BOOL build_branch_menu(struct git_data *data,
 		strbuf_rtrim(*it);
 		item.string = strdup((*it)->buf + 2);
 		item.helptext = strdup((*it)->buf + 2);
-		if (build_item(data, &item, submenu)) {
-			check_menu_item(submenu, '*' == (*it)->buf[0]);
+		item.flags = '*' == (*it)->buf[0] ? MI_CHECKED : 0;
+		if (build_item(data, &item, submenu))
 			append_active_menu(&item);
-		} else
+		else
 			/*
 			 * if the platform failed to create an item
 			 * there is no point to try other items
@@ -327,41 +327,41 @@ UINT cheetah_menu_mask(struct git_data *this_)
 }
 
 const struct menu_item cheetah_menu[] = {
-	{ MENU_ITEM_ALWAYS, NULL, NULL, build_separator, NULL },
+	{ MENU_ITEM_ALWAYS, 0, NULL, NULL, build_separator, NULL },
 
-	{ MENU_ITEM_REPO, "Git &Add all files now",
+	{ MENU_ITEM_REPO, 0, "Git &Add all files now",
 		"Add all files from this folder now",
 		build_item, menu_addall },
-	{ MENU_ITEM_REPO, "Git &Commit Tool",
+	{ MENU_ITEM_REPO, 0, "Git &Commit Tool",
 		"Launch the GIT commit tool in the local or chosen directory.",
 		build_item, menu_citool },
-	{ MENU_ITEM_TRACK, "Git &History",
+	{ MENU_ITEM_TRACK, 0, "Git &History",
 		"Show GIT history of the chosen file or directory.",
 		build_item,
 		menu_history },
-	{ MENU_ITEM_TRACK | MENU_ITEM_FILE, "Git &Blame",
+	{ MENU_ITEM_TRACK | MENU_ITEM_FILE, 0, "Git &Blame",
 		"Start a blame viewer on the specified file.",
 		build_item, menu_blame },
 
-	{ MENU_ITEM_REPO, "Git &Gui",
+	{ MENU_ITEM_REPO, 0, "Git &Gui",
 		"Launch the GIT Gui in the local or chosen directory.",
 		build_item, menu_gui },
 
-	{ MENU_ITEM_REPO, "Git Bra&nch",
+	{ MENU_ITEM_REPO, 0, "Git Bra&nch",
 		"Checkout a branch",
 		build_branch_menu, NULL },
 
-	{ MENU_ITEM_NOREPO, "Git I&nit Here",
+	{ MENU_ITEM_NOREPO, 0, "Git I&nit Here",
 		"Initialize GIT repo in the local directory.",
 		build_item, menu_init },
-	{ MENU_ITEM_NOREPO | MENU_ITEM_DIR, "Git &Gui",
+	{ MENU_ITEM_NOREPO | MENU_ITEM_DIR, 0, "Git &Gui",
 		"Launch the GIT Gui in the local or chosen directory.",
 		build_item, menu_gui },
 
-	{ MENU_ITEM_ALWAYS, "Git Ba&sh",
+	{ MENU_ITEM_ALWAYS, 0, "Git Ba&sh",
 		"Start GIT shell in the local or chosen directory",
 		build_item, menu_bash },
-	{ MENU_ITEM_ALWAYS, NULL, NULL, build_separator, NULL },
+	{ MENU_ITEM_ALWAYS, 0, NULL, NULL, build_separator, NULL },
 };
 
 void build_cheetah_menu(struct git_data *data, void *platform_data)

@@ -63,8 +63,12 @@ BOOL build_item(struct git_data *data, const struct menu_item *item,
 		MF_STRING | MF_BYPOSITION,
 		windows_menu->first + next_active_item,
 		item->string);
-	windows_menu->index++;
 
+	if (item->flags & MI_CHECKED)
+		CheckMenuItem(windows_menu->menu, windows_menu->index,
+			MF_BYPOSITION | MF_CHECKED);
+
+	windows_menu->index++;
 	return TRUE;
 }
 
@@ -89,14 +93,6 @@ void *start_submenu(struct git_data *this_, const struct menu_item *item,
 void end_submenu(void *parent, void *submenu)
 {
 	free(submenu);
-}
-
-void check_menu_item(void *platform, int checked)
-{
-	struct windows_menu_data *submenu = platform;
-	/* -1, because it's called __after__ index is increased */
-	CheckMenuItem(submenu->menu, submenu->index - 1,
-		MF_BYPOSITION | (checked ? MF_CHECKED : 0));
 }
 
 /*

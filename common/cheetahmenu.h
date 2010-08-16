@@ -16,8 +16,6 @@ void *start_submenu(struct git_data *, const struct menu_item *item,
 		    void *platform);
 void end_submenu(void *parent, void *submenu);
 
-void check_menu_item(void *platform, int checked);
-
 /*
  * This lets a platform override the command called by an item
  */

@@ -93,11 +93,6 @@ void end_submenu(void *parent, void *submenu)
 	/* not implemented, yet */
 }
 
-void check_menu_item(void *platform, int checked)
-{
-	/* not implemented, yet */
-}
-
 static inline char *get_local_filename_from_fileinfo(char *filename, int n,
 		NautilusFileInfo *file)
 {

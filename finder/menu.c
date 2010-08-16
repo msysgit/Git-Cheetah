@@ -104,10 +104,6 @@ void end_submenu(void *parent, void *submenu)
 {
 }
 
-void check_menu_item(void *platform, int checked)
-{
-}
-
 OSStatus query_context_menu(void *_me, const AEDescList *selection,
 		AEDescList *menu)
 {
