@@ -1,5 +1,7 @@
 Debug~
+Debugx64~
 Release~
+Releasex64~
 *.exp
 *.ilk
 *.lib
