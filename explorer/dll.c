@@ -282,16 +282,18 @@ char *get_registry_path(const char *src, char dst[MAX_REGISTRY_PATH])
 
 HRESULT PASCAL DllRegisterServer(void)
 {
+	HRESULT retval;
 	setup_root = HKEY_CURRENT_USER;
-	HRESULT retval = create_reg_entries (setup_root, registry_info);
+	retval = create_reg_entries (setup_root, registry_info);
 	SHChangeNotify(SHCNE_ASSOCCHANGED, SHCNF_IDLIST,NULL,NULL);
 	return retval;
 }
 
 HRESULT PASCAL DllUnregisterServer(void)
 {
+	HRESULT retval;
 	setup_root = HKEY_CURRENT_USER;
-	HRESULT retval = delete_reg_entries(setup_root, registry_info);
+	retval = delete_reg_entries(setup_root, registry_info);
 	SHChangeNotify(SHCNE_ASSOCCHANGED, SHCNF_IDLIST,NULL,NULL);
 	return retval;
 }
