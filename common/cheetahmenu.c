@@ -175,7 +175,7 @@ static int menu_blame(struct git_data *this_, UINT id)
 		name = this_->name + strlen(wd) + 1;
 		generic_argv[3] = name;
 
-		argv = menu_get_platform_argv(MENU_BLAME, name,
+		argv = menu_get_platform_argv(MENU_BLAME, NULL,
 				&argv_free, &argv_data);
 		if (!argv)
 			argv = generic_argv;
@@ -254,7 +254,7 @@ static int menu_branch(struct git_data *this_, UINT id)
 	menu_item_text = get_menu_item_text(id);
 	generic_argv[2] = menu_item_text;
 
-	argv = menu_get_platform_argv(MENU_BRANCH, menu_item_text,
+	argv = menu_get_platform_argv(MENU_BRANCH, NULL,
 			&argv_free, &argv_data);
 	if (!argv)
 		argv = generic_argv;

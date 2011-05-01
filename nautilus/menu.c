@@ -232,7 +232,7 @@ void invoke_command(NautilusMenuItem *item,
 		nautilus_menu_provider_emit_items_updated_signal(provider);
 }
 
-const char **menu_get_platform_argv(menu_commands cmd, const void *data,
+const char **menu_get_platform_argv(menu_commands cmd, void *data,
 		free_func_t *free_argv, void **argv_data)
 {
 	static const char *bash_argv[] = { "gnome-terminal", NULL };

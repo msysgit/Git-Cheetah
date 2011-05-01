@@ -32,7 +32,7 @@ typedef enum {
 
 typedef void (*free_func_t)(void *);
 
-const char **menu_get_platform_argv(menu_commands cmd, const void *data,
+const char **menu_get_platform_argv(menu_commands cmd, void *data,
 		free_func_t *free_platform_argv, void **argv_data);
 
 /*

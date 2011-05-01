@@ -194,11 +194,10 @@ static const char *get_cmd(void)
 	return buf.buf;
 }
 
-const char **menu_get_platform_argv(menu_commands cmd, const void *data,
+const char **menu_get_platform_argv(menu_commands cmd, void *data,
 		free_func_t *free_argv, void **argv_data)
 {
-	int n;
-	const char *wd = data;
+	char *wd = data;
 	const char **argv;
 	const char *history_argv[] = { "sh", "--login", "-i",
 		"/bin/gitk", "HEAD", "--", NULL, NULL };
