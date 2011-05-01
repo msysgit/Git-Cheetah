@@ -176,13 +176,20 @@ static void free_platform_argv(void *data)
 	free(data);
 }
 
+#ifndef _WIN64
+#define SYSTEMDIR "system32"
+#else
+#define SYSTEMDIR "syswow64"
+#endif
+
 __attribute__((unused))
-static const char *get_win3264_cmd(void)
+static const char *get_cmd(void)
 {
 	static struct strbuf buf = STRBUF_INIT;
 
 	if (!buf.len)
-		strbuf_addf(&buf, "%s\\SysWOW64\\cmd.exe", getenv("WINDIR"));
+		strbuf_addf(&buf, "%s\\" SYSTEMDIR "\\cmd.exe",
+			getenv("WINDIR"));
 
 	return buf.buf;
 }
@@ -196,15 +203,10 @@ const char **menu_get_platform_argv(menu_commands cmd, const void *data,
 	const char *history_argv[] = { "sh", "--login", "-i",
 		"/bin/gitk", "HEAD", "--", NULL, NULL };
 	/* start is required because exec_program does not create a window */
-#ifndef _WIN64
-	const char *bash_argv[] = { "start", "sh", "--login",
-		"-i", NULL };
-#else
 	const char *bash_argv[] = { NULL, "/c",
 		"start sh --login -i", NULL };
 
-	bash_argv[0] = get_win3264_cmd();
-#endif
+	bash_argv[0] = get_cmd();
 
 	*free_argv = NULL;
 	*argv_data = NULL;
