@@ -129,36 +129,32 @@ inline STDMETHODIMP query_context_menu(void *p, HMENU menu,
  */
 static char *convert_directory_format(const char *path)
 {
-	int i;
-	int size_incr = 0;
-	char *converted;
-	char *dst;
-
-	/* Figure out how much extra space we need to escape spaces */
-	for (i = 0; i < MAX_PATH && path[i] != '\0'; ++i)
-		if (path[i] == ' ')
-			size_incr++;
-
-	converted = (char *)calloc(size_incr + i + 1, sizeof(char));
-	dst = converted;
+	/* assuming that each character has to be escaped,
+	allocate twice as much memory */
+	char *converted = (char *)calloc(2 * strlen(path) + 1, sizeof(char));
+	char *dst = converted;
 
 	/* Transform:
-	 * " " -> "\ "
-	 * "\" -> "/"
-	 */
-	for (i = 0; i < MAX_PATH && path[i] != '\0'; ++i)
+	* "\" -> "/"
+	* chars, special to bash, are escaped with "\"
+	*/
+	for (; *path; path++)
 	{
-		switch (path[i])
+		switch (*path)
 		{
 		case ' ':
+		case '(':
+		case ')':
+		case ';':
+		case '\'':
 			*(dst++) = '\\';
-			*(dst++) = ' ';
+			*(dst++) = *path;
 			break;
 		case '\\':
 			*(dst++) = '/';
 			break;
 		default:
-			*(dst++) = path[i];
+			*(dst++) = *path;
 			break;
 		}
 	}
