@@ -194,6 +194,39 @@ static const char *get_cmd(void)
 	return buf.buf;
 }
 
+static void *create_bash_argv(char *wd)
+{
+	/* start is required because exec_program does not create a window */
+	static const char *bash_argv[] = { NULL, "/c", "start",
+		"sh", "-c", NULL, NULL };
+	static const char *command = "cd %s && sh -l -i";
+	void *argv = xmalloc(sizeof(bash_argv));
+	struct strbuf shell_cmd = STRBUF_INIT;
+	char *converted = convert_directory_format(wd);
+
+	/* strbuf_addf allocates only 64 bytes, so we have to grow it manually */
+	strbuf_grow(&shell_cmd, strlen(converted) + strlen(command) + 1);
+	strbuf_addf(&shell_cmd, command, converted);
+	free(converted);
+
+	bash_argv[0] = get_cmd();
+	bash_argv[5] = shell_cmd.buf;
+
+	memcpy(argv, bash_argv, sizeof(bash_argv));
+
+	/* start the cmd on a system drive, so it does not fail on UNC */
+	strcpy(wd, getenv("SYSTEMDRIVE"));
+
+	return argv;
+}
+
+static void free_bash_argv(void *data)
+{
+	void **argv = (void **)data;
+	free(argv[5]);
+	free(data);
+}
+
 const char **menu_get_platform_argv(menu_commands cmd, void *data,
 		free_func_t *free_argv, void **argv_data)
 {
@@ -201,12 +234,6 @@ const char **menu_get_platform_argv(menu_commands cmd, void *data,
 	const char **argv;
 	const char *history_argv[] = { "sh", "--login", "-i",
 		"/bin/gitk", "HEAD", "--", NULL, NULL };
-	/* start is required because exec_program does not create a window */
-	const char *bash_argv[] = { NULL, "/c",
-		"start sh --login -i", NULL };
-
-	bash_argv[0] = get_cmd();
-
 	*free_argv = NULL;
 	*argv_data = NULL;
 
@@ -217,13 +244,14 @@ const char **menu_get_platform_argv(menu_commands cmd, void *data,
 
 			argv = xmalloc(sizeof(history_argv));
 			memcpy(argv, history_argv, sizeof(history_argv));
+			*free_argv = free_platform_argv;
 
 			break;
 
 		case MENU_BASH:
 
-			argv = xmalloc(sizeof(bash_argv));
-			memcpy(argv, bash_argv, sizeof(bash_argv));
+			argv = create_bash_argv(wd);
+			*free_argv = free_bash_argv;
 
 			break;
 
@@ -231,7 +259,6 @@ const char **menu_get_platform_argv(menu_commands cmd, void *data,
 			return NULL;
 	}
 
-	*free_argv = free_platform_argv;
 	*argv_data = argv;
 
 	return argv;
