@@ -34,16 +34,16 @@ static char *get_git_prefix(const char *wd, int *out_status)
 		"git", "rev-parse", "--show-prefix", NULL);
 	if (out_status)
 		*out_status = status;
+	if (status) {
+		strbuf_release(&output);
+		return NULL;
+	}
 	
 	eol = strchr(output.buf, '\n');
 	if (eol)
 		*eol = 0;
 
-	if (!status) /* we're in the repo */
-		prefix = strdup(output.buf);
-
-	strbuf_release(&output);
-	return prefix;
+	return strbuf_detach(&output, NULL);
 }
 
 /*
