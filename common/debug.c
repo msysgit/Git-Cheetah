@@ -8,7 +8,10 @@ void debug_git(char * format, ...)
 {
 	if (!debug_git_fp) {
 #ifdef _WIN32
-		debug_git_fp = fopen("C:/git_shell_ext_debug.txt", "a+");
+		WCHAR path[MAX_PATH];
+		GetTempPathW(MAX_PATH, path);
+		wcsncat(path, L"git_shell_ext_debug.txt", MAX_PATH);
+		debug_git_fp = _wfopen(path, L"a+");
 #else
 		debug_git_fp = fopen("/tmp/git-cheetah-plugin.log", "a+");
 #endif
