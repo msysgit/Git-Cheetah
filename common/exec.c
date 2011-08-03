@@ -125,6 +125,7 @@ int exec_program_v(const char *working_directory,
 				working_directory, argv[0]);
 		}
 	}
+	close_process(pid);
 
 	if (output)
 		close(fdout[0]);

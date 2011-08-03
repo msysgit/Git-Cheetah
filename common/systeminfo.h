@@ -21,4 +21,10 @@ pid_t fork_process(const char *cmd, const char **args, const char *wd);
  */
 int wait_for_process(pid_t pid, int max_time, int *errcode);
 
+#ifndef _WIN32
+#define close_process
+#else
+void close_process(pid_t pid);
+#endif
+
 #endif /* SYSTEMINFO_H */

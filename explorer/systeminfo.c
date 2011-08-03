@@ -187,3 +187,8 @@ int wait_for_process(pid_t pid, int max_time, int *errcode)
 	}
 	return 0;
 }
+
+void close_process(pid_t pid)
+{
+	CloseHandle((HANDLE)pid);
+}
