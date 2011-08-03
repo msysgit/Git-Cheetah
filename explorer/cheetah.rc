@@ -7,7 +7,7 @@
 //
 // Required even by windres to compile LANGUAGE
 //
-#include "afxres.h"
+#include "windows.h"
 
 /////////////////////////////////////////////////////////////////////////////
 #undef APSTUDIO_READONLY_SYMBOLS
