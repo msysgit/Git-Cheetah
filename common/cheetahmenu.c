@@ -26,7 +26,7 @@ char *wd_from_path(const char *path, BOOL *is_path_dir)
 
 static char *get_git_prefix(const char *wd, int *out_status)
 {
-	char *prefix = NULL, *eol;
+	char *eol;
 	int status;
 	struct strbuf output = STRBUF_INIT;
 
