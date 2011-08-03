@@ -178,7 +178,6 @@ static void free_platform_argv(void *data)
 #define SYSTEMDIR "syswow64"
 #endif
 
-__attribute__((unused))
 static const char *get_cmd(void)
 {
 	static struct strbuf buf = STRBUF_INIT;
