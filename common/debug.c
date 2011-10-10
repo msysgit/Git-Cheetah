@@ -4,6 +4,19 @@
 
 static FILE *debug_git_fp = NULL;
 
+#ifdef _WIN32
+static void reset_inherit_flag(FILE *file)
+{
+	HANDLE handle;
+
+	if(!file)
+		return;
+
+	handle = (HANDLE)_get_osfhandle(_fileno(file));
+	SetHandleInformation(handle, HANDLE_FLAG_INHERIT, 0);
+}
+#endif
+
 void debug_git(char * format, ...)
 {
 	if (!debug_git_fp) {
@@ -12,6 +25,7 @@ void debug_git(char * format, ...)
 		GetTempPathW(MAX_PATH, path);
 		wcsncat(path, L"git_shell_ext_debug.txt", MAX_PATH);
 		debug_git_fp = _wfopen(path, L"a+");
+		reset_inherit_flag(debug_git_fp);
 #else
 		debug_git_fp = fopen("/tmp/git-cheetah-plugin.log", "a+");
 #endif
