@@ -666,7 +666,7 @@ static pid_t mingw_spawnve_cwd(const char *cmd, const char **argv, char **env,
 	}
 
 	memset(&pi, 0, sizeof(pi));
-	ret = CreateProcess(cmd, args.buf, NULL, NULL, FALSE, flags,
+	ret = CreateProcess(cmd, args.buf, NULL, NULL, TRUE, flags,
 		env ? envblk.buf : NULL, working_directory, &si, &pi);
 
 	if (env)
