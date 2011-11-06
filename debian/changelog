@@ -1,3 +1,10 @@
+git-cheetah (0.1.0-rc4) jaunty karmic lucid maverick natty oneiric; urgency=low
+
+  * release candidate 4
+    Made the package available for multiple distributions
+
+ -- Heiko Voigt (moon) <hvoigt@hvoigt.net>  Fri, 06 Nov 2011 20:24:10 +0100
+
 git-cheetah (0.1.0-rc3) jaunty; urgency=low
 
   * release candidate 3
