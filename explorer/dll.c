@@ -1,6 +1,7 @@
-
 #include "../common/cache.h"
 
+#include <windows.h>
+#include <ole2.h>
 #include <shlobj.h>
 #include <stdio.h>
 #include "dll.h"
@@ -20,7 +21,7 @@ const char *program_id = "Git-Cheetah.Application";
  */
 static HINSTANCE hInst;
 
-HRESULT PASCAL DllGetClassObject(REFCLSID obj_guid, REFIID factory_guid,
+HRESULT STDAPICALLTYPE DllGetClassObject(REFCLSID obj_guid, REFIID factory_guid,
 		void **factory_handle)
 {
 	if (IsEqualCLSID(obj_guid, &CLSID_git_shell_ext) ||
@@ -32,7 +33,7 @@ HRESULT PASCAL DllGetClassObject(REFCLSID obj_guid, REFIID factory_guid,
 	return CLASS_E_CLASSNOTAVAILABLE;
 }
 
-HRESULT PASCAL DllCanUnloadNow(void)
+HRESULT STDAPICALLTYPE DllCanUnloadNow(void)
 {
    return (object_count || lock_count) ? S_FALSE : S_OK;
 }
@@ -134,36 +135,36 @@ static const char *get_class_id()
  SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Git_is1\InstallLocation
  */
 static const reg_value registry_info[] = {
-	{ CURRENT_WINDOWS APPROVED_EXT, "@@CLSID@@", "@@PROGRAM_NAME@@" },
+	{ CURRENT_WINDOWS APPROVED_EXT, "@@CLSID@@", "@@PROGRAM_NAME@@", 0},
 	{ CURRENT_WINDOWS APPROVED_EXT "\\@@CLSID@@",
-		NULL, NULL },
+	  NULL, NULL, 0 },
 	{ CURRENT_WINDOWS APPROVED_EXT "\\@@CLSID@@",
-		NULL,"@@PROGRAM_NAME@@" },
-	{ CLASS_CHEETAH, NULL, NULL },
-	{ CLASS_CHEETAH, NULL, "@@PROGRAM_NAME@@" },
-	{ CLASS_CHEETAH "\\InProcServer32", NULL, NULL },
-	{ CLASS_CHEETAH "\\InProcServer32", NULL, "@@PROGRAM_PATH@@"},
-	{ CLASS_CHEETAH "\\InProcServer32", "ThreadingModel", "Apartment" },
-	{ CLASSES_ROOT "*\\" CONTEXTMENUHANDLER, NULL, NULL },
-	{ CLASSES_ROOT "*\\" CONTEXTMENUHANDLER, NULL, "@@CLSID@@" },
-	{ CLASSES_ROOT "Directory\\" CONTEXTMENUHANDLER, NULL, NULL },
-	{ CLASSES_ROOT "Directory\\" CONTEXTMENUHANDLER, NULL, "@@CLSID@@" },
+	  NULL, "@@PROGRAM_NAME@@", 0 },
+	{ CLASS_CHEETAH, NULL, NULL, 0 },
+	{ CLASS_CHEETAH, NULL, "@@PROGRAM_NAME@@", 0 },
+	{ CLASS_CHEETAH "\\InProcServer32", NULL, NULL, 0 },
+	{ CLASS_CHEETAH "\\InProcServer32", NULL, "@@PROGRAM_PATH@@", 0},
+	{ CLASS_CHEETAH "\\InProcServer32", "ThreadingModel", "Apartment", 0 },
+	{ CLASSES_ROOT "*\\" CONTEXTMENUHANDLER, NULL, NULL, 0 },
+	{ CLASSES_ROOT "*\\" CONTEXTMENUHANDLER, NULL, "@@CLSID@@", 0 },
+	{ CLASSES_ROOT "Directory\\" CONTEXTMENUHANDLER, NULL, NULL, 0x0500 },
+	{ CLASSES_ROOT "Directory\\" CONTEXTMENUHANDLER, NULL, "@@CLSID@@", 0x0500 },
 	{ CLASSES_ROOT "Directory\\Background\\" CONTEXTMENUHANDLER,
-		NULL, NULL },
+	  NULL, NULL, 0 },
 	{ CLASSES_ROOT "Directory\\Background\\" CONTEXTMENUHANDLER,
-		NULL, "@@CLSID@@" },
-	{ CLASSES_ROOT "Drive\\" CONTEXTMENUHANDLER, NULL, NULL },
-	{ CLASSES_ROOT "Drive\\" CONTEXTMENUHANDLER, NULL, "@@CLSID@@"},
-	{ CLASSES_ROOT "Folder\\" CONTEXTMENUHANDLER, NULL, NULL },
-	{ CLASSES_ROOT "Folder\\" CONTEXTMENUHANDLER, NULL, "@@CLSID@@" },
-	{ CLASSES_ROOT "Folder\\" COLUMNHANDLER "\\@@CLSID@@", NULL, NULL },
+	  NULL, "@@CLSID@@", 0 },
+	{ CLASSES_ROOT "Drive\\" CONTEXTMENUHANDLER, NULL, NULL, 0x0500 },
+	{ CLASSES_ROOT "Drive\\" CONTEXTMENUHANDLER, NULL, "@@CLSID@@", 0x0500 },
+	{ CLASSES_ROOT "Folder\\" CONTEXTMENUHANDLER, NULL, NULL, 0x0500 },
+	{ CLASSES_ROOT "Folder\\" CONTEXTMENUHANDLER, NULL, "@@CLSID@@", 0x0500 },
+	{ CLASSES_ROOT "Folder\\" COLUMNHANDLER "\\@@CLSID@@", NULL, NULL, 0 },
 	{ CLASSES_ROOT "InternetShortcut\\" CONTEXTMENUHANDLER,
-		NULL, NULL },
+	  NULL, NULL, 0x0500 },
 	{ CLASSES_ROOT "InternetShortcut\\" CONTEXTMENUHANDLER,
-		NULL, "@@CLSID@@" },
-	{ GIT_CHEETAH_REG_PATH, NULL, NULL },
+	  NULL, "@@CLSID@@", 0x0500 },
+	{ GIT_CHEETAH_REG_PATH, NULL, NULL, 0 },
 	{ GIT_CHEETAH_REG_PATH,
-		GIT_CHEETAH_REG_PATHTOMSYS, "@@MSYSGIT_PATH@@" },
+	  GIT_CHEETAH_REG_PATHTOMSYS, "@@MSYSGIT_PATH@@", 0 },
 	{ NULL, NULL, NULL }
 };
 

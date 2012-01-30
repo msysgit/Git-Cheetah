@@ -32,7 +32,9 @@ else
 endif
 
 # define _WIN32_IE, so IColumnProvider's structures are available
-CFLAGS=-O -g -DNO_MMAP -DNO_PREAD -DNO_STRLCPY -D_WIN32_IE=$(WIN32_IE) $(OSCFLAGS)
+DEFS=-DNO_MMAP -DNO_PREAD -DNO_STRLCPY -DSTRICT \
+	-DWINVER=0x0500 -D_WIN32_WINNT=0x0500 -D_WIN32_IE=$(WIN32_IE)
+CFLAGS=-O -g $(DEFS) $(OSCFLAGS)
 DLLWRAPFLAGS = -Wl,--enable-stdcall-fixup $(OSDLLWRAPFLAG)
 
 MSYSGIT_PATH=$(shell cd /; pwd -W | sed -e 's|/|\\\\\\\\|g')

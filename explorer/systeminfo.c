@@ -3,6 +3,7 @@
 #include "../common/systeminfo.h"
 #include "../common/debug.h"
 #include <windows.h>
+#include <ole2.h>
 #include "dll.h"
 
 static struct strbuf gitPath = STRBUF_INIT;

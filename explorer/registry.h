@@ -16,6 +16,7 @@ typedef struct reg_value {
 	char *path;
 	char *name;
 	char *value;
+	unsigned int minversion;
 } reg_value;
 
 /*

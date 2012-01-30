@@ -1,11 +1,23 @@
 #include <windows.h>
 #include "registry.h"
 
-/* uses get_registry_path to replace patterns */
+/* uses get_registry_path to replace patterns
+ *
+ * The minversion field can be used to mark entries as specific to a
+ * certain version.  So to add entries only for Windows 2K or XP use
+ * 0x0500, for Vista or Windows 7 use 0x0600, 0x0610 would be Win7 only.
+ */
 HRESULT create_reg_entries(const HKEY root, reg_value const info[])
 {
 	HRESULT result;
 	int i;
+	OSVERSIONINFOEX ver;
+	ULONGLONG condition = 0;
+
+	ver.dwOSVersionInfoSize = sizeof(ver);
+	memset(&ver, 0, sizeof(ver));
+	VER_SET_CONDITION(condition, VER_MAJORVERSION, VER_EQUAL);
+	VER_SET_CONDITION(condition, VER_MINORVERSION, VER_GREATER_EQUAL);
 
 	for (i = 0; NULL != info[i].path; ++i) {
 		char path[MAX_REGISTRY_PATH];
@@ -14,6 +26,15 @@ HRESULT create_reg_entries(const HKEY root, reg_value const info[])
 
 		HKEY key;
 		DWORD disp;
+
+		if (info[i].minversion != 0) {
+			ver.dwMajorVersion = (info[i].minversion >> 8) & 0xff;
+			ver.dwMinorVersion = info[i].minversion & 0xff;
+			if (!VerifyVersionInfo(&ver, VER_MAJORVERSION
+					       | VER_MINORVERSION, condition)) {
+				continue;
+			}
+		}
 
 		get_registry_path(info[i].path, path);
 		result = RegCreateKeyEx(root, path,
