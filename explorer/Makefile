@@ -12,6 +12,7 @@ endif
 
 CC = $(cross)gcc.exe
 DLLWRAP = $(cross)dllwrap.exe
+WINDRES = $(cross)windres
 
 MODULES=ext.c dll.c factory.c menu.c systeminfo.c registry.c \
 	columns.c
@@ -83,4 +84,4 @@ clean: platform-clean
 	-rm -f  $(TARGET32) $(TARGET64)
 
 cheetah.o: cheetah.rc ../common/version.h
-	windres -o $@ -i $<
+	$(WINDRES) -o $@ -i $<
