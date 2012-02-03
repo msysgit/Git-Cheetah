@@ -76,9 +76,12 @@ install-user: all
 uninstall-user:
 	regsvr32 -u -s $(DLL_PATH)
 
-platform-clean:
-	-rm -f $(OBJECTS) $(COMPAT_OBJ) $(TARGET) deps
+objects-clean:
+	-rm -f $(OBJECTS) $(COMPAT_OBJ) deps
 	$(MAKE) -C ../common clean
+
+platform-clean: objects-clean
+	-rm -f $(TARGET)
 
 clean: platform-clean
 	-rm -f  $(TARGET32) $(TARGET64)
