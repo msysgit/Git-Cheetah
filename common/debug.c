@@ -17,7 +17,7 @@ static void reset_inherit_flag(FILE *file)
 }
 #endif
 
-void debug_git(char * format, ...)
+void _debug_git(char * format, ...)
 {
 	if (!debug_git_fp) {
 #ifdef _WIN32
@@ -47,7 +47,7 @@ void debug_git(char * format, ...)
 	}
 }
 
-void debug_git_mbox(char *format, ...)
+void _debug_git_mbox(char *format, ...)
 {
 	va_list params;
 	char buffer[1024];

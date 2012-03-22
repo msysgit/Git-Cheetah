@@ -6,11 +6,15 @@ LIBDIR = /usr/lib
 LDFLAGS = -shared \
 	$(shell pkg-config --libs libnautilus-extension)
 
+ifdef DEBUG
+	DBG_CFLAGS=-DDEBUG
+endif
+
 WFLAGS=-std=c99 -Wall -pedantic
 
 # needed to get the proper declarations for glibc
 COMPAT_CFLAGS = -D_POSIX_C_SOURCE=200112L -D_GNU_SOURCE
-CFLAGS = $(WFLAGS) -fPIC -g $(COMPAT_CFLAGS) \
+CFLAGS = $(WFLAGS) -fPIC -g $(COMPAT_CFLAGS) $(DBG_CFLAGS) \
 	$(shell pkg-config --cflags libnautilus-extension)
 
 export CFLAGS

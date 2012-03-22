@@ -1,4 +1,8 @@
-CFLAGS = -g -pedantic -Wall -std=c99
+ifdef DEBUG
+	DBG_CFLAGS=-DDEBUG
+endif
+
+CFLAGS = -g -pedantic -Wall -std=c99 $(DBG_CFLAGS)
 TARGET = git-cheetah
 MODULES = menu.c util.c plugin.c ../compat/posix.c
 

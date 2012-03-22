@@ -46,7 +46,7 @@ int exec_program_v(const char *working_directory,
 	int status = 0;
 	int ret;
 
-	reporter *debug = QUIETMODE & flags ? debug_git : debug_git_mbox;
+	reporter *debug = QUIETMODE & flags ? _debug_git : _debug_git_mbox;
 
 	if (!git_path()) {
 		debug("[ERROR] Could not find git path");

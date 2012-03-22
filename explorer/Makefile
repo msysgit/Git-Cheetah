@@ -10,6 +10,10 @@ WIN32_IE=0x0500
 TARGET=$(TARGET32)
 endif
 
+ifdef DEBUG
+	DBG_CFLAGS=-DDEBUG
+endif
+
 CC = $(cross)gcc.exe
 DLLWRAP = $(cross)dllwrap.exe
 WINDRES = $(cross)windres
@@ -33,7 +37,7 @@ else
 endif
 
 # define _WIN32_IE, so IColumnProvider's structures are available
-CFLAGS=-O -g -DNO_MMAP -DNO_PREAD -DNO_STRLCPY -D_WIN32_IE=$(WIN32_IE) $(OSCFLAGS)
+CFLAGS=-O -g -DNO_MMAP -DNO_PREAD -DNO_STRLCPY -D_WIN32_IE=$(WIN32_IE) $(OSCFLAGS) $(DBG_CFLAGS)
 DLLWRAPFLAGS = -Wl,--enable-stdcall-fixup $(OSDLLWRAPFLAG)
 
 MSYSGIT_PATH=$(shell cd /; pwd -W | sed -e 's|/|\\\\\\\\|g')
