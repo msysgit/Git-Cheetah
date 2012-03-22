@@ -35,15 +35,21 @@ void _debug_git(char * format, ...)
 	if (debug_git_fp)
 	{
 		va_list params;
-		char buffer[1024];
+		char *buffer;
 		int length = 0;
       
 		va_start(params, format);
-		length = vsnprintf(buffer, sizeof(buffer), format, params);
+		length = vsnprintf(NULL, 0, format, params);
+		if (length < 0)
+			return;
+
+		buffer = xmalloc(length + 1);
+		vsnprintf(buffer, length, format, params);
 		va_end(params);
 		fwrite(buffer, sizeof(char), length, debug_git_fp);
 		fputc('\n', debug_git_fp);
 		fflush(debug_git_fp);
+		free(buffer);
 	}
 }
 
