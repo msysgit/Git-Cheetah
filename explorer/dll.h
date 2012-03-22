@@ -8,11 +8,11 @@ extern const char *program_name;
 extern const char *program_version;
 extern const char *program_id;
 
-STDAPI DllGetClassObject(REFCLSID obj_guid, REFIID factory_guid,
+HRESULT PASCAL DllGetClassObject(REFCLSID obj_guid, REFIID factory_guid,
 				 void **factory_handle);
-STDAPI DllCanUnloadNow(void);
-STDAPI DllRegisterServer(void);
-STDAPI DllUnregisterServer(void);
+HRESULT PASCAL DllCanUnloadNow(void);
+HRESULT PASCAL DllRegisterServer(void);
+HRESULT PASCAL DllUnregisterServer(void);
 BOOL WINAPI DllMain(HINSTANCE instance, DWORD reason, LPVOID reserved);
 
 #endif /* DLL_H */
