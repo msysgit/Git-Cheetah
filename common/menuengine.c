@@ -63,6 +63,9 @@ void build_menu_items(struct git_data *data,
 
 char *get_menu_item_text(unsigned int id)
 {
+	if (!active_menu)
+		return NULL;
+
 	if (id > next_active_item)
 		return NULL;
 
