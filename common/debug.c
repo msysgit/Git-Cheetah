@@ -44,7 +44,7 @@ void _debug_git(char * format, ...)
 			return;
 
 		buffer = xmalloc(length + 1);
-		vsnprintf(buffer, length, format, params);
+		vsnprintf(buffer, length + 1, format, params);
 		va_end(params);
 		fwrite(buffer, sizeof(char), length, debug_git_fp);
 		fputc('\n', debug_git_fp);
