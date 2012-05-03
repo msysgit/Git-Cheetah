@@ -20,7 +20,7 @@ const char *program_id = "Git-Cheetah.Application";
  */
 static HINSTANCE hInst;
 
-HRESULT PASCAL DllGetClassObject(REFCLSID obj_guid, REFIID factory_guid,
+HRESULT STDAPICALLTYPE DllGetClassObject(REFCLSID obj_guid, REFIID factory_guid,
 		void **factory_handle)
 {
 	if (IsEqualCLSID(obj_guid, &CLSID_git_shell_ext) ||
@@ -32,7 +32,7 @@ HRESULT PASCAL DllGetClassObject(REFCLSID obj_guid, REFIID factory_guid,
 	return CLASS_E_CLASSNOTAVAILABLE;
 }
 
-HRESULT PASCAL DllCanUnloadNow(void)
+HRESULT STDAPICALLTYPE DllCanUnloadNow(void)
 {
    return (object_count || lock_count) ? S_FALSE : S_OK;
 }
