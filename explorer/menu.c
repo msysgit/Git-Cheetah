@@ -231,6 +231,7 @@ const char **menu_get_platform_argv(menu_commands cmd, void *data,
 		"/bin/gitk", "HEAD", "--", NULL, NULL };
 	*free_argv = NULL;
 	*argv_data = NULL;
+	struct branch_gitk_data *branch_gitk = data;
 
 	switch(cmd)
 	{
@@ -242,6 +243,18 @@ const char **menu_get_platform_argv(menu_commands cmd, void *data,
 			*free_argv = free_platform_argv;
 
 			break;
+
+		case MENU_BRANCH_GITK:
+
+			history_argv[4] = branch_gitk->branch;
+			history_argv[6] = branch_gitk->file;
+
+			argv = xmalloc(sizeof(history_argv));
+			memcpy(argv, history_argv, sizeof(history_argv));
+			*free_argv = free_platform_argv;
+
+			break;
+
 
 		case MENU_BASH:
 

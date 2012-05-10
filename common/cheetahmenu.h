@@ -28,7 +28,13 @@ typedef enum {
 	MENU_CITOOL,
 	MENU_ADDALL,
 	MENU_BRANCH,
+	MENU_BRANCH_GITK,
 } menu_commands;
+
+struct branch_gitk_data {
+	const char *branch;
+	const char *file;
+};
 
 typedef void (*free_func_t)(void *);
 

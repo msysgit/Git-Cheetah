@@ -275,6 +275,52 @@ static int menu_branch(struct git_data *this_, UINT id)
 	return 1;
 }
 
+static int menu_branch_gitk(struct git_data *this_, UINT id)
+{
+	int status;
+	char *wd = wd_from_path(this_->name, NULL);
+	struct strbuf err;
+	const char *menu_item_text;
+	const char *name;
+	const char **argv;
+
+	free_func_t argv_free;
+	void *argv_data;
+
+	struct branch_gitk_data platform_data;
+
+	const char *generic_argv[] = { "gitk", NULL, "--",
+		NULL, NULL };
+
+	menu_item_text = get_menu_item_text(id);
+	name = this_->name + strlen(wd) + 1;
+
+	generic_argv[1] = menu_item_text;
+	generic_argv[3] = name;
+
+	platform_data.branch = menu_item_text;
+	platform_data.file = name;
+	argv = menu_get_platform_argv(MENU_BRANCH_GITK, &platform_data,
+			&argv_free, &argv_data);
+	if (!argv)
+		argv = generic_argv;
+
+	strbuf_init(&err, 0);
+
+	status = exec_program_v(wd, NULL, &err, HIDDENMODE | WAITMODE, argv);
+
+	/* if nothing, terribly wrong happened, show the confirmation */
+	if (-1 != status)
+		/* strangely enough even success message is on stderr */
+		debug_git_mbox(err.buf);
+
+	if (argv_free)
+		argv_free(argv_data);
+	free(wd);
+
+	return 1;
+}
+
 static BOOL build_branch_menu(struct git_data *data,
 			      const struct menu_item *item,
 			      void *platform)
@@ -286,6 +332,7 @@ static BOOL build_branch_menu(struct git_data *data,
 
 	struct strbuf output;
 	struct strbuf **lines, **it;
+	const struct menu_item *parent_item = item;
 	strbuf_init(&output, 0);
 
 	status = exec_program(wd, &output, NULL, WAITMODE,
@@ -301,14 +348,16 @@ static BOOL build_branch_menu(struct git_data *data,
 		struct menu_item item = {
 			MENU_ITEM_CLEANUP, 0,
 			NULL, NULL,
-			NULL, menu_branch
+			NULL, parent_item->handler
 		};
 
 		strbuf_rtrim(*it);
 		item.string = strdup((*it)->buf + 2);
 		item.helptext = strdup((*it)->buf + 2);
-		item.flags = '*' == (*it)->buf[0] ?
-			MI_CHECKED | MI_DISABLED : 0;
+		if (parent_item->handler == menu_branch) {
+			item.flags = '*' == (*it)->buf[0] ?
+				MI_CHECKED | MI_DISABLED : 0;
+		}
 		if (build_item(data, &item, submenu))
 			append_active_menu(&item);
 		else
@@ -372,6 +421,10 @@ const struct menu_item cheetah_menu[] = {
 		"Show GIT history of the chosen file or directory.",
 		build_item,
 		menu_history },
+	{ MENU_ITEM_REPO, 0, "Git History of Branch",
+		"Show GIT history of the chosen branch of file or directory.",
+		build_branch_menu, menu_branch_gitk },
+
 	{ MENU_ITEM_TRACK | MENU_ITEM_FILE, 0, "Git &Blame",
 		"Start a blame viewer on the specified file.",
 		build_item, menu_blame },
@@ -382,7 +435,7 @@ const struct menu_item cheetah_menu[] = {
 
 	{ MENU_ITEM_REPO, 0, "Git Bra&nch",
 		"Checkout a branch",
-		build_branch_menu, NULL },
+		build_branch_menu, menu_branch },
 
 	{ MENU_ITEM_NOREPO, 0, "Git I&nit Here",
 		"Initialize GIT repo in the local directory.",
