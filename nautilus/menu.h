@@ -8,9 +8,6 @@ GList *git_extension_get_file_items(NautilusMenuProvider *provider,
 GList *git_extension_get_background_items(NautilusMenuProvider *provider,
 		GtkWidget *window,
 		NautilusFileInfo *current_folder);
-GList *git_extension_get_toolbar_items(NautilusMenuProvider *provider,
-		GtkWidget *window,
-		NautilusFileInfo *current_folder);
 
 /* command callback */
 void invoke_command(NautilusMenuItem *item, gpointer user_data);

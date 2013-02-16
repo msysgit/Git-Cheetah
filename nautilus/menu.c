@@ -207,14 +207,6 @@ GList *git_extension_get_background_items(NautilusMenuProvider *provider,
 	return nautilus_data.menu_items;
 }
 
-GList *git_extension_get_toolbar_items(NautilusMenuProvider *provider,
-		GtkWidget *window,
-		NautilusFileInfo *current_folder)
-{
-	return git_extension_get_background_items(provider,
-			window, current_folder);
-}
-
 void invoke_command(NautilusMenuItem *item,
 		gpointer user_data)
 {
