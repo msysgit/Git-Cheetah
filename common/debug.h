@@ -5,7 +5,7 @@ typedef void reporter(char *format, ...);
 void _debug_git(char * format, ...);
 void _debug_git_mbox(char *format, ...);
 
-#ifdef DEBUG
+#ifdef GIT_CHEETAH_DEBUG
 #	define debug_git _debug_git
 #	define debug_git_mbox _debug_git_mbox
 #else

@@ -7,7 +7,7 @@ LDFLAGS = -shared \
 	$(shell pkg-config --libs libnautilus-extension)
 
 ifdef DEBUG
-	DBG_CFLAGS=-DDEBUG
+	DBG_CFLAGS=-DGIT_CHEETAH_DEBUG
 endif
 
 WFLAGS=-std=c99 -Wall -pedantic
