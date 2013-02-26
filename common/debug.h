@@ -9,7 +9,7 @@ void _debug_git_mbox(char *format, ...);
 #	define debug_git _debug_git
 #	define debug_git_mbox _debug_git_mbox
 #else
-#	define debug_git
+#	define debug_git(...)
 #	define debug_git_mbox
 #endif
 
