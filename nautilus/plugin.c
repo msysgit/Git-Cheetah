@@ -113,5 +113,4 @@ static void git_extension_menu_provider_iface_init(
 {
 	iface->get_file_items = git_extension_get_file_items;
 	iface->get_background_items = git_extension_get_background_items;
-	iface->get_toolbar_items = git_extension_get_toolbar_items;
 }

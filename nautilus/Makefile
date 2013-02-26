@@ -42,8 +42,8 @@ $(TARGET).so: $(OBJECTS) $(COMPAT_OBJ) common-obj
 -include deps
 
 install: all
-	mkdir -p $(LIBDIR)/nautilus/extensions-2.0
-	cp $(TARGET).so $(LIBDIR)/nautilus/extensions-2.0/
+	mkdir -p $(LIBDIR)/nautilus/extensions-3.0
+	cp $(TARGET).so $(LIBDIR)/nautilus/extensions-3.0/
 
 clean:
 	rm -f $(OBJECTS) $(COMPAT_OBJ) $(TARGET).so deps
