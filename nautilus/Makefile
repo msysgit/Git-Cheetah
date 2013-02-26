@@ -45,6 +45,10 @@ install: all
 	mkdir -p $(LIBDIR)/nautilus/extensions-3.0
 	cp $(TARGET).so $(LIBDIR)/nautilus/extensions-3.0/
 
+checkinstall: all
+	sudo checkinstall --nodoc \
+		--pkgname=git_cheetah --pkgversion=`git describe | sed 's/^v//'`
+
 clean:
 	rm -f $(OBJECTS) $(COMPAT_OBJ) $(TARGET).so deps
 	$(MAKE) -C ../common clean
