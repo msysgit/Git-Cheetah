@@ -109,17 +109,15 @@ pid_t fork_process(const char *cmd, const char **args, const char *wd)
 
 	/* if gitpath is set, temporarily set PATH=<gitpath>;%PATH% */
 	if (gitpath) {
-		int len;
 		struct strbuf path = STRBUF_INIT;
 		strbuf_addstr(&path, gitpath);
-		len = GetEnvironmentVariable("PATH", NULL, 0);
-		if (len) {
-			oldpath = malloc(len);
-			GetEnvironmentVariable("PATH", oldpath, len);
+		oldpath = getenv("PATH");
+		if (oldpath) {
+			oldpath = xstrdup(oldpath);
 			strbuf_addch(&path, ';');
 			strbuf_addstr(&path, oldpath);
 		}
-		SetEnvironmentVariable("PATH", path.buf);
+		setenv("PATH", path.buf, 1);
 		strbuf_release(&path);
 	}
 
@@ -128,7 +126,7 @@ pid_t fork_process(const char *cmd, const char **args, const char *wd)
 
 	/* reset PATH to previous value */
 	if (gitpath) {
-		SetEnvironmentVariable("PATH", oldpath);
+		setenv("PATH", oldpath, 1);
 		free(oldpath);
 	}
 	return result;
