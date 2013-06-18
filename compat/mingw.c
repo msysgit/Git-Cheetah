@@ -1,5 +1,6 @@
 #include "../common/git-compat-util.h"
 #include "../common/strbuf.h"
+#include "../common/cache.h"
 
 unsigned int _CRT_fmode = _O_BINARY;
 
@@ -369,17 +370,53 @@ char *mingw_getcwd(char *pointer, int len)
 	return ret;
 }
 
-#undef getenv
+/*
+ * Use GetEnvironmentVariable() instead of getenv() to see updates to the
+ * hosting explorer process's environment (e.g. PATH). MSVCRT's getenv() is
+ * just a copy which may not be up to date.
+ *
+ * This implementation is *not* thread safe. This is not a problem as the
+ * git-cheetah DLL is appartment threaded, so all calls should be made from
+ * the same COM thread.
+ *
+ * Additionally, each call overwrites the previous return value (i.e. use
+ * strdup(getenv(...)) if necessary).
+ *
+ * Note: both of these limitations are POSIX compliant.
+ */
+static char *do_getenv(const char *name)
+{
+	static char *value;
+	static unsigned value_len;
+	unsigned len = GetEnvironmentVariableA(name, NULL, 0);
+	if (!len)
+		return NULL;
+	ALLOC_GROW(value, len, value_len);
+	if (!GetEnvironmentVariableA(name, value, value_len))
+		return NULL;
+	return value;
+}
+
 char *mingw_getenv(const char *name)
 {
-	char *result = getenv(name);
+	char *result = do_getenv(name);
 	if (!result && !strcmp(name, "TMPDIR")) {
 		/* on Windows it is TMP and TEMP */
-		result = getenv("TMP");
+		result = do_getenv("TMP");
 		if (!result)
-			result = getenv("TEMP");
+			result = do_getenv("TEMP");
 	}
 	return result;
+}
+
+int mingw_setenv(const char *name, const char *value, int overwrite)
+{
+	if (!overwrite && GetEnvironmentVariableA(name, NULL, 0))
+		return 0;
+	if (SetEnvironmentVariableA(name, value))
+		return 0;
+	errno = EINVAL;
+	return -1;
 }
 
 /*
