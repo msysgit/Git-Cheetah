@@ -67,6 +67,7 @@ extern struct git_shell_ext_virtual_table
 
 extern DWORD object_count;
 extern DWORD lock_count;
+extern HINSTANCE hInst;
 
 inline STDMETHODIMP query_interface_git_data(struct git_data *this_,
 					     REFIID iid, LPVOID FAR *pointer);

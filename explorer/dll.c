@@ -18,7 +18,7 @@ const char *program_id = "Git-Cheetah.Application";
  * The following is just the necessary infrastructure for having a .dll
  * which can be registered as a COM object.
  */
-static HINSTANCE hInst;
+HINSTANCE hInst;
 
 HRESULT STDAPICALLTYPE DllGetClassObject(REFCLSID obj_guid, REFIID factory_guid,
 		void **factory_handle)

@@ -55,14 +55,19 @@ BOOL build_separator(struct git_data *data, const struct menu_item *item,
 BOOL build_item(struct git_data *data, const struct menu_item *item,
 		void *platform)
 {
+	MENUITEMINFO mii;
+
 	struct windows_menu_data *windows_menu = platform;
 	if (windows_menu->last < windows_menu->first + next_active_item)
 		return FALSE;
 
-	InsertMenu(windows_menu->menu, windows_menu->index,
-		MF_STRING | MF_BYPOSITION,
-		windows_menu->first + next_active_item,
-		item->string);
+	memset(&mii, 0, sizeof(MENUITEMINFO));
+	mii.cbSize = sizeof(MENUITEMINFO);
+	mii.fMask = MIIM_STRING |  MIIM_ID | MIIM_DATA;
+	mii.wID = windows_menu->first + next_active_item;
+	mii.dwItemData = (ULONG_PTR) hInst;
+	mii.dwTypeData = item->string;
+	InsertMenuItem(windows_menu->menu, windows_menu->index, TRUE, &mii);
 
 	if (item->flags & MI_CHECKED)
 		CheckMenuItem(windows_menu->menu, windows_menu->index,
@@ -78,10 +83,18 @@ void *start_submenu(struct git_data *this_, const struct menu_item *item,
 	struct windows_menu_data *parent_menu = platform;
 	struct windows_menu_data *submenu =
 		xmalloc(sizeof(struct windows_menu_data));
+	MENUITEMINFO mii;
+
 	submenu->menu = CreateMenu();
-	InsertMenu(parent_menu->menu, parent_menu->index,
-		MF_POPUP | MF_BYPOSITION, (UINT_PTR)(submenu->menu),
-		item->string);
+
+	memset(&mii, 0, sizeof(MENUITEMINFO));
+	mii.cbSize = sizeof(MENUITEMINFO);
+	mii.fMask = MIIM_STRING | MIIM_DATA | MIIM_SUBMENU;
+	mii.dwItemData = (ULONG_PTR) hInst;
+	mii.dwTypeData = item->string;
+	mii.hSubMenu = submenu->menu;
+	InsertMenuItem(parent_menu->menu, parent_menu->index, TRUE, &mii);
+
 	parent_menu->index++;
 
 	submenu->index = 0;
@@ -94,6 +107,28 @@ void *start_submenu(struct git_data *this_, const struct menu_item *item,
 void end_submenu(void *parent, void *submenu)
 {
 	free(submenu);
+}
+
+BOOL menu_exists(HMENU menu)
+{
+	int count, i;
+	MENUITEMINFO mii;
+	memset(&mii, 0, sizeof(MENUITEMINFO));
+	mii.cbSize = sizeof(MENUITEMINFO);
+	mii.fMask = MIIM_DATA;
+	mii.dwTypeData = NULL;
+
+	count = GetMenuItemCount(menu);
+	for (i = 0; i < count; ++i)
+	{
+		GetMenuItemInfo(menu, i, TRUE, &mii);
+		if (mii.dwItemData == (ULONG_PTR) hInst)
+		{
+			return TRUE;
+		}
+	}
+
+	return FALSE;
 }
 
 /*
@@ -110,6 +145,9 @@ inline STDMETHODIMP query_context_menu(void *p, HMENU menu,
 		{ menu, index, first_command, last_command };
 
 	if (flags & CMF_DEFAULTONLY)
+		return MAKE_HRESULT(SEVERITY_SUCCESS, FACILITY_NULL, 0);
+
+	if (menu_exists(menu))
 		return MAKE_HRESULT(SEVERITY_SUCCESS, FACILITY_NULL, 0);
 
 	build_cheetah_menu(this_, &windows_menu);
