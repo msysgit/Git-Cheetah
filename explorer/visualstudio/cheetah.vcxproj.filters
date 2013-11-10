@@ -1,0 +1,132 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="common">
+      <UniqueIdentifier>{5db05708-470b-489f-a89d-23f3bd3a87bf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compat">
+      <UniqueIdentifier>{2677eb57-edc5-4b17-a49b-109d13e918b6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="explorer">
+      <UniqueIdentifier>{3da6d38f-2b1b-4a50-ae08-6b633a07d3aa}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\common\cache.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\cheetahmenu.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\debug.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\exec.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\git-compat-util.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\hash.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\menuengine.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\strbuf.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\systeminfo.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\compat\mingw.h">
+      <Filter>compat</Filter>
+    </ClInclude>
+    <ClInclude Include="..\columns.h">
+      <Filter>explorer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\dll.h">
+      <Filter>explorer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ext.h">
+      <Filter>explorer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\factory.h">
+      <Filter>explorer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\menu.h">
+      <Filter>explorer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\registry.h">
+      <Filter>explorer</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\common\cheetahmenu.c">
+      <Filter>common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\date.c">
+      <Filter>common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\debug.c">
+      <Filter>common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\exec.c">
+      <Filter>common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\menuengine.c">
+      <Filter>common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\sha1_file.c">
+      <Filter>common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\strbuf.c">
+      <Filter>common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\usage.c">
+      <Filter>common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\wrapper.c">
+      <Filter>common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\compat\mingw.c">
+      <Filter>compat</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\compat\mmap.c">
+      <Filter>compat</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\compat\pread.c">
+      <Filter>compat</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\compat\strlcpy.c">
+      <Filter>compat</Filter>
+    </ClCompile>
+    <ClCompile Include="..\columns.c">
+      <Filter>explorer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\dll.c">
+      <Filter>explorer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\ext.c">
+      <Filter>explorer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\factory.c">
+      <Filter>explorer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\menu.c">
+      <Filter>explorer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\registry.c">
+      <Filter>explorer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\systeminfo.c">
+      <Filter>explorer</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\cheetah.def">
+      <Filter>explorer</Filter>
+    </None>
+    <None Include="README.txt" />
+  </ItemGroup>
+</Project>
