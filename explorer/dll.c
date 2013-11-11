@@ -190,11 +190,12 @@ static BOOL find_msysgit_in_path()
 	/*
 	 * git.exe is in "\bin\" from what we really need
 	 * the minimal case we can handle is c:\bin\git.exe
-	 * otherwise declare failure
+	 * otherwise declare failure. We additionally check
+	 * for Git for Windows where it is placed in ..\Git\cmd\
 	 */
 	if (file < msysgit + 7)
 		return FALSE;
-	if (strnicmp(file - 5, "\\bin\\", 5))
+	if (strnicmp(file - 5, "\\bin\\", 5) && strnicmp(file - 5, "\\cmd\\", 5))
 		return FALSE;
 	file[-5] = '\0';
 
