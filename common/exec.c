@@ -41,6 +41,7 @@ int exec_program_v(const char *working_directory,
 {
 	int fdout[2], fderr[2];
 	int s1 = -1, s2 = -1;	/* backups of stdin, stdout, stderr */
+	int devnull = -1;
 
 	pid_t pid;
 	int status = 0;
@@ -53,27 +54,35 @@ int exec_program_v(const char *working_directory,
 		return -1;
 	}
 
+	if (!output || !error_output)
+		devnull = open("/dev/null", O_WRONLY);
+
+	s1 = dup(1);
 	if (output) {
 		if (pipe(fdout) < 0) {
 			return -ERR_RUN_COMMAND_PIPE;
 		}
-		s1 = dup(1);
 		dup2(fdout[1], 1);
 
 		flags |= WAITMODE;
+	} else {
+		dup2(devnull, 1);
 	}
 
+	s2 = dup(2);
 	if (error_output) {
 		if (pipe(fderr) < 0) {
 			if (output)
 				close_pair(fdout);
 			return -ERR_RUN_COMMAND_PIPE;
 		}
-		s2 = dup(2);
 		dup2(fderr[1], 2);
 
 		flags |= WAITMODE;
+	} else {
+		dup2(devnull, 2);
 	}
+	close(devnull);
 
 	pid = fork_process(argv[0], argv, working_directory);
 
