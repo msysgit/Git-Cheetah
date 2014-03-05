@@ -46,12 +46,6 @@ int exec_program_v(const char *working_directory,
 	int status = 0;
 	int ret;
 
-	struct strbuf strout = STRBUF_INIT, strerr = STRBUF_INIT;
-	if (!output)
-		output = &strout;
-	if (!error_output)
-		error_output = &strerr;
-
 	reporter *debug = QUIETMODE & flags ? _debug_git : _debug_git_mbox;
 
 	if (!git_path()) {
@@ -59,23 +53,27 @@ int exec_program_v(const char *working_directory,
 		return -1;
 	}
 
-	if (pipe(fdout) < 0) {
-		return -ERR_RUN_COMMAND_PIPE;
+	if (output) {
+		if (pipe(fdout) < 0) {
+			return -ERR_RUN_COMMAND_PIPE;
+		}
+		s1 = dup(1);
+		dup2(fdout[1], 1);
+
+		flags |= WAITMODE;
 	}
-	s1 = dup(1);
-	dup2(fdout[1], 1);
 
-	flags |= WAITMODE;
+	if (error_output) {
+		if (pipe(fderr) < 0) {
+			if (output)
+				close_pair(fdout);
+			return -ERR_RUN_COMMAND_PIPE;
+		}
+		s2 = dup(2);
+		dup2(fderr[1], 2);
 
-	if (pipe(fderr) < 0) {
-		if (output)
-			close_pair(fdout);
-		return -ERR_RUN_COMMAND_PIPE;
+		flags |= WAITMODE;
 	}
-	s2 = dup(2);
-	dup2(fderr[1], 2);
-
-	flags |= WAITMODE;
 
 	pid = fork_process(argv[0], argv, working_directory);
 
@@ -85,13 +83,17 @@ int exec_program_v(const char *working_directory,
 		dup2(s2, 2), close(s2);
 
 	if (pid < 0) {
-		close_pair(fdout);
-		close_pair(fderr);
+		if (output)
+			close_pair(fdout);
+		if (error_output)
+			close_pair(fderr);
 		return -ERR_RUN_COMMAND_FORK;
 	}
 
-	close(fdout[1]);
-	close(fderr[1]);
+	if (output)
+		close(fdout[1]);
+	if (error_output)
+		close(fderr[1]);
 
 	if (WAITMODE & flags) {
 		ret = wait_for_process(pid, MAX_PROCESSING_TIME,
@@ -107,11 +109,15 @@ int exec_program_v(const char *working_directory,
 				status = -1;
 			}
 
-			strbuf_read(output, fdout[0], 0);
-			debug_git("STDOUT:\r\n%s\r\n*** end of STDOUT ***\r\n", output->buf);
+			if (output) {
+				strbuf_read(output, fdout[0], 0);
+				debug_git("STDOUT:\r\n%s\r\n*** end of STDOUT ***\r\n", output->buf);
+			}
 
-			strbuf_read(error_output, fderr[0], 0);
-			debug_git("STDERR:\r\n%s\r\n*** end of STDERR ***\r\n", error_output->buf);
+			if (error_output) {
+				strbuf_read(error_output, fderr[0], 0);
+				debug_git("STDERR:\r\n%s\r\n*** end of STDERR ***\r\n", error_output->buf);
+			}
 		} else {
 			status = -ERR_RUN_COMMAND_WAITPID_NOEXIT;
 			debug_git("[ERROR] process timed out; "
@@ -121,11 +127,10 @@ int exec_program_v(const char *working_directory,
 	}
 	close_process(pid);
 
-	close(fdout[0]);
-	close(fderr[0]);
-
-	strbuf_release(&strerr);
-	strbuf_release(&strout);
+	if (output)
+		close(fdout[0]);
+	if (error_output)
+		close(fderr[0]);
 
 	return status;
 }
