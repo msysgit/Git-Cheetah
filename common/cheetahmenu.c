@@ -149,7 +149,7 @@ static int menu_bash(struct git_data *this_, UINT id)
 		return 0;
 	}
 
-	exec_program_v(wd, NULL, NULL, NORMALMODE, argv);
+	exec_program_v(wd, NULL, NULL, DETACHMODE, argv);
 
 	if (argv_free)
 		argv_free(argv_data);

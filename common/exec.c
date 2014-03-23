@@ -54,7 +54,7 @@ int exec_program_v(const char *working_directory,
 		return -1;
 	}
 
-	if (!output || !error_output)
+	if ((!output || !error_output) && !(DETACHMODE & flags))
 		devnull = open("/dev/null", O_WRONLY);
 
 	s1 = dup(1);
@@ -65,7 +65,7 @@ int exec_program_v(const char *working_directory,
 		dup2(fdout[1], 1);
 
 		flags |= WAITMODE;
-	} else {
+	} else if (devnull >= 0) {
 		dup2(devnull, 1);
 	}
 
@@ -79,10 +79,11 @@ int exec_program_v(const char *working_directory,
 		dup2(fderr[1], 2);
 
 		flags |= WAITMODE;
-	} else {
+	} else if (devnull >= 0) {
 		dup2(devnull, 2);
 	}
-	close(devnull);
+	if (devnull >= 0)
+		close(devnull);
 
 	pid = fork_process(argv[0], argv, working_directory);
 
