@@ -2,6 +2,7 @@
 #define NORMALMODE (0)
 #define HIDDENMODE (1 << 0) /* hide any windows, opened by execution */
 #define WAITMODE   (1 << 1) /* wait for execution to complete */
+#define DETACHMODE (1 << 2) /* do *not* wait for execution to complete */
 #define QUIETMODE  (1 << 7) /* don't report any errors to user */
 
 enum {
