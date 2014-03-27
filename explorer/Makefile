@@ -24,7 +24,7 @@ OBJECTS=${MODULES:%.c=%.o} cheetah.o
 COMMON_OBJ = ../common/cheetahmenu.o ../common/date.o ../common/debug.o \
 	     ../common/exec.o ../common/menuengine.o \
 	     ../common/sha1_file.o ../common/strbuf.o \
-	     ../common/usage.o ../common/wrapper.o
+	     ../common/usage.o ../common/winexec.o ../common/wrapper.o
 COMPAT_OBJ = ../compat/mingw.o ../compat/mmap.o ../compat/pread.o \
 	     ../compat/strlcpy.o ../compat/winansi.o
 

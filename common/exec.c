@@ -35,6 +35,8 @@ int exec_program(const char *working_directory,
 			flags, argv);
 }
 
+/* see winexec.c for the Windows-specific implementation of exec_program_v() */
+#ifndef _WIN32
 int exec_program_v(const char *working_directory,
 	struct strbuf *output, struct strbuf *error_output,
 	int flags, const char **argv)
@@ -144,3 +146,4 @@ int exec_program_v(const char *working_directory,
 
 	return status;
 }
+#endif

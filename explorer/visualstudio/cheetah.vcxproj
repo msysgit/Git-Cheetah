@@ -96,6 +96,7 @@
     <ClCompile Include="..\..\common\sha1_file.c" />
     <ClCompile Include="..\..\common\strbuf.c" />
     <ClCompile Include="..\..\common\usage.c" />
+    <ClCompile Include="..\..\common\winexec.c" />
     <ClCompile Include="..\..\common\wrapper.c" />
     <ClCompile Include="..\..\compat\mingw.c" />
     <ClCompile Include="..\..\compat\mmap.c" />

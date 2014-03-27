@@ -4,7 +4,7 @@ CC = $(cross)gcc.exe
 endif
 
 MODULES=debug.c exec.c menuengine.c cheetahmenu.c date.c \
-	sha1_file.c strbuf.c usage.c wrapper.c
+	sha1_file.c strbuf.c usage.c winexec.c wrapper.c
 OBJECTS=${MODULES:%.c=%.o} version.h
 
 # transform descriptions of the form v1.0-124-g12345 into 1,0

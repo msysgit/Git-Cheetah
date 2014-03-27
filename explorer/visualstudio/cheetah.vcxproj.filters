@@ -86,6 +86,9 @@
     <ClCompile Include="..\..\common\usage.c">
       <Filter>common</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\common\winexec.c">
+      <Filter>common</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\common\wrapper.c">
       <Filter>common</Filter>
     </ClCompile>
