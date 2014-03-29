@@ -46,18 +46,15 @@ static char **path_split(const char *envpath)
 		char *dir = p;
 		p = strchr(p, ';');
 
-		if (p) {
+		if (p)
 			*p++ = '\0';
-		}
 
-		if (*dir) {	/* not earlier, catches series of ; */
+		if (*dir)	/* not earlier, catches series of ; */
 			++n;
-		}
 	}
 
-	if (!n) {
+	if (!n)
 		return NULL;
-	}
 
 	path = (char **)xmalloc((n + 1) * sizeof(char *));
 	p = orig;
@@ -65,9 +62,9 @@ static char **path_split(const char *envpath)
 
 	do {
 
-		if (*p) {
+		if (*p)
 			path[i++] = xstrdup(p);
-		}
+
 		p = p + strlen(p) + 1;
 
 	} while (i < n);
@@ -90,9 +87,8 @@ static char *path_lookup_prog(const char *dir, const char *cmd)
 		snprintf(path, sizeof(path), "%s/%s.exe", dir, cmd);
 	}
 
-	if (0 == access(path, F_OK)) {
+	if (0 == access(path, F_OK))
 		return xstrdup(path);
-	}
 
 	return NULL;
 }
@@ -105,13 +101,11 @@ static char *path_lookup(const char *cmd, char **path)
 {
 	char *prog = NULL;
 
-	if (strchr(cmd, '/') || strchr(cmd, '\\')) {
+	if (strchr(cmd, '/') || strchr(cmd, '\\'))
 		return xstrdup(cmd);
-	}
 
-	while (!prog && *path) {
+	while (!prog && *path)
 		prog = path_lookup_prog(*path++, cmd);
-	}
 
 	return prog;
 }
@@ -143,9 +137,8 @@ static const char *escape_arg(const char *arg)
 		len++;
 		p++;
 	}
-	if (!force_quotes && n == 0) {
+	if (!force_quotes && n == 0)
 		return arg;
-	}
 
 	/* insert \ where necessary */
 	d = q = (char *)xmalloc(len+n+3);
@@ -182,19 +175,16 @@ static void cmd_rec_init(const char **argv, const char *envpath,
 
 	rec->cmd = path_lookup(*argv, path);
 
-	if (!rec->cmd) {
+	if (!rec->cmd)
 		return;
-	}
 
 	for (; *argv; argv++) {
 		escaped = (char *)escape_arg(*argv);
-		if (args.len) {
+		if (args.len)
 			strbuf_addch(&args, ' ');
-		}
 		strbuf_addstr(&args, escaped);
-		if (escaped != *argv) {
+		if (escaped != *argv)
 			free(escaped);
-		}
 	}
 
 	rec->args = strbuf_detach(&args, NULL);
@@ -202,13 +192,11 @@ static void cmd_rec_init(const char **argv, const char *envpath,
 
 static void cmd_rec_final(struct cmd_rec *rec)
 {
-	if (rec->cmd) {
+	if (rec->cmd)
 		free(rec->cmd);
-	}
 
-	if (rec->args) {
+	if (rec->args)
 		free(rec->args);
-	}
 }
 
 static BOOL create_output_handles(PHANDLE hRead, PHANDLE hWrite, HANDLE hProc)
@@ -216,9 +204,8 @@ static BOOL create_output_handles(PHANDLE hRead, PHANDLE hWrite, HANDLE hProc)
 	HANDLE hWriteTmp;
 
 	/* create pipe with no inheritance */
-	if (!CreatePipe(hRead, &hWriteTmp, NULL, 0)) {
+	if (!CreatePipe(hRead, &hWriteTmp, NULL, 0))
 		return FALSE;
-	}
 
 	/* dup write end with inheritance to hWrite and close hWriteTmp */
 	if (!DuplicateHandle(hProc, hWriteTmp, hProc, hWrite, 0, TRUE,
@@ -236,14 +223,12 @@ static BOOL create_handles(struct handles_rec *hStd, struct output_rec *hOutput)
 	hStd->in = GetStdHandle(STD_INPUT_HANDLE);
 
 	/* create stdOut */
-	if (!create_output_handles(&hOutput->out, &hStd->out, hProc)) {
+	if (!create_output_handles(&hOutput->out, &hStd->out, hProc))
 		return FALSE;
-	}
 
 	/* create stdErr */
-	if (!create_output_handles(&hOutput->err, &hStd->err, hProc)) {
+	if (!create_output_handles(&hOutput->err, &hStd->err, hProc))
 		return FALSE;
-	}
 
 	return TRUE;
 }
@@ -265,9 +250,8 @@ static void path_rec_init(const char *gitpath, struct path_rec *rec)
 {
 	struct strbuf path = STRBUF_INIT;
 
-	if (gitpath) {
+	if (gitpath)
 		strbuf_addstr(&path, gitpath);
-	}
 
 	if ((rec->envpath_old = getenv("PATH"))) {
 		rec->envpath_old = xstrdup(rec->envpath_old);
@@ -288,23 +272,20 @@ static void path_rec_final(struct path_rec *rec)
 		free(rec->envpath_old);
 	}
 
-	if (rec->envpath) {
+	if (rec->envpath)
 		free(rec->envpath);
-	}
 }
 
 static void path_split_free(char **path)
 {
 	char **p;
 
-	if (!path) {
+	if (!path)
 		return;
-	}
 
 	p = path;
-	while (*p) {
+	while (*p)
 		free(*p++);
-	}
 
 	free(path);
 }
@@ -330,9 +311,8 @@ static HANDLE process_init(struct cmd_rec cmdInfo, const char *dir,
 	success = CreateProcess(cmdInfo.cmd, cmdInfo.args, NULL, NULL,
 		TRUE, flags, NULL, dir, &si, &pi);
 
-	if (!success) {
+	if (!success)
 		errno = ENOENT;
-	}
 
 	/* close our end of the output handles */
 	CloseHandle(hStd.out);
@@ -354,9 +334,8 @@ static int process_final(HANDLE hProc, int wait, struct strbuf *output,
 
 		if (res) {
 
-			if (res < 0) {
+			if (res < 0)
 				status = -1;
-			}
 
 			if (output) {
 				int fd = _open_osfhandle((intptr_t)hOutput.out, _O_RDONLY);
@@ -391,13 +370,11 @@ int exec_program_v(const char *working_directory, struct strbuf *output,
 	HANDLE hProc;
 	int wait, status = 0;
 
-	if (!(gitpath = git_path())) {
+	if (!(gitpath = git_path()))
 		return -1;
-	}
 
-	if (!create_handles(&hStd, &hOutput)) {
+	if (!create_handles(&hStd, &hOutput))
 		return -1;
-	}
 
 	path_rec_init(gitpath, &pathInfo);
 	cmd_rec_init(argv, pathInfo.envpath, &cmdInfo);
