@@ -73,6 +73,7 @@ static char **path_split(const char *envpath)
 	} while (i < n);
 
 	path[i] = NULL;
+	free(orig);
 
 	return path;
 }
