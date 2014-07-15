@@ -184,6 +184,9 @@ static char *convert_directory_format(const char *path)
 		case '(':
 		case ')':
 		case ';':
+		case '&':
+		case '`':
+		case '$':
 		case '\'':
 			*(dst++) = '\\';
 			*(dst++) = *path;
