@@ -19,12 +19,12 @@ DWORD lock_count = 0;
  * Both of our COM objects contain pointers to the git_data object.
  */
 
-inline ULONG STDMETHODCALLTYPE add_ref_git_data(struct git_data *this_)
+ULONG STDMETHODCALLTYPE add_ref_git_data(struct git_data *this_)
 {
 	return ++(this_->count);
 }
 
-inline ULONG STDMETHODCALLTYPE release_git_data(struct git_data *this_)
+ULONG STDMETHODCALLTYPE release_git_data(struct git_data *this_)
 {
 	if (--(this_->count) == 0) {
 		strbuf_release(&this_->other_files);
@@ -36,7 +36,7 @@ inline ULONG STDMETHODCALLTYPE release_git_data(struct git_data *this_)
 	return this_->count;
 }
 
-inline STDMETHODIMP query_interface_git_data(struct git_data *this_,
+STDMETHODIMP query_interface_git_data(struct git_data *this_,
 					     REFIID iid, LPVOID FAR *pointer)
 {
 	if (IsEqualIID(iid, &IID_git_shell_ext) ||
@@ -56,7 +56,7 @@ inline STDMETHODIMP query_interface_git_data(struct git_data *this_,
 	return NOERROR;
 }
 
-inline STDMETHODIMP initialize_git_data(struct git_data *this_,
+STDMETHODIMP initialize_git_data(struct git_data *this_,
 					LPCITEMIDLIST folder,
 					LPDATAOBJECT data, HKEY id)
 {

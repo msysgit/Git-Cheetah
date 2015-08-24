@@ -135,7 +135,7 @@ BOOL menu_exists(HMENU menu)
  * These are the functions for handling the context menu.
  */
 
-inline STDMETHODIMP query_context_menu(void *p, HMENU menu,
+STDMETHODIMP query_context_menu(void *p, HMENU menu,
 				       UINT index, UINT first_command,
 				       UINT last_command, UINT flags)
 {
@@ -300,7 +300,7 @@ const char **menu_get_platform_argv(menu_commands cmd, void *data,
 	return argv;
 }
 
-inline STDMETHODIMP invoke_command(void *p,
+STDMETHODIMP invoke_command(void *p,
 				   LPCMINVOKECOMMANDINFO info)
 {
 	struct git_menu *this_menu = p;
@@ -314,7 +314,7 @@ inline STDMETHODIMP invoke_command(void *p,
 	return S_OK;
 }
 
-inline STDMETHODIMP get_command_string(void *p, UINT id,
+STDMETHODIMP get_command_string(void *p, UINT id,
 				       UINT flags, UINT *reserved,
 				       LPSTR name, UINT size)
 {
