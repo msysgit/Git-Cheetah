@@ -13,12 +13,14 @@ typedef int pid_t;
 #define S_IFLNK    0120000 /* Symbolic link */
 #define S_ISLNK(x) (((x) & S_IFMT) == S_IFLNK)
 #define S_ISSOCK(x) 0
+#ifndef __MINGW64_VERSION_MAJOR
 #define S_IRGRP 0
 #define S_IWGRP 0
 #define S_IXGRP 0
 #define S_ISGID 0
 #define S_IROTH 0
 #define S_IXOTH 0
+#endif
 
 #define WIFEXITED(x) ((unsigned)(x) < 259)	/* STILL_ACTIVE */
 #define WEXITSTATUS(x) ((x) & 0xff)
