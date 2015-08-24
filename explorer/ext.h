@@ -69,11 +69,11 @@ extern DWORD object_count;
 extern DWORD lock_count;
 extern HINSTANCE hInst;
 
-inline STDMETHODIMP query_interface_git_data(struct git_data *this_,
+STDMETHODIMP query_interface_git_data(struct git_data *this_,
 					     REFIID iid, LPVOID FAR *pointer);
-inline ULONG STDMETHODCALLTYPE add_ref_git_data(struct git_data *this_);
-inline ULONG STDMETHODCALLTYPE release_git_data(struct git_data *this_);
-inline STDMETHODIMP initialize_git_data(struct git_data *this_,
+ULONG STDMETHODCALLTYPE add_ref_git_data(struct git_data *this_);
+ULONG STDMETHODCALLTYPE release_git_data(struct git_data *this_);
+STDMETHODIMP initialize_git_data(struct git_data *this_,
 					LPCITEMIDLIST folder,
 					LPDATAOBJECT data, HKEY id);
 

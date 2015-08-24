@@ -2,8 +2,8 @@
  * Copyright 2008 Peter Harris <git@peter.is-a-geek.org>
  */
 
-#include <windows.h>
 #include "../common/git-compat-util.h"
+#include <windows.h>
 
 /*
  Functions to be wrapped:
