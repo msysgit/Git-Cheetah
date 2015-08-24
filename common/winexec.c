@@ -1,4 +1,6 @@
+#ifdef _MSC_VER
 #pragma once
+#endif
 
 #ifdef _WIN32
 
